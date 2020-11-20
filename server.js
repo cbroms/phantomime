@@ -57,8 +57,11 @@ io.on("connection", function(socket) {
   socket.emit("serverMessage", "Hello welcome!");
 
   //send the whole game state to the player that just connected
-  //so they know where all the players are without having to wait for an update
-  socket.emit("gameState", gameState);
+  const playerArr = [];
+  for (const id in gameState.players) {
+    playerArr.push(id);
+  }
+  socket.emit("gameState", { ...gameState, players: playerArr });
 
   // let everyone know the new player joined
   io.sockets.emit("playerJoined", newPlayer);
@@ -111,6 +114,9 @@ io.on("connection", function(socket) {
   socket.on("keyPress", function(key) {
     // make sure it came from the explorer
     if (socket.id === gameState.explorer) {
+      // update the guessed keycode
+      gameState.guessedKeyCode += key;
+
       // if the key codes are the same length, see if they got it right
       if (gameState.guessedKeyCode.length === gameState.keyCode.length) {
         if (gameState.guessedKeyCode === gameState.keyCode) {
@@ -119,6 +125,13 @@ io.on("connection", function(socket) {
           console.log(`players guessed correctly!`);
           // create a new keycode
           gameState.keyCode = generateKeyCode();
+
+          // resend the state to everyone
+          const playerArr = [];
+          for (const id in gameState.players) {
+            playerArr.push(id);
+          }
+          io.sockets.emit("gameState", { ...gameState, players: playerArr });
         } else {
           console.log(`players guessed incorrectly`);
           // they failed
@@ -126,7 +139,10 @@ io.on("connection", function(socket) {
         }
       } else {
         // send the number to everyone
-        io.sockets.emit("keyPressed", { id: socket.id, key: key });
+        io.sockets.emit("keyPressed", {
+          key: key,
+          fullGuess: gameState.guessedKeyCode,
+        });
       }
     }
   });
