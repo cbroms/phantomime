@@ -40,6 +40,7 @@ public class NetManager : MonoBehaviour
     private bool amExplorer;
     private GameObject myAvatar;
     public GameObject serverMessages;
+    private bool initializedView = false;
     
     public Vector3 spawnPoint = new Vector3(11.19f, 0, 29.6f);
     public float spawnRadius = 2;
@@ -164,12 +165,17 @@ public class NetManager : MonoBehaviour
     public void OnGameState(SocketIOEvent e) {
         GameState data = JsonUtility.FromJson<GameState>(e.data.ToString());
 
-        // foreach (NewPlayer player in data.players) {
-        //     //Render them
-        //     ServerMessage("player " + player.id + "joined, isExplorer=" + player.amExplorer);
-        //     // string currID = entry.Split("");
-        //     // NewPlayer currPlayer = entry.Value;
-        // }
+        if (initializedView) return;
+        initializedView = true;
+        int i = 0;
+        foreach (NewPlayer player in data.players) {
+            i++;
+            //Render them
+            ServerMessage("player " + player.id + "joined, isExplorer=" + player.amExplorer);
+            GameObject g = player.amExplorer ? Instantiate(explorerAvatar, transform.position + new Vector3(i, 0, 0), Quaternion.identity) : Instantiate(ghostAvatar, transform.position + new Vector3(i*2, 0, 0), Quaternion.identity);
+            // string currID = entry.Split("");
+            // NewPlayer currPlayer = entry.Value;
+        }
     }
 
 
@@ -181,23 +187,20 @@ public class NetManager : MonoBehaviour
         //is it me?
         if (data.id == socket.SocketID)
         {
-                
                 Net.playing = true;
                 
                 //do I have to create an avatar?
                 Net.myId = socket.SocketID;
+                amExplorer = data.amExplorer;
+                if (data.amExplorer == true) {
+                    myAvatar = Instantiate(explorerAvatar);
+                } else {
+                    myAvatar = Instantiate(ghostAvatar);
+                }
+
+                // Set camera follow true for me
+                myAvatar.GetComponent<CameraFollow>().enabled = true;
         }
-
-        amExplorer = data.amExplorer;
-        if (data.amExplorer == true) {
-            myAvatar = Instantiate(explorerAvatar);
-        } else {
-            myAvatar = Instantiate(ghostAvatar);
-        }
-
-        // Set camera follow true for me
-        myAvatar.GetComponent<CameraFollow>().enabled = true;
-
     }
 
     public void OnPlayerTalked(SocketIOEvent e) {
