@@ -167,12 +167,13 @@ public class NetManager : MonoBehaviour
 
         if (initializedView) return;
         initializedView = true;
-        int i = 0;
+        int i = 1;
         foreach (NewPlayer player in data.players) {
+            if (player.id == socket.SocketID) continue;
             i++;
             //Render them
             ServerMessage("player " + player.id + "joined, isExplorer=" + player.amExplorer);
-            GameObject g = player.amExplorer ? Instantiate(explorerAvatar, transform.position + new Vector3(i, 0, 0), Quaternion.identity) : Instantiate(ghostAvatar, transform.position + new Vector3(i*2, 0, 0), Quaternion.identity);
+            GameObject g = player.amExplorer ? Instantiate(explorerAvatar, transform.position + new Vector3(i, 0, 0), Quaternion.identity) : Instantiate(ghostAvatar, transform.position + new Vector3(i*5, 0, 0), Quaternion.identity);
             // string currID = entry.Split("");
             // NewPlayer currPlayer = entry.Value;
         }
@@ -200,6 +201,9 @@ public class NetManager : MonoBehaviour
 
                 // Set camera follow true for me
                 myAvatar.GetComponent<CameraFollow>().enabled = true;
+        } else if (initializedView) {
+            if (data.amExplorer) Instantiate(explorerAvatar, transform.position + new Vector3(-15, 0, 0), Quaternion.identity);
+            else Instantiate(ghostAvatar, transform.position + new Vector3(-15, 0, 0), Quaternion.identity);
         }
     }
 
