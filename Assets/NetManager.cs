@@ -37,7 +37,7 @@ public class NetManager : MonoBehaviour
     public GameObject explorerAvatar;
     public GameObject ghostAvatar;
     public Sprite[] sprites;
-    private bool amExplorer;
+    public bool amExplorer;
     private GameObject myAvatar;
     public GameObject serverMessages;
     private bool initializedView = false;
@@ -188,10 +188,12 @@ public class NetManager : MonoBehaviour
         //is it me?
         if (data.id == socket.SocketID)
         {
+                Net.connected = true;
                 Net.playing = true;
                 
                 //do I have to create an avatar?
                 Net.myId = socket.SocketID;
+                ChatScript.chatScript.SetID(socket.SocketID);
                 amExplorer = data.amExplorer;
                 if (data.amExplorer == true) {
                     myAvatar = Instantiate(explorerAvatar);
@@ -208,16 +210,20 @@ public class NetManager : MonoBehaviour
     }
 
     public void OnPlayerTalked(SocketIOEvent e) {
+        Debug.Log("got player talk data");
         TalkedData data = JsonUtility.FromJson<TalkedData>(e.data.ToString());
 
-        //TODO: render based on if you're player or ghost
+        // render based on if you're player or ghost
+        // if (data.id != socket.SocketID) {
+            ChatScript.chatScript.SendMessageToChat(data.id + ":" + data.message, Message.MessageType.playerMessage, true);
+        // }
         ServerMessage(data.id + " says " + data.message);
     }
 
     public void OnPlayerDisturbed(SocketIOEvent e) {
         DisturbedData data = JsonUtility.FromJson<DisturbedData>(e.data.ToString());
 
-        ServerMessage(data.id + " was disturbed");
+        ServerMessage(data.id + " sent a disturbance");
         //TODO: render something
 
     }
@@ -250,11 +256,13 @@ public class NetManager : MonoBehaviour
     //TODO: call from keypad object
     public void SendKeyPress(string key) {
         if (amExplorer) socket.Emit("keyPress", key);
+        else ServerMessage("Ghosts cannot press keys");
     }
 
     //TODO: call from player chat
-    public void SendPlayerTalk(string message) {
-        socket.Emit("talk", message);
+    public void SendPlayerTalk(string msg) {
+        socket.Emit("talkExplorer", msg);
+        Debug.Log("[NETMANAGER] sending player talk: " + msg);
     }
 
     //TODO: call from ghost button?
@@ -842,6 +850,7 @@ public class NetManager : MonoBehaviour
     {
         Debug.Log("Server message: " + msg);
         if (serverMessages) serverMessages.GetComponent<TextMeshProUGUI>().text = msg;
+        ChatScript.chatScript.SendMessageToChat("server:" + msg, Message.MessageType.info, true);
     }
 
 }

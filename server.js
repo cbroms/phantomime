@@ -95,12 +95,13 @@ io.on("connection", function(socket) {
   });
 
   //when I receive a talk send it to everybody
-  socket.on("talk", function(msg) {
+  socket.on("talkExplorer", function(msg) {
     // make sure it came from the explorer
-    if (socket.id === gameState.explorer) {
+    // console.log("received a chat");
+    // if (socket.id === gameState.explorer) {
       io.sockets.emit("playerTalked", { id: socket.id, message: msg });
       console.log(`player ${socket.id} said "${msg}"`);
-    }
+    // }
   });
 
   // got a disturbance from a ghost
