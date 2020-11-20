@@ -142,7 +142,7 @@ public class NetManager : MonoBehaviour
         Net.objects = new Dictionary<string, NetObject>();
         
         //make a global reference to this script
-        Net.manager = this;        
+        if (Net.manager == null) Net.manager = this;        
         
 
         ServerMessage("Connecting to server...");
@@ -210,14 +210,13 @@ public class NetManager : MonoBehaviour
     }
 
     public void OnPlayerTalked(SocketIOEvent e) {
-        Debug.Log("got player talk data");
         TalkedData data = JsonUtility.FromJson<TalkedData>(e.data.ToString());
 
         // render based on if you're player or ghost
         // if (data.id != socket.SocketID) {
             ChatScript.chatScript.SendMessageToChat(data.id + ":" + data.message, Message.MessageType.playerMessage, true);
         // }
-        ServerMessage(data.id + " says " + data.message);
+        // ServerMessage(data.id + " says " + data.message);
     }
 
     public void OnPlayerDisturbed(SocketIOEvent e) {
@@ -260,9 +259,8 @@ public class NetManager : MonoBehaviour
     }
 
     //TODO: call from player chat
-    public void SendPlayerTalk(string msg) {
-        socket.Emit("talkExplorer", msg);
-        Debug.Log("[NETMANAGER] sending player talk: " + msg);
+    public void SendPlayerTalk(string key) {
+        socket.Emit("talkExplorer", JsonUtility.ToJson(new WillTalkData(key)));
     }
 
     //TODO: call from ghost button?
@@ -318,6 +316,16 @@ public class NetManager : MonoBehaviour
     public class StringData
     {
         public string message;
+    }
+
+    [Serializable]
+    public class WillTalkData
+    {
+        public string message;
+
+        public WillTalkData(string a) {
+            message = a;
+        }
     }
 
 

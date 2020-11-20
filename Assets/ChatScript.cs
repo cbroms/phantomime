@@ -86,7 +86,6 @@ public class ChatScript : MonoBehaviour
         
         if (!display) {
             Net.manager.SendPlayerTalk(text);
-            Debug.Log("send to net manager");
             return;
         }
 

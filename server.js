@@ -99,8 +99,8 @@ io.on("connection", function(socket) {
     // make sure it came from the explorer
     // console.log("received a chat");
     // if (socket.id === gameState.explorer) {
-      io.sockets.emit("playerTalked", { id: socket.id, message: msg });
-      console.log(`player ${socket.id} said "${msg}"`);
+      io.sockets.emit("playerTalked", { id: socket.id, message: msg.message });
+      console.log(`player ${socket.id} said "${msg.message}"`);
     // }
   });
 
@@ -110,6 +110,10 @@ io.on("connection", function(socket) {
     io.sockets.emit("playerDisturbed", { id: socket.id });
     console.log(`player ${socket.id} made a disturbance`);
   });
+
+  socket.on("randomNew", function(myObj) {
+    console.log("got an abject");
+  })
 
   // when I receive a keypress from the explorer
   socket.on("keyPress", function(key) {
