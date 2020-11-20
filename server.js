@@ -54,12 +54,12 @@ io.on("connection", function(socket) {
   gameState.players[socket.id] = newPlayer;
 
   //this is sent to the client upon connection
-  socket.emit("serverMessage", "Hello welcome!");
+  socket.emit("serverMessage", {message: "Hello welcome!"});
 
   //send the whole game state to the player that just connected
   const playerArr = [];
   for (const id in gameState.players) {
-    playerArr.push(id);
+    playerArr.push(gameState.players[id]);
   }
   socket.emit("gameState", { ...gameState, players: playerArr });
 
@@ -125,6 +125,7 @@ io.on("connection", function(socket) {
           console.log(`players guessed correctly!`);
           // create a new keycode
           gameState.keyCode = generateKeyCode();
+          gameState.guessedKeyCode="";
 
           // resend the state to everyone
           const playerArr = [];
@@ -136,12 +137,13 @@ io.on("connection", function(socket) {
           console.log(`players guessed incorrectly`);
           // they failed
           io.sockets.emit("codeResult", { success: false });
+          gameState.guessedKeyCode="";
         }
       } else {
         // send the number to everyone
         io.sockets.emit("keyPressed", {
-          key: key,
-          fullGuess: gameState.guessedKeyCode,
+          key: String(key),
+          fullGuess: String(gameState.guessedKeyCode),
         });
       }
     }
@@ -151,6 +153,6 @@ io.on("connection", function(socket) {
 });
 
 //listen to the port 5000
-http.listen(5000, function() {
-  console.log("listening on *:5000");
+http.listen(3000, function() {
+  console.log("listening on *:3000");
 });

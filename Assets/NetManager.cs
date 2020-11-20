@@ -5,6 +5,7 @@ using UnitySocketIO;
 using UnitySocketIO.Events;
 using UnityEngine.SceneManagement;
 using System.Reflection;
+using TMPro;
 using UnityEditor;
 
 
@@ -33,8 +34,12 @@ public class NetManager : MonoBehaviour
     public string OtherAvatarPrefabName = "";
     
     //reference to my avatar (if any)
-    public GameObject myAvatar;
+    public GameObject explorerAvatar;
+    public GameObject ghostAvatar;
     public Sprite[] sprites;
+    private bool amExplorer;
+    private GameObject myAvatar;
+    public GameObject serverMessages;
     
     public Vector3 spawnPoint = new Vector3(11.19f, 0, 29.6f);
     public float spawnRadius = 2;
@@ -43,7 +48,7 @@ public class NetManager : MonoBehaviour
     server: sends playerTalked, playerDistrubed, and keyPressed
     sends codeResult with correct/not
 
-    expect 3 events: talk, disturb for explorer/ghost, keyPress for explorer
+    expect 3 events: talk-string msg, disturb-empty for explorer/ghost, keyPress-string key for explorer
     *************/
 
     
@@ -78,12 +83,12 @@ public class NetManager : MonoBehaviour
         Net.connected = false;
 
         socket.On("gameState", OnGameState);
-        socket.On("playerJoined", OnPlayerJoin);
+        socket.On("playerJoined", OnPlayerJoined);
         socket.On("playerTalked", OnPlayerTalked);
         socket.On("playerDisturbed", OnPlayerDisturbed);
         socket.On("keyPressed", OnKeyPressed);
         socket.On("codeResult", OnCodeResult);
-        socket.On("serverMessage", ServerMessage);
+        socket.On("serverMessage", OnServerMessage);
         
         /* //OLD Listeners connecting socket events from the server and the functions below
         socket.On("socketConnect", OnSocketConnect);
@@ -129,13 +134,14 @@ public class NetManager : MonoBehaviour
         //Net.cs is just a global class
         //every variable in there is visible from anywhere
 
+        // Don't use these
         //initialize players
         Net.players = new Dictionary<string, Player>();
         //initialize net objects
         Net.objects = new Dictionary<string, NetObject>();
         
         //make a global reference to this script
-        Net.manager = this;
+        Net.manager = this;        
         
 
         ServerMessage("Connecting to server...");
@@ -153,6 +159,155 @@ public class NetManager : MonoBehaviour
     }
 
 
+
+
+    public void OnGameState(SocketIOEvent e) {
+        GameState data = JsonUtility.FromJson<GameState>(e.data.ToString());
+
+        // foreach (NewPlayer player in data.players) {
+        //     //Render them
+        //     ServerMessage("player " + player.id + "joined, isExplorer=" + player.amExplorer);
+        //     // string currID = entry.Split("");
+        //     // NewPlayer currPlayer = entry.Value;
+        // }
+    }
+
+
+    public void OnPlayerJoined(SocketIOEvent e) {
+        NewPlayer data = JsonUtility.FromJson<NewPlayer>(e.data.ToString());
+
+        ServerMessage(data.id + " joined and isExplorer=" + data.amExplorer);
+
+        //is it me?
+        if (data.id == socket.SocketID)
+        {
+                
+                Net.playing = true;
+                
+                //do I have to create an avatar?
+                Net.myId = socket.SocketID;
+        }
+
+        amExplorer = data.amExplorer;
+        if (data.amExplorer == true) {
+            myAvatar = Instantiate(explorerAvatar);
+        } else {
+            myAvatar = Instantiate(ghostAvatar);
+        }
+
+        // Set camera follow true for me
+        myAvatar.GetComponent<CameraFollow>().enabled = true;
+
+    }
+
+    public void OnPlayerTalked(SocketIOEvent e) {
+        TalkedData data = JsonUtility.FromJson<TalkedData>(e.data.ToString());
+
+        //TODO: render based on if you're player or ghost
+        ServerMessage(data.id + " says " + data.message);
+    }
+
+    public void OnPlayerDisturbed(SocketIOEvent e) {
+        DisturbedData data = JsonUtility.FromJson<DisturbedData>(e.data.ToString());
+
+        ServerMessage(data.id + " was disturbed");
+        //TODO: render something
+
+    }
+
+    public void OnKeyPressed(SocketIOEvent e) {
+        KeyPressData data = JsonUtility.FromJson<KeyPressData>(e.data.ToString());
+
+        //TODO: render something?
+        ServerMessage("pressed key " + data.key + ", fullGuess=" + data.fullGuess);
+
+    }
+
+    public void OnCodeResult(SocketIOEvent e) {
+        CodeResultData data = JsonUtility.FromJson<CodeResultData>(e.data.ToString());
+
+        //TODO: render something
+        if (data.success == true) {
+            ServerMessage("You guessed the right code!");
+        } else {
+            ServerMessage("You guessed incorrectly.");
+        }
+
+    }
+
+    public void OnServerMessage(SocketIOEvent e) {
+        StringData data = JsonUtility.FromJson<StringData>(e.data.ToString());
+        ServerMessage(data.message);
+    }
+
+    //TODO: call from keypad object
+    public void SendKeyPress(string key) {
+        if (amExplorer) socket.Emit("keyPress", key);
+    }
+
+    //TODO: call from player chat
+    public void SendPlayerTalk(string message) {
+        socket.Emit("talk", message);
+    }
+
+    //TODO: call from ghost button?
+    public void SendPlayerDisturb() {
+        socket.Emit("disturb");
+    }
+
+
+    [Serializable]
+    public class GameState
+    {
+        //dictionary from socket id to new players
+        public List<NewPlayer> players;
+        public string explorer; //socket ID of the explorer
+        public string keyCode;
+        public string guessedKeyCode;
+    }
+
+    [Serializable]
+    public class NewPlayer
+    {
+        public string id;
+        public bool amExplorer;
+    }
+
+    [Serializable]
+    public class TalkedData
+    {
+        public string id;
+        public string message;
+    }
+
+    [Serializable]
+    public class DisturbedData
+    {
+        public string id;
+    }
+
+    [Serializable]
+    public class KeyPressData
+    {
+        public string key;
+        public string fullGuess;
+    }
+
+    [Serializable]
+    public class CodeResultData
+    {
+        public bool success;
+    }
+
+    [Serializable]
+    public class StringData
+    {
+        public string message;
+    }
+
+
+
+ /********************************************************************/
     //server responded with connection success
     public void OnSocketConnect(SocketIOEvent e)
     {
@@ -679,6 +834,7 @@ public class NetManager : MonoBehaviour
     void ServerMessage(string msg)
     {
         Debug.Log("Server message: " + msg);
+        if (serverMessages) serverMessages.GetComponent<TextMeshProUGUI>().text = msg;
     }
 
 }

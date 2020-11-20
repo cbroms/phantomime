@@ -13,13 +13,13 @@ public class CameraFollow : MonoBehaviour
     {
 
         //if it's my avatar make the camera follow me
-        if (gameObject.name == Net.myId)
-        {
-        }
-        else
-        {
-            this.enabled = false;
-        }
+        // if (gameObject.name == Net.myId)
+        // {
+        // }
+        // else
+        // {
+        //     this.enabled = false;
+        // }
     }
 
     void Update()
