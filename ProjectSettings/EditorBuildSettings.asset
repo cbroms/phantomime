@@ -8,4 +8,19 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Paolo's Stuff/Scenes/Client.unity
     guid: 733794bfc93834d61a49dadaa2094edc
+  - enabled: 1
+    path: Assets/Paolo's Stuff/Scenes/MainRoom.unity
+    guid: cf88323c47d8c6043914e055527f2fba
+  - enabled: 1
+    path: Assets/Paolo's Stuff/Scenes/LetterBlockScene.unity
+    guid: 39675d9b35166c24f99e812d8930b530
+  - enabled: 1
+    path: Assets/Paolo's Stuff/Scenes/Book.unity
+    guid: be94e055db140484a9dd1f5bb648f45b
+  - enabled: 1
+    path: Assets/Paolo's Stuff/Scenes/Computer.unity
+    guid: 1ca6d08a8f0e9f446bff3ac4af18aff4
+  - enabled: 1
+    path: Assets/Paolo's Stuff/Scenes/WallScene.unity
+    guid: 0bfb2ba377ea9f244b7e9523747290dd
   m_configObjects: {}

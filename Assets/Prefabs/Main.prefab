@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &573091950815506841
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 573091950815506847}
+  - component: {fileID: 573091950815506844}
+  - component: {fileID: 573091950815506846}
+  - component: {fileID: 573091950815506845}
+  m_Layer: 0
+  m_Name: Main
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &573091950815506847
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 573091950815506841}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &573091950815506844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 573091950815506841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7e6021b6709d4841b7d36056e5d2743, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  settings:
+    url: localhost
+    port: 3000
+    sslEnabled: 0
+    reconnectTime: 500
+    timeToDropAck: 250
+    pingTimeout: 5
+    pingInterval: 10
+--- !u!114 &573091950815506846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 573091950815506841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ee28affb8c634f43aee6518ddbdceb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GLITCH: 0
+  HEROKU: 0
+  LOCAL: 0
+  socket: {fileID: 0}
+  MyAvatarPrefabName: AvatarPrefab
+  OtherAvatarPrefabName: OtherAvatarPrefab
+  explorerAvatar: {fileID: 9136848307108427664, guid: e4fa4e286a0839e44b24ce39c8510f4b,
+    type: 3}
+  ghostAvatar: {fileID: 3945873517014318531, guid: ca31d9a3839445f4b84cb81ca9b97515,
+    type: 3}
+  sprites:
+  - {fileID: 21300000, guid: 66d01fe811a1c174f9523914af9783a7, type: 3}
+  - {fileID: 21300000, guid: 8b6045971e91ab64f87d6c3b561fe8e8, type: 3}
+  amExplorer: 0
+  serverMessages: {fileID: 0}
+  spawnPoint: {x: 5.81, y: 0, z: 13.57}
+  spawnRadius: 3
+--- !u!114 &573091950815506845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 573091950815506841}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0efd50f6621f4d40ab5709c59c9fe22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  menuUI: {fileID: 0}
+  menuCamera: {fileID: 0}
+  menuAvatar: {fileID: 0}
+  menuAvatarAppearance: {fileID: 0}
+  joinButton: {fileID: 0}
+  nickNameField: {fileID: 0}
+  s0: {fileID: 0}
+  s1: {fileID: 0}
