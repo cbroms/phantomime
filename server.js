@@ -4,7 +4,15 @@ const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 const { v4: uuidv4 } = require("uuid");
 
+const task1 = {
+  word: "tree",
+};
+
 const queue = [];
+
+const gameState = {};
+const inGame = {};
+const playerToGame = {};
 
 // QUEUE MANAGEMENT
 // every five seconds, check the queue and make new pairings
@@ -23,10 +31,25 @@ setInterval(() => {
 
     for (const pair of pairs) {
       if (pair.length === 2) {
-        // add the players as a pairing to the game state
+        // add the players as a pairing to the game state and give their roles
 
-        // prompt both players to enter their nicknames
-        io.sockets.to().emit();
+        // create an ID for the game
+        const gameId = uuidv4();
+
+        // record the players as being in this game
+        playerToGame[pair[0]] = gameId;
+        playerToGame[pair[1]] = gameId;
+
+        // record the pair as being in game
+        inGame[pair[0]] = pair[1];
+        inGame[pair[1]] = pair[0];
+
+        // initialize the game state
+        gameState[gameId] = {};
+
+        // send the players their roles
+        io.sockets.to(pair[0]).emit("enteredGame", { role: "ghost" });
+        io.sockets.to(pair[1]).emit("enteredGame", { role: "explorer" });
       } else {
         // there is only one possible singleton, so add it to the new queue
         queue.push(pair[0]);
@@ -39,12 +62,43 @@ setInterval(() => {
 app.use(express.static("public"));
 
 io.on("connection", function (socket) {
+  // on the first connection, add the player to the queue
   socket.on("addToQueue", () => {
     // add the player to the queue and wait for a partner
     queue.push(socket.id);
   });
 
-  //this appears in the terminal
+  socket.on("disconnect", function () {
+    console.log(`player ${socket.id} disconnected`);
+    // if the player was in a game, kick the paired player out to the queue
+    if (inGame[socket.id] !== undefined) {
+      // tell the partner the player left
+      io.sockets.to(inGame[socket.id]).emit("partnerLeft");
+      // move the remaining player to the queue
+      queue.push(inGame[socket.id]);
+      console.log(`adding player ${inGame[socket.id]} to queue`);
+
+      // remove the players' game
+      delete gameState[playerToGame[socket.id]];
+
+      delete playerToGame[socket.id];
+      delete playerToGame[inGame[socket.id]];
+
+      // remove both players from the in-game state
+      delete inGame[inGame[socket.id]];
+      delete inGame[socket.id];
+    }
+  });
+
+  //when I receive a guess, see if it matches the answer and send to the ghost
+  socket.on("guess", (guess) => {
+    // check if the guess was good
+
+    // send the guess to the player's partner
+    io.sockets.to(inGame[socket.id]).emit("explorerGuessed", guess);
+    console.log(`player ${socket.id} guessed "${guess}"`);
+  });
+
   console.log("A user connected");
 
   // // generate a new keycode if it doesnt already exist
@@ -83,19 +137,6 @@ io.on("connection", function (socket) {
   // io.sockets.emit("playerJoined", newPlayer);
 
   // delete the player and let everyone know that they left
-  socket.on("disconnect", function () {
-    console.log(`player ${socket.id} disconnected`);
-  });
-
-  // //when I receive a talk send it to everybody
-  // socket.on("talkExplorer", function (msg) {
-  //   // make sure it came from the explorer
-  //   // console.log("received a chat");
-  //   // if (socket.id === gameState.explorer) {
-  //   io.sockets.emit("playerTalked", { id: socket.id, message: msg.message });
-  //   console.log(`player ${socket.id} said "${msg.message}"`);
-  //   // }
-  // });
 
   // got a disturbance from a ghost
   // socket.on("disturb", function () {
