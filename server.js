@@ -4,22 +4,6 @@ const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 const { v4: uuidv4 } = require("uuid");
 
-const defaultGameState = {
-  currentTask: 0, // which of the three tasks are we working on?
-  currentWord: 0, // which of the three words in that task are we guessing?
-  taskCompletionStatus: [
-    [false, false, false],
-    [false, false, false],
-    [false, false, false],
-  ],
-  taskWords: [
-    ["animal", "wealthy", "landscape"],
-    ["dissection", "biology", "mystery"],
-    ["sharp", "moist", "shiny"],
-  ],
-  role: null, // am I the ghost (0) or explorer (1)?
-};
-
 /* EVENT API DOCUMENTATION
 
 **Callables**: 
@@ -55,7 +39,7 @@ For every guess, will always also emit `explorerGuessedWord` to both players wit
 ```
 
 `moveObject` -> move an object as a ghost. Takes a number and emits the event `explorerGuessedWord`
-with the number to the explorer player. 
+with the number to both of the players. 
 
 **Non-callables**:
 
@@ -67,7 +51,23 @@ be emitted to the remaining player. The remaining player must then manually rejo
 
 */
 
-const queue = [];
+const defaultGameState = {
+  currentTask: 0, // which of the three tasks are we working on?
+  currentWord: 0, // which of the three words in that task are we guessing?
+  taskCompletionStatus: [
+    [false, false, false],
+    [false, false, false],
+    [false, false, false],
+  ],
+  taskWords: [
+    ["animal", "wealthy", "landscape"],
+    ["dissection", "biology", "mystery"],
+    ["sharp", "moist", "shiny"],
+  ],
+  role: null, // am I the ghost (0) or explorer (1)?
+};
+
+let queue = [];
 
 const gameState = {};
 const inGame = {};
@@ -91,6 +91,8 @@ setInterval(() => {
     for (const pair of pairs) {
       if (pair.length === 2) {
         // add the players as a pairing to the game state and give their roles
+
+        console.log(`new game with players ${pair[1].id} and ${pair[0].id}`);
 
         // create an ID for the game
         const gameId = uuidv4();
@@ -128,15 +130,18 @@ setInterval(() => {
 //when a client connects serve the static files in the public directory ie public/index.html
 app.use(express.static("public"));
 
-io.on("connection", function (socket) {
-  console.log("A user connected");
-  // on the first connection, add the player to the queue
+io.on("connection", (socket) => {
+  console.log(`player ${socket.id} connected`);
+
+  // add the player to the queue
   socket.on("addToQueue", () => {
+    console.log(`adding player ${socket.id} to queue`);
     // add the player to the queue and wait for a partner
     queue.push({ id: socket.id, socket: socket });
   });
 
-  socket.on("disconnect", function () {
+  // handle cleanup when the player leaves
+  socket.on("disconnect", () => {
     console.log(`player ${socket.id} disconnected`);
     // if the player was in a game, kick the paired player out to the queue
     if (inGame[socket.id] !== undefined) {
@@ -172,6 +177,8 @@ io.on("connection", function (socket) {
     const targetWord = game.taskWords[game.currentTask][game.currentWord];
 
     const result = { guess: guess, correct: false };
+    // to call after we emit the guessedWord event
+    let nextEmit = () => {};
 
     // check if the guess was good
     if (guess.toLowerCase() === targetWord) {
@@ -181,19 +188,25 @@ io.on("connection", function (socket) {
       if (game.currentWord < 2) {
         // move on to the next word in the task
         game.currentWord += 1;
-        io.sockets
-          .to(playerToGame[socket.id])
-          .emit("nextWord", game.currentWord);
+        nextEmit = () => {
+          io.sockets
+            .to(playerToGame[socket.id])
+            .emit("nextWord", game.currentWord);
+        };
       } else if (game.currentTask < 2) {
         // move on to the next task in the game
         game.currentTask += 1;
         game.currentWord = 0;
-        io.sockets
-          .to(playerToGame[socket.id])
-          .emit("nextTask", game.currentTask);
+        nextEmit = () => {
+          io.sockets
+            .to(playerToGame[socket.id])
+            .emit("nextTask", game.currentTask);
+        };
       } else {
         // the game is complete!
-        io.sockets.to(playerToGame[socket.id]).emit("tasksComplete");
+        nextEmit = () => {
+          io.sockets.to(playerToGame[socket.id]).emit("tasksComplete");
+        };
       }
 
       // mark the word as correct for the players
@@ -202,19 +215,21 @@ io.on("connection", function (socket) {
 
     // send the guess and result to both the explorer and ghost
     io.sockets.to(playerToGame[socket.id]).emit("explorerGuessedWord", result);
+    // call the next emit that says something about  if we've moving to the next task
+    nextEmit();
   });
 
-  // when I receive a movement, send it to the explorer
+  // when I receive a movement, send it to both the players
   // here I'm assuming the ghost client is sending a number that will be used by
   // the explorer client to reference the same object that was clicked
   socket.on("moveObject", (objNumber) => {
     console.log(`player ${socket.id} moved object ${objNumber}`);
-    // send the movement to the ghost's partner
-    io.sockets.to(inGame[socket.id]).emit("ghostMovedObject", objNumber);
+    // send the movement to the players
+    io.sockets.to(playerToGame[socket.id]).emit("ghostMovedObject", objNumber);
   });
 });
 
-//listen to the port 5000
-http.listen(3000, function () {
+//listen to the port 3000
+http.listen(3000, () => {
   console.log("listening on *:3000");
 });
