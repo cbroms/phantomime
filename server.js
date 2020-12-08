@@ -4,9 +4,68 @@ const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 const { v4: uuidv4 } = require("uuid");
 
-const task1 = {
-  word: "tree",
+const defaultGameState = {
+  currentTask: 0, // which of the three tasks are we working on?
+  currentWord: 0, // which of the three words in that task are we guessing?
+  taskCompletionStatus: [
+    [false, false, false],
+    [false, false, false],
+    [false, false, false],
+  ],
+  taskWords: [
+    ["animal", "wealthy", "landscape"],
+    ["dissection", "biology", "mystery"],
+    ["sharp", "moist", "shiny"],
+  ],
+  role: null, // am I the ghost (0) or explorer (1)?
 };
+
+/* EVENT API DOCUMENTATION
+
+**Callables**: 
+
+`addToQueue` -> add the player to the queue. When matched, emits `enteredGame` with the state:
+```js
+{
+  currentTask: 0, // which of the three tasks are we working on?
+    currentWord: 0, // which of the three words in that task are we guessing?
+    taskCompletionStatus: [
+      [false, false, false],
+      [false, false, false],
+      [false, false, false],
+    ],
+    taskWords: [
+      ["animal", "wealthy", "landscape"],
+      ["dissection", "biology", "mystery"],
+      ["sharp", "moist", "shiny"],
+    ],
+    role: null // am I the ghost (0) or explorer (1)?
+}
+```
+
+`guess` -> make a guess as the explorer. Takes a string and compares against the current target
+word. If correct, will emit one of `nextWord` or `nextTask` with the next word or task index. 
+If the guess was correct and it was the last word in the last task, will emit `tasksComplete`.
+For every guess, will always also emit `explorerGuessedWord` to both players with:
+```js
+{ 
+  guess: guess, 
+  correct: false // was the guess right? 
+}
+```
+
+`moveObject` -> move an object as a ghost. Takes a number and emits the event `explorerGuessedWord`
+with the number to the explorer player. 
+
+**Non-callables**:
+
+`connect` -> called on connection to the server. 
+
+`disconnect`-> called on disconnection from the server. If the player was in the queue, they will be 
+removed from the queue. If they were in a game, the game state is destroyed and `partnerLeft` will 
+be emitted to the remaining player. The remaining player must then manually rejoin the queue. 
+
+*/
 
 const queue = [];
 
@@ -37,19 +96,27 @@ setInterval(() => {
         const gameId = uuidv4();
 
         // record the players as being in this game
-        playerToGame[pair[0]] = gameId;
-        playerToGame[pair[1]] = gameId;
+        playerToGame[pair[0].id] = gameId;
+        playerToGame[pair[1].id] = gameId;
 
         // record the pair as being in game
-        inGame[pair[0]] = pair[1];
-        inGame[pair[1]] = pair[0];
+        inGame[pair[0].id] = pair[1].id;
+        inGame[pair[1].id] = pair[0].id;
 
         // initialize the game state
-        gameState[gameId] = {};
+        gameState[gameId] = { ...defaultGameState };
+
+        // add the players to the same game room
+        pair[0].socket.join(gameId);
+        pair[1].socket.join(gameId);
 
         // send the players their roles
-        io.sockets.to(pair[0]).emit("enteredGame", { role: "ghost" });
-        io.sockets.to(pair[1]).emit("enteredGame", { role: "explorer" });
+        io.sockets
+          .to(pair[0].id)
+          .emit("enteredGame", { ...gameState[gameId], role: 0 });
+        io.sockets
+          .to(pair[1].id)
+          .emit("enteredGame", { ...gameState[gameId], role: 1 });
       } else {
         // there is only one possible singleton, so add it to the new queue
         queue.push(pair[0]);
@@ -62,10 +129,11 @@ setInterval(() => {
 app.use(express.static("public"));
 
 io.on("connection", function (socket) {
+  console.log("A user connected");
   // on the first connection, add the player to the queue
   socket.on("addToQueue", () => {
     // add the player to the queue and wait for a partner
-    queue.push(socket.id);
+    queue.push({ id: socket.id, socket: socket });
   });
 
   socket.on("disconnect", function () {
@@ -74,9 +142,6 @@ io.on("connection", function (socket) {
     if (inGame[socket.id] !== undefined) {
       // tell the partner the player left
       io.sockets.to(inGame[socket.id]).emit("partnerLeft");
-      // move the remaining player to the queue
-      queue.push(inGame[socket.id]);
-      console.log(`adding player ${inGame[socket.id]} to queue`);
 
       // remove the players' game
       delete gameState[playerToGame[socket.id]];
@@ -87,108 +152,66 @@ io.on("connection", function (socket) {
       // remove both players from the in-game state
       delete inGame[inGame[socket.id]];
       delete inGame[socket.id];
+    } else {
+      // check if the player was in the queue, and if so remove them
+      const index = queue.map((player) => player.id).indexOf(socket.id);
+      if (index !== -1) {
+        // remove them from the queue
+        queue.splice(index, 1);
+      }
     }
   });
 
-  //when I receive a guess, see if it matches the answer and send to the ghost
+  //when I receive an explorer guess, see if it matches the answer and send to the ghost
   socket.on("guess", (guess) => {
-    // check if the guess was good
-
-    // send the guess to the player's partner
-    io.sockets.to(inGame[socket.id]).emit("explorerGuessed", guess);
     console.log(`player ${socket.id} guessed "${guess}"`);
+
+    // get the current state of the game
+    const game = gameState[playerToGame[socket.id]];
+    // get the word the player should be guessing
+    const targetWord = game.taskWords[game.currentTask][game.currentWord];
+
+    const result = { guess: guess, correct: false };
+
+    // check if the guess was good
+    if (guess.toLowerCase() === targetWord) {
+      // mark the task as complete
+      game.taskCompletionStatus[game.currentTask][game.currentWord] = true;
+      // adjust the game state to move on to the next word
+      if (game.currentWord < 2) {
+        // move on to the next word in the task
+        game.currentWord += 1;
+        io.sockets
+          .to(playerToGame[socket.id])
+          .emit("nextWord", game.currentWord);
+      } else if (game.currentTask < 2) {
+        // move on to the next task in the game
+        game.currentTask += 1;
+        game.currentWord = 0;
+        io.sockets
+          .to(playerToGame[socket.id])
+          .emit("nextTask", game.currentTask);
+      } else {
+        // the game is complete!
+        io.sockets.to(playerToGame[socket.id]).emit("tasksComplete");
+      }
+
+      // mark the word as correct for the players
+      result.correct = true;
+    }
+
+    // send the guess and result to both the explorer and ghost
+    io.sockets.to(playerToGame[socket.id]).emit("explorerGuessedWord", result);
   });
 
-  console.log("A user connected");
-
-  // // generate a new keycode if it doesnt already exist
-  // if (gameState.keyCode === null) {
-  //   gameState.keyCode = generateKeyCode();
-  // }
-
-  // let amExplorer = false;
-
-  // if (gameState.explorer === null) {
-  //   console.log(`player ${socket.id} is explorer`);
-  //   // there is no explorer yet, so make the new player the explorer
-  //   amExplorer = true;
-  //   gameState.explorer = socket.id;
-  // }
-
-  // var newPlayer = {
-  //   id: socket.id,
-  //   amExplorer: amExplorer,
-  // };
-
-  // //save the same information in my game state
-  // gameState.players[socket.id] = newPlayer;
-
-  // //this is sent to the client upon connection
-  // socket.emit("serverMessage", { message: "Hello welcome!" });
-
-  // //send the whole game state to the player that just connected
-  // const playerArr = [];
-  // for (const id in gameState.players) {
-  //   playerArr.push(gameState.players[id]);
-  // }
-  // socket.emit("gameState", { ...gameState, players: playerArr });
-
-  // // let everyone know the new player joined
-  // io.sockets.emit("playerJoined", newPlayer);
-
-  // delete the player and let everyone know that they left
-
-  // got a disturbance from a ghost
-  // socket.on("disturb", function () {
-  //   // send the disturbance to everyone
-  //   io.sockets.emit("playerDisturbed", { id: socket.id });
-  //   console.log(`player ${socket.id} made a disturbance`);
-  // });
-
-  // socket.on("randomNew", function (myObj) {
-  //   console.log("got an abject");
-  // });
-
-  // when I receive a keypress from the explorer
-  // socket.on("keyPress", function (key) {
-  //   // make sure it came from the explorer
-  //   if (socket.id === gameState.explorer) {
-  //     // update the guessed keycode
-  //     gameState.guessedKeyCode += key;
-
-  //     // if the key codes are the same length, see if they got it right
-  //     if (gameState.guessedKeyCode.length === gameState.keyCode.length) {
-  //       if (gameState.guessedKeyCode === gameState.keyCode) {
-  //         // they got it right
-  //         io.sockets.emit("codeResult", { success: true });
-  //         console.log(`players guessed correctly!`);
-  //         // create a new keycode
-  //         gameState.keyCode = generateKeyCode();
-  //         gameState.guessedKeyCode = "";
-
-  //         // resend the state to everyone
-  //         const playerArr = [];
-  //         for (const id in gameState.players) {
-  //           playerArr.push(id);
-  //         }
-  //         io.sockets.emit("gameState", { ...gameState, players: playerArr });
-  //       } else {
-  //         console.log(`players guessed incorrectly`);
-  //         // they failed
-  //         io.sockets.emit("codeResult", { success: false });
-  //         gameState.guessedKeyCode = "";
-  //       }
-  //     } else {
-  //       // send the number to everyone
-  //       io.sockets.emit("keyPressed", {
-  //         key: String(key),
-  //         fullGuess: String(gameState.guessedKeyCode),
-  //       });
-  //     }
-  //   }
-  // });
-
-  console.log(`there are now ${Object.keys(gameState.players).length} players`);
+  // when I receive a movement, send it to the explorer
+  // here I'm assuming the ghost client is sending a number that will be used by
+  // the explorer client to reference the same object that was clicked
+  socket.on("moveObject", (objNumber) => {
+    console.log(`player ${socket.id} moved object ${objNumber}`);
+    // send the movement to the ghost's partner
+    io.sockets.to(inGame[socket.id]).emit("ghostMovedObject", objNumber);
+  });
 });
 
 //listen to the port 5000
