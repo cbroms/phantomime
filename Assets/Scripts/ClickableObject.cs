@@ -22,8 +22,9 @@ public class ClickableObject : MonoBehaviour
 
         //TODO: double check this gets initialized properly
         myObjectIndex = Net.manager.WhichObject(this.gameObject);
+        if (myObjectIndex == -1) return; //not a valid object
 
-        //TODO: create folder called Resources in assets with subfolders "object1", "object2", etc. within each folder, there are 3 sprites, each labelled (0,1,2) based on which task they are
+        //TODO: create folder called Resources in assets with subfolders "object1", "object2", etc. within each folder, add 3 sprites, each labelled (0,1,2) based on which task they are
 
         // Populate our sprite list
         taskSprites = new List<Sprite>();
@@ -32,6 +33,8 @@ public class ClickableObject : MonoBehaviour
         {
             taskSprites.Add((Sprite)loadedSprite[i]);
         }
+        Debug.Log("Object " + myObjectIndex + " Initialized");
+        spriteRenderer.sprite = taskSprites[0];
     }
 
     // Indicate somebody has clicked on the 

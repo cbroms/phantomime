@@ -17,13 +17,13 @@ public class NetManager : MonoBehaviour
 {
 
     //for quick deployment I have different presets for Glitch and Heroku
-    public bool GLITCH = false;
-    public bool HEROKU = false;
-    public bool LOCAL = false;
+    [SerializeField] bool GLITCH = false;
+    [SerializeField] bool HEROKU = false;
+    [SerializeField] bool LOCAL = false;
     //if both are false go with the values in SocketIOController
 
     //the socket or, the pipe connecting this client to the server
-    public SocketIOController socket;
+    [SerializeField] SocketIOController socket;
 
     //a game menu script for character selection and such
     //if not specified connects directly
@@ -36,10 +36,10 @@ public class NetManager : MonoBehaviour
     //reference to my avatar (if any)
 
 
-    //TODO: populate all these gameobjects in the inspector for NetManager!
+    //TODO: populate all these gameobjects in the inspector for Main->NetManager!
     // Keeping track of task information
     private GameState currGameState;
-    private GameObject[] taskObjects;
+    [SerializeField] GameObject[] taskObjects;
     
     // View based on if you're explorer or ghost
     [SerializeField] GameObject ghostMainScreen;
@@ -75,6 +75,9 @@ public class NetManager : MonoBehaviour
         explorerMainScreen.SetActive(false);
         ghostMainScreen.SetActive(false);
         finalScreen.SetActive(false);
+        foreach (GameObject g in taskObjects) {
+            g.SetActive(false);
+        }
 
         socket = GetComponent<SocketIOController>();
         // gameMenu = GetComponent<GameMenu>();
@@ -203,6 +206,11 @@ public class NetManager : MonoBehaviour
 
         // Change the screen to our appropriate screen
         lobbyScreen.SetActive(false);
+        
+        foreach (GameObject g in taskObjects) {
+            g.SetActive(true);
+        }
+
         if (amExplorer) {
             explorerMainScreen.SetActive(true);
         } else {
@@ -215,6 +223,9 @@ public class NetManager : MonoBehaviour
         // manually by refreshing.
         ghostMainScreen.SetActive(false);
         explorerMainScreen.SetActive(false);
+        foreach (GameObject g in taskObjects) {
+            g.SetActive(false);
+        }
         disconnectScreen.SetActive(true);
     }
 
@@ -265,7 +276,7 @@ public class NetManager : MonoBehaviour
     }
 
     public void OnTasksComplete(SocketIOEvent e) {
-        //TODO: do something in the game beyond just this
+        //TODO: do something in the game beyond just this??
 
         // Update game state
         currGameState.taskCompletionStatus[currGameState.currentTask][currGameState.currentWord] = true;
@@ -273,6 +284,9 @@ public class NetManager : MonoBehaviour
         // Change screens to the final screen
         explorerMainScreen.SetActive(false);
         ghostMainScreen.SetActive(false);
+        foreach (GameObject g in taskObjects) {
+            g.SetActive(false);
+        }
         finalScreen.SetActive(true);
         Debug.Log("all tasks complete");
     }
@@ -291,6 +305,13 @@ public class NetManager : MonoBehaviour
     
     public void EmitGuess(string guess) {
         socket.Emit("guess", guess);
+    }
+
+    //TODO: have button on startScreen call this function
+    public void EmitJoinQueue() {
+        socket.Emit("addToQueue");
+        startScreen.SetActive(false);
+        lobbyScreen.SetActive(true);
     }
 
     public void EmitMoveObject(int objectMoved) {
