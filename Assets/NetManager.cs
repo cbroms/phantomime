@@ -29,33 +29,52 @@ public class NetManager : MonoBehaviour
     //if not specified connects directly
     // public GameMenu gameMenu;
 
-    //names of prefabs in the resource folder (optional)
-    public string MyAvatarPrefabName ="";
-    public string OtherAvatarPrefabName = "";
+    // //names of prefabs in the resource folder (optional)
+    // public string MyAvatarPrefabName ="";
+    // public string OtherAvatarPrefabName = "";
     
     //reference to my avatar (if any)
-    public GameObject explorerAvatar;
-    public GameObject ghostAvatar;
-    public Sprite[] sprites;
-    public bool amExplorer;
-    private GameObject myAvatar;
-    public GameObject serverMessages;
-    private bool initializedView = false;
+
+
+    //TODO: populate all these gameobjects in the inspector for NetManager!
+    // Keeping track of task information
+    private GameState currGameState;
+    private GameObject[] taskObjects;
     
-    public Vector3 spawnPoint = new Vector3(11.19f, 0, 29.6f);
-    public float spawnRadius = 2;
+    // View based on if you're explorer or ghost
+    [SerializeField] GameObject ghostMainScreen;
+    [SerializeField]  GameObject explorerMainScreen;
 
-    /************
-    server: sends playerTalked, playerDistrubed, and keyPressed
-    sends codeResult with correct/not
+    // View based on if you're still connecting, in lobby, starting game, or disconnected
+    [SerializeField]  GameObject connectingScreen;
+    [SerializeField]  GameObject startScreen;
+    [SerializeField]  GameObject lobbyScreen; // waiting for match
+    [SerializeField]  GameObject disconnectScreen;
+    [SerializeField]  GameObject finalScreen;
 
-    expect 3 events: talk-string msg, disturb-empty for explorer/ghost, keyPress-string key for explorer
-    *************/
+    // Information based on if you're explorer
+    public bool amExplorer;
+
+    // Extra
+    // public GameObject serverMessages;
+
+    // private bool initializedView = false;
+    
+    // public Vector3 spawnPoint = new Vector3(11.19f, 0, 29.6f);
+    // public float spawnRadius = 2;
 
     
     void Start()
 	{
         Application.targetFrameRate = 60;
+
+        connectingScreen.SetActive(true);
+        startScreen.SetActive(false);
+        lobbyScreen.SetActive(false);
+        disconnectScreen.SetActive(false);
+        explorerMainScreen.SetActive(false);
+        ghostMainScreen.SetActive(false);
+        finalScreen.SetActive(false);
 
         socket = GetComponent<SocketIOController>();
         // gameMenu = GetComponent<GameMenu>();
@@ -83,13 +102,19 @@ public class NetManager : MonoBehaviour
 
         Net.connected = false;
 
-        socket.On("gameState", OnGameState);
-        socket.On("playerJoined", OnPlayerJoined);
-        socket.On("playerTalked", OnPlayerTalked);
-        socket.On("playerDisturbed", OnPlayerDisturbed);
-        socket.On("keyPressed", OnKeyPressed);
-        socket.On("codeResult", OnCodeResult);
-        socket.On("serverMessage", OnServerMessage);
+        // server emits: nextWord, nextTask, tasksComplete, explorerGuessedWord, ghostMovedObject, enteredGame, partnerLeft, 
+
+        // we emit: addToQueue, guess, moveObject
+
+        socket.On("connect", OnConnected);
+        socket.On("enteredGame", OnGameEntered);
+        socket.On("partnerLeft", OnPartnerLeft);
+        socket.On("ghostMovedObject", OnGhostMoved);
+        socket.On("explorerGuessedWord", OnExplorerGuessedWord);
+        socket.On("nextWord", OnNextWord);
+        socket.On("nextTask", OnNextTask);
+        socket.On("tasksComplete", OnTasksComplete);
+        // socket.On("serverMessage", OnServerMessage);
         
         /* //OLD Listeners connecting socket events from the server and the functions below
         socket.On("socketConnect", OnSocketConnect);
@@ -137,15 +162,15 @@ public class NetManager : MonoBehaviour
 
         // Don't use these
         //initialize players
-        Net.players = new Dictionary<string, Player>();
-        //initialize net objects
-        Net.objects = new Dictionary<string, NetObject>();
+        // Net.players = new Dictionary<string, Player>();
+        // //initialize net objects
+        // Net.objects = new Dictionary<string, NetObject>();
         
         //make a global reference to this script
         if (Net.manager == null) Net.manager = this;        
         
 
-        ServerMessage("Connecting to server...");
+        Debug.Log("Connecting to server...");
 
         Invoke("Timeout", 10);
 
@@ -155,798 +180,786 @@ public class NetManager : MonoBehaviour
     {
         if (!Net.connected)
         {
-            ServerMessage("Unable to connect");
+            Debug.Log("Unable to connect");
         }
     }
 
 
+    /*****************************************
+        Functions for handling server messages
+    ******************************************/
 
+    // We have connected to server
+    public void OnConnected(SocketIOEvent e) {
+        this.connectingScreen.SetActive(false);
+        this.startScreen.SetActive(true);
+    }
 
-    public void OnGameState(SocketIOEvent e) {
+    public void OnGameEntered(SocketIOEvent e) {
+        // Update our data
         GameState data = JsonUtility.FromJson<GameState>(e.data.ToString());
+        currGameState = data;
+        amExplorer = data.role == 0 ? false : true;
 
-        if (initializedView) return;
-        initializedView = true;
-        int i = 1;
-        foreach (NewPlayer player in data.players) {
-            if (player.id == socket.SocketID) continue;
-            i++;
-            //Render them
-            ServerMessage("player " + player.id + "joined, isExplorer=" + player.amExplorer);
-            GameObject g = player.amExplorer ? Instantiate(explorerAvatar, transform.position + new Vector3(i, 0, 0), Quaternion.identity) : Instantiate(ghostAvatar, transform.position + new Vector3(i*5, 0, 0), Quaternion.identity);
-            // string currID = entry.Split("");
-            // NewPlayer currPlayer = entry.Value;
-        }
-    }
-
-
-    public void OnPlayerJoined(SocketIOEvent e) {
-        NewPlayer data = JsonUtility.FromJson<NewPlayer>(e.data.ToString());
-
-        ServerMessage(data.id + " joined and isExplorer=" + data.amExplorer);
-
-        //is it me?
-        if (data.id == socket.SocketID)
-        {
-                Net.connected = true;
-                Net.playing = true;
-                
-                //do I have to create an avatar?
-                Net.myId = socket.SocketID;
-                ChatScript.chatScript.SetID(socket.SocketID);
-                amExplorer = data.amExplorer;
-                if (data.amExplorer == true) {
-                    myAvatar = Instantiate(explorerAvatar);
-                } else {
-                    myAvatar = Instantiate(ghostAvatar);
-                }
-
-                // Set camera follow true for me
-                myAvatar.GetComponent<CameraFollow>().enabled = true;
-        } else if (initializedView) {
-            if (data.amExplorer) Instantiate(explorerAvatar, transform.position + new Vector3(-15, 0, 0), Quaternion.identity);
-            else Instantiate(ghostAvatar, transform.position + new Vector3(-15, 0, 0), Quaternion.identity);
-        }
-    }
-
-    public void OnPlayerTalked(SocketIOEvent e) {
-        TalkedData data = JsonUtility.FromJson<TalkedData>(e.data.ToString());
-
-        // render based on if you're player or ghost
-        // if (data.id != socket.SocketID) {
-            ChatScript.chatScript.SendMessageToChat(data.id + ":" + data.message, Message.MessageType.playerMessage, true);
-        // }
-        // ServerMessage(data.id + " says " + data.message);
-    }
-
-    public void OnPlayerDisturbed(SocketIOEvent e) {
-        DisturbedData data = JsonUtility.FromJson<DisturbedData>(e.data.ToString());
-
-        ServerMessage(data.id + " sent a disturbance");
-        //TODO: render something
-
-    }
-
-    public void OnKeyPressed(SocketIOEvent e) {
-        KeyPressData data = JsonUtility.FromJson<KeyPressData>(e.data.ToString());
-
-        //TODO: render something?
-        ServerMessage("pressed key " + data.key + ", fullGuess=" + data.fullGuess);
-
-    }
-
-    public void OnCodeResult(SocketIOEvent e) {
-        CodeResultData data = JsonUtility.FromJson<CodeResultData>(e.data.ToString());
-
-        //TODO: render something
-        if (data.success == true) {
-            ServerMessage("You guessed the right code!");
+        // Change the screen to our appropriate screen
+        lobbyScreen.SetActive(false);
+        if (amExplorer) {
+            explorerMainScreen.SetActive(true);
         } else {
-            ServerMessage("You guessed incorrectly.");
+            ghostMainScreen.SetActive(true);
+        }
+    }
+
+    public void OnPartnerLeft(SocketIOEvent e) {
+        // Tell player the other person disconnected and they have to reconnect
+        // manually by refreshing.
+        ghostMainScreen.SetActive(false);
+        explorerMainScreen.SetActive(false);
+        disconnectScreen.SetActive(true);
+    }
+
+    public void OnGhostMoved(SocketIOEvent e) {
+        MovedObject objMoved = JsonUtility.FromJson<MovedObject>(e.data.ToString());
+
+        // display animation for said object
+        taskObjects[objMoved.objectMoved].GetComponent<ClickableObject>().OnMoved();
+    }
+
+    public void OnExplorerGuessedWord(SocketIOEvent e) {
+        ExplorerGuess explorerGuess = JsonUtility.FromJson<ExplorerGuess>(e.data.ToString());
+
+        // Display the text in the chat for both ghost and explorer
+        ChatScript.chatScript.SendMessageToChat(explorerGuess.guess, Message.MessageType.playerMessage);
+
+        // Display if it was correct or not
+        ChatScript.chatScript.SendMessageToChat(explorerGuess.correct + "", Message.MessageType.result);
+    }
+
+    public void OnNextWord(SocketIOEvent e) {
+        int nextWord = JsonUtility.FromJson<int>(e.data.ToString());
+
+        // We update our local game state with the next word
+        currGameState.taskCompletionStatus[currGameState.currentTask][currGameState.currentWord] = true;
+        currGameState.currentWord = nextWord;
+
+        // TODO: do something on the screen to indicate we are switching words
+        // and trigger that here
+    }
+
+    public void OnNextTask(SocketIOEvent e) {
+        int nextTask = JsonUtility.FromJson<int>(e.data.ToString());
+
+        // We update our local game state with the next word
+        currGameState.taskCompletionStatus[currGameState.currentTask][currGameState.currentWord] = true;
+        currGameState.currentWord = 0;
+        currGameState.currentTask = nextTask;
+
+        // Switch out the sprites for each task object
+        foreach (GameObject g in taskObjects) {
+            g.GetComponent<ClickableObject>().ChangeSprite(currGameState.currentTask);
         }
 
+        // TODO: do something on the screen to indicate we are switching tasks
+        // and trigger that here
+
     }
 
-    public void OnServerMessage(SocketIOEvent e) {
-        StringData data = JsonUtility.FromJson<StringData>(e.data.ToString());
-        ServerMessage(data.message);
+    public void OnTasksComplete(SocketIOEvent e) {
+        //TODO: do something in the game beyond just this
+
+        // Update game state
+        currGameState.taskCompletionStatus[currGameState.currentTask][currGameState.currentWord] = true;
+
+        // Change screens to the final screen
+        explorerMainScreen.SetActive(false);
+        ghostMainScreen.SetActive(false);
+        finalScreen.SetActive(true);
+        Debug.Log("all tasks complete");
     }
 
-    //TODO: call from keypad object
-    public void SendKeyPress(string key) {
-        if (amExplorer) socket.Emit("keyPress", key);
-        else ServerMessage("Ghosts cannot press keys");
+    // public void OnServerMessage(SocketIOEvent e) {
+    //     string data = JsonUtility.FromJson<string>(e.data.ToString());
+    //     // ServerMessage(data.message);
+    //     Debug.Log("Server message: " + data.message);
+    // }
+
+
+
+    /**************************************
+        Functions for emitting messages
+    ***************************************/
+    
+    public void EmitGuess(string guess) {
+        socket.Emit("guess", guess);
     }
 
-    //TODO: call from player chat
-    public void SendPlayerTalk(string key) {
-        socket.Emit("talkExplorer", JsonUtility.ToJson(new WillTalkData(key)));
+    public void EmitMoveObject(int objectMoved) {
+        MovedObject mObject = new MovedObject();
+        mObject.objectMoved = objectMoved;
+        socket.Emit("moveObject", JsonUtility.ToJson(mObject));
     }
 
-    //TODO: call from ghost button?
-    public void SendPlayerDisturb() {
-        socket.Emit("disturb");
+
+
+    // Helper function to determine which task object is clicked
+    public int WhichObject(GameObject g) {
+        for (int i = 0; i < taskObjects.Length; i++) {
+            if (g == taskObjects[i]) return i;
+        }
+        return -1;
     }
 
+
+    // Object classes
 
     [Serializable]
     public class GameState
     {
-        //dictionary from socket id to new players
-        public List<NewPlayer> players;
-        public string explorer; //socket ID of the explorer
-        public string keyCode;
-        public string guessedKeyCode;
+        public int currentTask;
+        public int currentWord;
+        public bool[][] taskCompletionStatus;
+        public string[][] taskWords;
+        public int role; // 0 ghost, 1 explorer
     }
 
     [Serializable]
-    public class NewPlayer
+    public class MovedObject
     {
-        public string id;
-        public bool amExplorer;
+        public int objectMoved;
     }
-
+    
     [Serializable]
-    public class TalkedData
+    public class ExplorerGuess
     {
-        public string id;
-        public string message;
+        public string guess;
+        public bool correct;
     }
 
-    [Serializable]
-    public class DisturbedData
-    {
-        public string id;
-    }
-
-    [Serializable]
-    public class KeyPressData
-    {
-        public string key;
-        public string fullGuess;
-    }
-
-    [Serializable]
-    public class CodeResultData
-    {
-        public bool success;
-    }
-
-    [Serializable]
-    public class StringData
-    {
-        public string message;
-    }
-
-    [Serializable]
-    public class WillTalkData
-    {
-        public string message;
-
-        public WillTalkData(string a) {
-            message = a;
-        }
-    }
+}
 
 
 
- /********************************************************************/
+
+
+ /**********************************
+    PAOLO'S OLD STUFF
+ ***********************************/
     //server responded with connection success
-    public void OnSocketConnect(SocketIOEvent e)
-    {
-        IntData data = JsonUtility.FromJson<IntData>(e.data.ToString());
+//     public void OnSocketConnect(SocketIOEvent e)
+//     {
+//         IntData data = JsonUtility.FromJson<IntData>(e.data.ToString());
 
-        //special case: the server restarted, restart client
-        if (Net.connected)
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            ServerMessage("SERVER RESTARTED...");
-            print("Attention: attempt to reconnect after the server went down, reloading the scene.");
-            return;
-        }
-        else
-        {
-            ServerMessage("Connected. Players online: " + data.num);
+//         //special case: the server restarted, restart client
+//         if (Net.connected)
+//         {
+//             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+//             ServerMessage("SERVER RESTARTED...");
+//             print("Attention: attempt to reconnect after the server went down, reloading the scene.");
+//             return;
+//         }
+//         else
+//         {
+//             ServerMessage("Connected. Players online: " + data.num);
 
-            //if no game menu generate random nickname and send the data
-            // if (gameMenu == null)
-            // {
-            //     AvatarData d = new AvatarData();
-            //     d.nickName = "user"+UnityEngine.Random.Range(0, 10000);
-            //     SendAvatarData(d);
-            // }
+//             //if no game menu generate random nickname and send the data
+//             // if (gameMenu == null)
+//             // {
+//             //     AvatarData d = new AvatarData();
+//             //     d.nickName = "user"+UnityEngine.Random.Range(0, 10000);
+//             //     SendAvatarData(d);
+//             // }
 
-            Net.connected = true;
-        }
-    }
+//             Net.connected = true;
+//         }
+//     }
 
-    //send data for validation
-    public void SendAvatarData(AvatarData aData)
-    {
-        if(socket != null)
-           socket.Emit("avatarData", JsonUtility.ToJson(aData));
-    }
+//     //send data for validation
+//     public void SendAvatarData(AvatarData aData)
+//     {
+//         if(socket != null)
+//            socket.Emit("avatarData", JsonUtility.ToJson(aData));
+//     }
 
 
-    public void OnNameError(SocketIOEvent e)
-    {
-        IntData data = JsonUtility.FromJson<IntData>(e.data.ToString());
+//     public void OnNameError(SocketIOEvent e)
+//     {
+//         IntData data = JsonUtility.FromJson<IntData>(e.data.ToString());
 
-        if(data.num == 4)
-            ServerMessage("Invalid admin password");
-        if (data.num == 5)
-            ServerMessage("You can't have a blank name");
-        if (data.num == 0)
-            ServerMessage("Sorry, the name is reserved or already in use");
-        if (data.num == 3)
-            ServerMessage("Sorry, only Western Latin character allowed");
+//         if(data.num == 4)
+//             ServerMessage("Invalid admin password");
+//         if (data.num == 5)
+//             ServerMessage("You can't have a blank name");
+//         if (data.num == 0)
+//             ServerMessage("Sorry, the name is reserved or already in use");
+//         if (data.num == 3)
+//             ServerMessage("Sorry, only Western Latin character allowed");
 
-    }
+//     }
 
-    //somebody joined (including me)
-    public void OnPlayerJoin(SocketIOEvent e)
-    {
-        //read the data (just the id)
-        AvatarData data = JsonUtility.FromJson<AvatarData>(e.data.ToString());
-        Debug.Log("[SocketIO] Player Connected: " + data.id + " " + data.nickName);
+//     //somebody joined (including me)
+//     public void OnPlayerJoin(SocketIOEvent e)
+//     {
+//         //read the data (just the id)
+//         AvatarData data = JsonUtility.FromJson<AvatarData>(e.data.ToString());
+//         Debug.Log("[SocketIO] Player Connected: " + data.id + " " + data.nickName);
 
-        //add a player object to my dictionary
-        Player p = new Player();
-        p.id = data.id;
-        p.nickName = data.nickName;
-        p.DNA = data.DNA;
+//         //add a player object to my dictionary
+//         Player p = new Player();
+//         p.id = data.id;
+//         p.nickName = data.nickName;
+//         p.DNA = data.DNA;
 
-        //is it me?
-        if (data.id == socket.SocketID)
-        {
+//         //is it me?
+//         if (data.id == socket.SocketID)
+//         {
 
-            //close the menu, change the camera
-            // if(gameMenu != null)
-            // {
-            //     gameMenu.CloseMenu();
-            // }
+//             //close the menu, change the camera
+//             // if(gameMenu != null)
+//             // {
+//             //     gameMenu.CloseMenu();
+//             // }
 
-            if (MyAvatarPrefabName != "")
-            {
-                print("I officially join the game as " + data.nickName);
+//             if (MyAvatarPrefabName != "")
+//             {
+//                 print("I officially join the game as " + data.nickName);
                 
-                Net.playing = true;
+//                 Net.playing = true;
                 
-                //do I have to create an avatar?
-                Net.myId = socket.SocketID;
+//                 //do I have to create an avatar?
+//                 Net.myId = socket.SocketID;
 
-                //just in case
-                if (myAvatar != null)
-                    Destroy(myAvatar);
+//                 //just in case
+//                 if (myAvatar != null)
+//                     Destroy(myAvatar);
 
-                //instantiate on the scene
-                myAvatar = Instantiate(Resources.Load(MyAvatarPrefabName) as GameObject);
-                myAvatar.name = socket.SocketID;
-
-
-                //fetch or add the netcomponent object
-                NetObject netObj = myAvatar.GetComponent<NetObject>();
-
-                if (netObj == null)
-                    netObj = myAvatar.AddComponent<NetObject>();
-
-                Net.objects[socket.SocketID] = netObj;
-                netObj.owner = socket.SocketID;
-                netObj.type = Net.TEMPORARY;
-                netObj.prefabName = MyAvatarPrefabName;
-
-                //other client should instantiate a different avatar without controls
-                //and camera but if it's not provided that's fine too
-                if (OtherAvatarPrefabName == "")
-                    OtherAvatarPrefabName = MyAvatarPrefabName;
-
-                //tell the server to tell the other clients to make a puppet avatar
-                InstantiationData iData = new InstantiationData();
-                iData.prefabName = OtherAvatarPrefabName;
-                iData.uniqueId = socket.SocketID;
-                iData.type = Net.TEMPORARY;
-
-                //instantiate all avatars around 0,0 by default
-                //this is game logic and can be changed here on the server or on the netObject upon instantiation 
-                Vector2 spawnRange = UnityEngine.Random.insideUnitCircle * spawnRadius;
-                myAvatar.transform.position = iData.position = new Vector3(spawnPoint.x + spawnRange.x, spawnPoint.y, spawnPoint.z + spawnRange.y);
-                myAvatar.transform.localScale = iData.localScale = Vector3.one;
-                myAvatar.transform.rotation = iData.rotation = Quaternion.identity;
-
-                print("Instantiation " + myAvatar.transform.position);
-                socket.Emit("instantiateAvatar", JsonUtility.ToJson(iData));
-
-            }//end avatar creation
-
-            //find all the static netObjects - they are the ones in the Unity scene with a netObject attached
-            //their uniqueId is their gameObject name 
-            NetObject[] sceneObjects = FindObjectsOfType(typeof(NetObject)) as NetObject[];
-
-            foreach (NetObject item in sceneObjects)
-            {
-                if (item.owner == "")
-                {
-                    Debug.Log(item.gameObject.name + " is a netObject without an owner in the scene, make sure the server knows about it");
-
-                    //if the object is orphan assign ownership to me and make sure the server knows about it
-                    //this should happen only to the first user logging after the server starts
-                    InstantiationData iData = new InstantiationData();
-                    iData.prefabName = item.gameObject.name;
-                    iData.uniqueId = item.gameObject.name;
-                    iData.position = item.transform.position;
-                    iData.localScale = item.transform.localScale;
-                    iData.rotation = item.transform.rotation;
-                    iData.netVariables = item.netVariables;
-                    iData.type = Net.PERSISTENT;
-                    //item.OnVariableInit();
-                    //if the server knows about it there will be no followup
-                    socket.Emit("registerObject", JsonUtility.ToJson(iData));
-
-                }
-            }
+//                 //instantiate on the scene
+//                 myAvatar = Instantiate(Resources.Load(MyAvatarPrefabName) as GameObject);
+//                 myAvatar.name = socket.SocketID;
 
 
-        }//is it me?
+//                 //fetch or add the netcomponent object
+//                 NetObject netObj = myAvatar.GetComponent<NetObject>();
 
-        //add the player object to the players dictionary
-        Net.players[p.id] = p;
+//                 if (netObj == null)
+//                     netObj = myAvatar.AddComponent<NetObject>();
 
-    }
+//                 Net.objects[socket.SocketID] = netObj;
+//                 netObj.owner = socket.SocketID;
+//                 netObj.type = Net.TEMPORARY;
+//                 netObj.prefabName = MyAvatarPrefabName;
+
+//                 //other client should instantiate a different avatar without controls
+//                 //and camera but if it's not provided that's fine too
+//                 if (OtherAvatarPrefabName == "")
+//                     OtherAvatarPrefabName = MyAvatarPrefabName;
+
+//                 //tell the server to tell the other clients to make a puppet avatar
+//                 InstantiationData iData = new InstantiationData();
+//                 iData.prefabName = OtherAvatarPrefabName;
+//                 iData.uniqueId = socket.SocketID;
+//                 iData.type = Net.TEMPORARY;
+
+//                 //instantiate all avatars around 0,0 by default
+//                 //this is game logic and can be changed here on the server or on the netObject upon instantiation 
+//                 Vector2 spawnRange = UnityEngine.Random.insideUnitCircle * spawnRadius;
+//                 myAvatar.transform.position = iData.position = new Vector3(spawnPoint.x + spawnRange.x, spawnPoint.y, spawnPoint.z + spawnRange.y);
+//                 myAvatar.transform.localScale = iData.localScale = Vector3.one;
+//                 myAvatar.transform.rotation = iData.rotation = Quaternion.identity;
+
+//                 print("Instantiation " + myAvatar.transform.position);
+//                 socket.Emit("instantiateAvatar", JsonUtility.ToJson(iData));
+
+//             }//end avatar creation
+
+//             //find all the static netObjects - they are the ones in the Unity scene with a netObject attached
+//             //their uniqueId is their gameObject name 
+//             NetObject[] sceneObjects = FindObjectsOfType(typeof(NetObject)) as NetObject[];
+
+//             foreach (NetObject item in sceneObjects)
+//             {
+//                 if (item.owner == "")
+//                 {
+//                     Debug.Log(item.gameObject.name + " is a netObject without an owner in the scene, make sure the server knows about it");
+
+//                     //if the object is orphan assign ownership to me and make sure the server knows about it
+//                     //this should happen only to the first user logging after the server starts
+//                     InstantiationData iData = new InstantiationData();
+//                     iData.prefabName = item.gameObject.name;
+//                     iData.uniqueId = item.gameObject.name;
+//                     iData.position = item.transform.position;
+//                     iData.localScale = item.transform.localScale;
+//                     iData.rotation = item.transform.rotation;
+//                     iData.netVariables = item.netVariables;
+//                     iData.type = Net.PERSISTENT;
+//                     //item.OnVariableInit();
+//                     //if the server knows about it there will be no followup
+//                     socket.Emit("registerObject", JsonUtility.ToJson(iData));
+
+//                 }
+//             }
+
+
+//         }//is it me?
+
+//         //add the player object to the players dictionary
+//         Net.players[p.id] = p;
+
+//     }
     
-	public void Update() { }
-    
-
-    public void OnAddPlayerData(SocketIOEvent e)
-    {
-        //read the data (just the id)
-        AvatarData data = JsonUtility.FromJson<AvatarData>(e.data.ToString());
-        
-        //add a player object to my dictionary
-        Player p = new Player();
-        p.id = data.id;
-        p.nickName = data.nickName;
-        p.DNA = data.DNA;
-
-        
-
-        //add the player object to the players dictionary
-        Net.players[p.id] = p;
-    }
-
-    
+// 	public void Update() { }
     
 
-    //Instantiation for networked objects
-    public void NetInstantiate(string prefabName, int type, Vector3 position, Quaternion rotation, Vector3 localScale)
-    {
-        //tell the server to tell the other clients to do the same
-        InstantiationData data = new InstantiationData();
-        data.prefabName = prefabName;
-        data.position = position;
-        data.localScale = localScale;
-        data.rotation = rotation;
-        data.type = type;
+//     public void OnAddPlayerData(SocketIOEvent e)
+//     {
+//         //read the data (just the id)
+//         AvatarData data = JsonUtility.FromJson<AvatarData>(e.data.ToString());
+        
+//         //add a player object to my dictionary
+//         Player p = new Player();
+//         p.id = data.id;
+//         p.nickName = data.nickName;
+//         p.DNA = data.DNA;
 
         
-        socket.Emit("instantiate", JsonUtility.ToJson(data));
-    }
 
-    //from the server: a networked game object has been instantiated
-    public void OnNetInstantiate(SocketIOEvent e)
-    {   
-        //this is the data coming from the server as JSON, it needs to be parses into
-        //usable variables according to a serializable class defined at the bottom of this script
-        InstantiationData data = JsonUtility.FromJson<InstantiationData>(e.data.ToString());
+//         //add the player object to the players dictionary
+//         Net.players[p.id] = p;
+//     }
 
-        //print("Net instantiate " + data.uniqueId+" "+ data.position);
-
-        //see if there is already an object with that id
-        GameObject o = GameObject.Find(data.uniqueId);
-        
-        //if not instantiate on the scene
-        if(o == null)
-           o = Instantiate(Resources.Load(data.prefabName) as GameObject);
-
-        
-        o.transform.position = data.position;
-        o.transform.localScale = data.localScale;
-        o.transform.rotation = data.rotation;
-        o.name = data.uniqueId;
-        
-
-        //fetch or add the netcomponent object
-        NetObject netObj = o.GetComponent<NetObject>();
-
-        if (netObj == null)
-        {
-            netObj = o.AddComponent<NetObject>();
-        }
-
-        netObj.type = data.type;
-        netObj.owner = data.owner;
-        netObj.prefabName = data.prefabName;
-        
-        Net.objects[data.uniqueId] = netObj;
-
-       netObj.OnVariableInit();
-    }
-
-    //destroy a net object
-    public void NetDestroy(string uniqueId)
-    {
-        IdData data = new IdData();
-        data.id = uniqueId;
-        socket.Emit("destroy", JsonUtility.ToJson(data));
-    }
+    
     
 
-    public void OnNetDestroy(SocketIOEvent e)
-       {
-        IdData data = JsonUtility.FromJson<IdData>(e.data.ToString());
+//     //Instantiation for networked objects
+//     public void NetInstantiate(string prefabName, int type, Vector3 position, Quaternion rotation, Vector3 localScale)
+//     {
+//         //tell the server to tell the other clients to do the same
+//         InstantiationData data = new InstantiationData();
+//         data.prefabName = prefabName;
+//         data.position = position;
+//         data.localScale = localScale;
+//         data.rotation = rotation;
+//         data.type = type;
+
         
-        if (Net.objects.ContainsKey(data.id))
-        {
+//         socket.Emit("instantiate", JsonUtility.ToJson(data));
+//     }
 
+//     //from the server: a networked game object has been instantiated
+//     public void OnNetInstantiate(SocketIOEvent e)
+//     {   
+//         //this is the data coming from the server as JSON, it needs to be parses into
+//         //usable variables according to a serializable class defined at the bottom of this script
+//         InstantiationData data = JsonUtility.FromJson<InstantiationData>(e.data.ToString());
 
-            //destroy the object on stage
-            if (Net.objects[data.id] != null)
-            {
-                //is it an avatar thingy
-                if (Net.objects[data.id].prefabName == "OtherAvatarPrefab") {
-                    //do something when another avatar disconnects
-                }
+//         //print("Net instantiate " + data.uniqueId+" "+ data.position);
 
-                Destroy(Net.objects[data.id].gameObject);
-            }
-            //remove the object reference
-            Net.objects.Remove(data.id);
-        }
-        else
-        {
-            print("Warning OnNetDestroy: I can't find a netobject named "+data.id);
-        }
-    }
-
-    //request ownership
-    public void RequestOwnership(string uniqueId)
-    {
-        OwnershipData data = new OwnershipData();
-        data.uniqueId = uniqueId;
-        data.owner = Net.myId;
-        socket.Emit("requestOwnership", JsonUtility.ToJson(data));
-    }
-
-
-    public void OnChangeOwner(SocketIOEvent e)
-    {
-        OwnershipData data = JsonUtility.FromJson<OwnershipData>(e.data.ToString());
+//         //see if there is already an object with that id
+//         GameObject o = GameObject.Find(data.uniqueId);
         
-        if (Net.objects.ContainsKey(data.uniqueId))
-        {
-            Net.objects[data.uniqueId].owner = data.owner;
-        }
-        else
-        {
-            print("Warning OnChangeOwner: I can't find a netobject named " + data.uniqueId);
-        }
-    }
+//         //if not instantiate on the scene
+//         if(o == null)
+//            o = Instantiate(Resources.Load(data.prefabName) as GameObject);
 
-    //request a change of type
-    public void ChangeType(string uniqueId, int type)
-    {
-        TypeData data = new TypeData();
-        data.uniqueId = uniqueId;
-        data.type = type;
-        socket.Emit("changeType", JsonUtility.ToJson(data));
-    }
-
-
-    public void OnChangeType(SocketIOEvent e)
-    {
-        TypeData data = JsonUtility.FromJson<TypeData>(e.data.ToString());
-
-        if (Net.objects.ContainsKey(data.uniqueId))
-        {
-            Net.objects[data.uniqueId].type = data.type;
-        }
-        else
-        {
-            print("Warning OnChangeType: I can't find a netobject named " + data.uniqueId);
-        }
-    }
-
-    public void OnSetAuthority(SocketIOEvent e)
-    {
-        IdData data = JsonUtility.FromJson<IdData>(e.data.ToString());
-        Debug.Log("Authority is set to: " + data.id);
-        Net.authorityId = data.id;
-
-        Net.authority = (data.id == Net.myId && data.id != "");
         
-        if (Net.authority)
-            print("I AM THE AUTHORITY!");
-     }
+//         o.transform.position = data.position;
+//         o.transform.localScale = data.localScale;
+//         o.transform.rotation = data.rotation;
+//         o.name = data.uniqueId;
+        
 
-    public void UpdateTransform(GameObject o)
-    {
-        //tell the server to tell the other clients to do the same
-        TransformData data = new TransformData();
-        data.uniqueId = o.name;
-        data.position = o.transform.position;
-        data.rotation = o.transform.rotation;
-        data.localScale = o.transform.localScale;
-        
-        socket.Emit("updateTransform", JsonUtility.ToJson(data));
-    }
+//         //fetch or add the netcomponent object
+//         NetObject netObj = o.GetComponent<NetObject>();
 
-    //from the server: a transform on a netObject has changed
-    public void OnUpdateTransform(SocketIOEvent e)
-    {
-        TransformData data = JsonUtility.FromJson<TransformData>(e.data.ToString());
+//         if (netObj == null)
+//         {
+//             netObj = o.AddComponent<NetObject>();
+//         }
+
+//         netObj.type = data.type;
+//         netObj.owner = data.owner;
+//         netObj.prefabName = data.prefabName;
         
-        //is there a networked object with that id?
-        if (Net.objects.ContainsKey(data.uniqueId))
-        {
-            Net.objects[data.uniqueId].targetPosition = data.position;
-            Net.objects[data.uniqueId].targetRotation = data.rotation;
-            Net.objects[data.uniqueId].targetLocalScale = data.localScale;
-        }
-        else
-        {
-            print("Warning: no networked object named " + data.uniqueId);
-        }
-        
-    }
+//         Net.objects[data.uniqueId] = netObj;
+
+//        netObj.OnVariableInit();
+//     }
+
+//     //destroy a net object
+//     public void NetDestroy(string uniqueId)
+//     {
+//         IdData data = new IdData();
+//         data.id = uniqueId;
+//         socket.Emit("destroy", JsonUtility.ToJson(data));
+//     }
     
-    //from the server: a player disconnected
-    public void OnPlayerDisconnect(SocketIOEvent e)
-    {
-        IdData data = JsonUtility.FromJson<IdData>(e.data.ToString());
-        Debug.Log("[SocketIO] Player Disconnected: " + data.id);
+
+//     public void OnNetDestroy(SocketIOEvent e)
+//        {
+//         IdData data = JsonUtility.FromJson<IdData>(e.data.ToString());
         
-        //remove the reference in the dictionary
-        if (Net.players.ContainsKey(data.id))
-        {
-            Net.players.Remove(data.id);
-        }
+//         if (Net.objects.ContainsKey(data.id))
+//         {
 
-    }
 
-    //calls a function on a script by name 
-    public void NewMessage(string msg)
-    {
-        //tell the server to tell the other clients to do the same
-        MessageData data = new MessageData();
-        data.id = Net.myId;
-        data.message = msg;
-        socket.Emit("message", JsonUtility.ToJson(data));
-    }
+//             //destroy the object on stage
+//             if (Net.objects[data.id] != null)
+//             {
+//                 //is it an avatar thingy
+//                 if (Net.objects[data.id].prefabName == "OtherAvatarPrefab") {
+//                     //do something when another avatar disconnects
+//                 }
 
-    //message from user or server
-    public void OnMessage(SocketIOEvent e)
-    {
-        MessageData data = JsonUtility.FromJson<MessageData>(e.data.ToString());
+//                 Destroy(Net.objects[data.id].gameObject);
+//             }
+//             //remove the object reference
+//             Net.objects.Remove(data.id);
+//         }
+//         else
+//         {
+//             print("Warning OnNetDestroy: I can't find a netobject named "+data.id);
+//         }
+//     }
+
+//     //request ownership
+//     public void RequestOwnership(string uniqueId)
+//     {
+//         OwnershipData data = new OwnershipData();
+//         data.uniqueId = uniqueId;
+//         data.owner = Net.myId;
+//         socket.Emit("requestOwnership", JsonUtility.ToJson(data));
+//     }
+
+
+//     public void OnChangeOwner(SocketIOEvent e)
+//     {
+//         OwnershipData data = JsonUtility.FromJson<OwnershipData>(e.data.ToString());
         
-        if (Net.players.ContainsKey(data.id))
-        {
-            //visualize chat message
-        }
-        else
-        {
-            ServerMessage(data.message);
-        }
-    }
+//         if (Net.objects.ContainsKey(data.uniqueId))
+//         {
+//             Net.objects[data.uniqueId].owner = data.owner;
+//         }
+//         else
+//         {
+//             print("Warning OnChangeOwner: I can't find a netobject named " + data.uniqueId);
+//         }
+//     }
+
+//     //request a change of type
+//     public void ChangeType(string uniqueId, int type)
+//     {
+//         TypeData data = new TypeData();
+//         data.uniqueId = uniqueId;
+//         data.type = type;
+//         socket.Emit("changeType", JsonUtility.ToJson(data));
+//     }
+
+
+//     public void OnChangeType(SocketIOEvent e)
+//     {
+//         TypeData data = JsonUtility.FromJson<TypeData>(e.data.ToString());
+
+//         if (Net.objects.ContainsKey(data.uniqueId))
+//         {
+//             Net.objects[data.uniqueId].type = data.type;
+//         }
+//         else
+//         {
+//             print("Warning OnChangeType: I can't find a netobject named " + data.uniqueId);
+//         }
+//     }
+
+//     public void OnSetAuthority(SocketIOEvent e)
+//     {
+//         IdData data = JsonUtility.FromJson<IdData>(e.data.ToString());
+//         Debug.Log("Authority is set to: " + data.id);
+//         Net.authorityId = data.id;
+
+//         Net.authority = (data.id == Net.myId && data.id != "");
+        
+//         if (Net.authority)
+//             print("I AM THE AUTHORITY!");
+//      }
+
+//     public void UpdateTransform(GameObject o)
+//     {
+//         //tell the server to tell the other clients to do the same
+//         TransformData data = new TransformData();
+//         data.uniqueId = o.name;
+//         data.position = o.transform.position;
+//         data.rotation = o.transform.rotation;
+//         data.localScale = o.transform.localScale;
+        
+//         socket.Emit("updateTransform", JsonUtility.ToJson(data));
+//     }
+
+//     //from the server: a transform on a netObject has changed
+//     public void OnUpdateTransform(SocketIOEvent e)
+//     {
+//         TransformData data = JsonUtility.FromJson<TransformData>(e.data.ToString());
+        
+//         //is there a networked object with that id?
+//         if (Net.objects.ContainsKey(data.uniqueId))
+//         {
+//             Net.objects[data.uniqueId].targetPosition = data.position;
+//             Net.objects[data.uniqueId].targetRotation = data.rotation;
+//             Net.objects[data.uniqueId].targetLocalScale = data.localScale;
+//         }
+//         else
+//         {
+//             print("Warning: no networked object named " + data.uniqueId);
+//         }
+        
+//     }
     
-    //calls a function on a script by name 
-    public void NetFunction(string objectName, string componentName, string functionName, string argument)
-    {
+//     //from the server: a player disconnected
+//     public void OnPlayerDisconnect(SocketIOEvent e)
+//     {
+//         IdData data = JsonUtility.FromJson<IdData>(e.data.ToString());
+//         Debug.Log("[SocketIO] Player Disconnected: " + data.id);
+        
+//         //remove the reference in the dictionary
+//         if (Net.players.ContainsKey(data.id))
+//         {
+//             Net.players.Remove(data.id);
+//         }
+
+//     }
+
+//     //calls a function on a script by name 
+//     public void NewMessage(string msg)
+//     {
+//         //tell the server to tell the other clients to do the same
+//         MessageData data = new MessageData();
+//         data.id = Net.myId;
+//         data.message = msg;
+//         socket.Emit("message", JsonUtility.ToJson(data));
+//     }
+
+//     //message from user or server
+//     public void OnMessage(SocketIOEvent e)
+//     {
+//         MessageData data = JsonUtility.FromJson<MessageData>(e.data.ToString());
+        
+//         if (Net.players.ContainsKey(data.id))
+//         {
+//             //visualize chat message
+//         }
+//         else
+//         {
+//             ServerMessage(data.message);
+//         }
+//     }
+    
+//     //calls a function on a script by name 
+//     public void NetFunction(string objectName, string componentName, string functionName, string argument)
+//     {
        
-        //tell the server to tell the other clients to do the same
-        NetFunctionData data = new NetFunctionData();
-        data.objectName = objectName;
-        data.componentName = componentName;
-        data.functionName = functionName;
-        data.argument = argument;
-        socket.Emit("netFunction", JsonUtility.ToJson(data));
-    }
+//         //tell the server to tell the other clients to do the same
+//         NetFunctionData data = new NetFunctionData();
+//         data.objectName = objectName;
+//         data.componentName = componentName;
+//         data.functionName = functionName;
+//         data.argument = argument;
+//         socket.Emit("netFunction", JsonUtility.ToJson(data));
+//     }
 
-    //from the server: a function is being called
-    public void OnNetFunction(SocketIOEvent e)
-    {
+//     //from the server: a function is being called
+//     public void OnNetFunction(SocketIOEvent e)
+//     {
         
-        NetFunctionData data = JsonUtility.FromJson<NetFunctionData>(e.data.ToString());
-        Component comp = GetObjectComponent(data.objectName, data.componentName);
+//         NetFunctionData data = JsonUtility.FromJson<NetFunctionData>(e.data.ToString());
+//         Component comp = GetObjectComponent(data.objectName, data.componentName);
         
-        if (comp != null)
-        {
-            //Uses a rather obscure system called Reflection to find a function
-            MethodInfo method = comp.GetType().GetMethod(data.functionName);
+//         if (comp != null)
+//         {
+//             //Uses a rather obscure system called Reflection to find a function
+//             MethodInfo method = comp.GetType().GetMethod(data.functionName);
 
-            if (method != null)
-                method.Invoke(comp, new object[] {data.argument});
-            else
-                print("Warning: there is no PUBLIC function named " + data.functionName + " on object " + data.objectName + " and component " + data.componentName);
-        }
-    }
+//             if (method != null)
+//                 method.Invoke(comp, new object[] {data.argument});
+//             else
+//                 print("Warning: there is no PUBLIC function named " + data.functionName + " on object " + data.objectName + " and component " + data.componentName);
+//         }
+//     }
 
     
-    //send a variable change
-    public void SetVariables(string uniqueId, NetVariables vars)
-    {
-        vars.uniqueId = uniqueId;
+//     //send a variable change
+//     public void SetVariables(string uniqueId, NetVariables vars)
+//     {
+//         vars.uniqueId = uniqueId;
         
-        socket.Emit("setVariables", JsonUtility.ToJson(vars));   
-    }
+//         socket.Emit("setVariables", JsonUtility.ToJson(vars));   
+//     }
 
-    //from the server: a NetVariable changed
-    public void OnSetVariables(SocketIOEvent e)
-    {
-        NetVariables data = JsonUtility.FromJson<NetVariables>(e.data.ToString());
+//     //from the server: a NetVariable changed
+//     public void OnSetVariables(SocketIOEvent e)
+//     {
+//         NetVariables data = JsonUtility.FromJson<NetVariables>(e.data.ToString());
         
-        if (Net.objects.ContainsKey(data.uniqueId))
-        {
-            NetObject netObject = Net.objects[data.uniqueId];
+//         if (Net.objects.ContainsKey(data.uniqueId))
+//         {
+//             NetObject netObject = Net.objects[data.uniqueId];
 
-            if(netObject.netVariables == null)
-                netObject.netVariables = new NetVariables();
+//             if(netObject.netVariables == null)
+//                 netObject.netVariables = new NetVariables();
 
-            Type myObjectType = data.GetType();
+//             Type myObjectType = data.GetType();
 
-            FieldInfo[] myPropertyInfo = typeof(NetVariables).GetFields();
+//             FieldInfo[] myPropertyInfo = typeof(NetVariables).GetFields();
             
-            //bool changed = false;
-            //for all the fields in NetVariables
-            for (int i = 0; i < myPropertyInfo.Length; i++)
-            {
-                //print(myPropertyInfo[i].ToString());
-                //print(myPropertyInfo[i].GetValue(netObject.netVariables));
-                var v1 = myPropertyInfo[i].GetValue(data);
-                var v2 = myPropertyInfo[i].GetValue(netObject.netVariables);
+//             //bool changed = false;
+//             //for all the fields in NetVariables
+//             for (int i = 0; i < myPropertyInfo.Length; i++)
+//             {
+//                 //print(myPropertyInfo[i].ToString());
+//                 //print(myPropertyInfo[i].GetValue(netObject.netVariables));
+//                 var v1 = myPropertyInfo[i].GetValue(data);
+//                 var v2 = myPropertyInfo[i].GetValue(netObject.netVariables);
 
                 
-                if (v1 != null && !System.Object.Equals(v1, v2))
-                {
-                    //set the variable
-                    try
-                    {
-                        myPropertyInfo[i].SetValue(netObject.netVariables, v1);
-                    }
-                    catch(Exception err)
-                    {
-                        Debug.LogException(err, this);
-                    }
+//                 if (v1 != null && !System.Object.Equals(v1, v2))
+//                 {
+//                     //set the variable
+//                     try
+//                     {
+//                         myPropertyInfo[i].SetValue(netObject.netVariables, v1);
+//                     }
+//                     catch(Exception err)
+//                     {
+//                         Debug.LogException(err, this);
+//                     }
                     
-                    netObject.OnVariableChange(myPropertyInfo[i].Name);
+//                     netObject.OnVariableChange(myPropertyInfo[i].Name);
                     
-                }
-            }//iteration
+//                 }
+//             }//iteration
             
-        }
-    }
+//         }
+//     }
     
-    //get a component from a NetObject only using names
-    public Component GetObjectComponent(string objectName, string componentName)
-    {
-        Component comp = null;
-        GameObject obj = GameObject.Find(objectName);
+//     //get a component from a NetObject only using names
+//     public Component GetObjectComponent(string objectName, string componentName)
+//     {
+//         Component comp = null;
+//         GameObject obj = GameObject.Find(objectName);
 
-        //is there a networked object with that id?
-        if (obj != null)
-        {
-            comp = obj.GetComponent(componentName);
+//         //is there a networked object with that id?
+//         if (obj != null)
+//         {
+//             comp = obj.GetComponent(componentName);
 
-            if (comp == null)
-               print("Warning: there is no component on " + objectName + " named " + componentName);
-        }
-        else
-            print("Warning: there is no networked object named " + objectName);
+//             if (comp == null)
+//                print("Warning: there is no component on " + objectName + " named " + componentName);
+//         }
+//         else
+//             print("Warning: there is no networked object named " + objectName);
         
-        return comp;
-    }
+//         return comp;
+//     }
 
-    //Socket disconnection is not immediate so I detect when a client quits  
-    void OnApplicationQuit()
-    {
-        IdData data = new IdData();
-        data.id = Net.myId;
+//     //Socket disconnection is not immediate so I detect when a client quits  
+//     void OnApplicationQuit()
+//     {
+//         IdData data = new IdData();
+//         data.id = Net.myId;
 
-        if(socket != null)
-            socket.Emit("quit", JsonUtility.ToJson(data));
-    }
+//         if(socket != null)
+//             socket.Emit("quit", JsonUtility.ToJson(data));
+//     }
 
-    void ServerMessage(string msg)
-    {
-        Debug.Log("Server message: " + msg);
-        if (serverMessages) serverMessages.GetComponent<TextMeshProUGUI>().text = msg;
-        ChatScript.chatScript.SendMessageToChat("server:" + msg, Message.MessageType.info, true);
-    }
+//     void ServerMessage(string msg)
+//     {
+//         Debug.Log("Server message: " + msg);
+//         if (serverMessages) serverMessages.GetComponent<TextMeshProUGUI>().text = msg;
+//         ChatScript.chatScript.SendMessageToChat("server:" + msg, Message.MessageType.info, true);
+//     }
 
-}
-
-
-//a data structure with information about a player
-public class Player
-{
-    public string id;
-    public string nickName;
-    public float[] DNA;
-    public GameObject gameObject;
-}
+// }
 
 
-/*
- * All the data received from the server needs to comply to these classes below, otherwise it can't be parsed
- */
+// //a data structure with information about a player
+// public class Player
+// {
+//     public string id;
+//     public string nickName;
+//     public float[] DNA;
+//     public GameObject gameObject;
+// }
 
 
-[Serializable]
-public class MessageData
-{
-    public string id;
-	public string message;
-}
-
-[Serializable]
-public class InstantiationData
-{
-    public string owner;
-    public string prefabName;
-    public string uniqueId;
-    public int type;
-    public Vector3 position;
-    public Quaternion rotation;
-    public Vector3 localScale;
-    public NetVariables netVariables;
-}
-
-[Serializable]
-public class IdData
-{
-    public string id;
-}
-
-public class IntData
-{
-    public int num;
-}
-
-[Serializable]
-public class OwnershipData
-{
-    public string uniqueId;
-    public string owner;
-}
-
-[Serializable]
-public class TypeData
-{
-    public string uniqueId;
-    public int type;
-}
-
-[Serializable]
-public class TransformData
-{
-    public string uniqueId;
-    public Vector3 position;
-    public Quaternion rotation;
-    public Vector3 localScale;
-}
-
-[Serializable]
-public class NetFunctionData
-{
-    public string objectName;
-    public string componentName;
-    public string functionName;
-    public string argument;
-}
+// /*
+//  * All the data received from the server needs to comply to these classes below, otherwise it can't be parsed
+//  */
 
 
-[Serializable]
-public class AvatarData
-{
-    public string id; //socketId
-    public string nickName;
-    public float[] DNA;
-}
+// [Serializable]
+// public class MessageData
+// {
+//     public string id;
+// 	public string message;
+// }
+
+// [Serializable]
+// public class InstantiationData
+// {
+//     public string owner;
+//     public string prefabName;
+//     public string uniqueId;
+//     public int type;
+//     public Vector3 position;
+//     public Quaternion rotation;
+//     public Vector3 localScale;
+//     public NetVariables netVariables;
+// }
+
+// [Serializable]
+// public class IdData
+// {
+//     public string id;
+// }
+
+// public class IntData
+// {
+//     public int num;
+// }
+
+// [Serializable]
+// public class OwnershipData
+// {
+//     public string uniqueId;
+//     public string owner;
+// }
+
+// [Serializable]
+// public class TypeData
+// {
+//     public string uniqueId;
+//     public int type;
+// }
+
+// [Serializable]
+// public class TransformData
+// {
+//     public string uniqueId;
+//     public Vector3 position;
+//     public Quaternion rotation;
+//     public Vector3 localScale;
+// }
+
+// [Serializable]
+// public class NetFunctionData
+// {
+//     public string objectName;
+//     public string componentName;
+//     public string functionName;
+//     public string argument;
+// }
+
+
+// [Serializable]
+// public class AvatarData
+// {
+//     public string id; //socketId
+//     public string nickName;
+//     public float[] DNA;
+// }
