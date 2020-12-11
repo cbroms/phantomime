@@ -38,7 +38,7 @@ public class NetManager : MonoBehaviour
 
     //TODO: populate all these gameobjects in the inspector for Main->NetManager!
     // Keeping track of task information
-    private GameState currGameState;
+    public GameState currGameState;
     [SerializeField] GameObject[] taskObjects;
     
     // View based on if you're explorer or ghost

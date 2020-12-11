@@ -6,19 +6,27 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Button))]
 public class ClickableObject : MonoBehaviour
 {
+    public bool Shook;
+    private Animator animator;
     //TODO: attach this script to each gameobject that is a clickable thingy
     Button button; // makes this object clickable
     List<Sprite> taskSprites; // list of sprites for this object ordered by task
-    SpriteRenderer spriteRenderer; // TODO: update based on if we are using Image or SpriteRenderer!
+    Image ObjectImage; // TODO: update based on if we are using Image or SpriteRenderer!
     int myObjectIndex; // what is our index in the NetManager's list
 
     // Start is NOT called since this gameobject is inactive.
     // So we update these every time the game object is enabled (should be once only)
+
+    public void Awake()
+    {
+        animator = GetComponent<Animator>();
+    }
+
     void OnEnable()
     {
         button = this.GetComponent<Button>();
         button.onClick.AddListener(() => ClickFunction());
-        spriteRenderer = this.GetComponent<SpriteRenderer>();
+        ObjectImage = this.GetComponent<Image>();
 
         //TODO: double check this gets initialized properly
         myObjectIndex = Net.manager.WhichObject(this.gameObject);
@@ -34,13 +42,14 @@ public class ClickableObject : MonoBehaviour
             taskSprites.Add((Sprite)loadedSprite[i]);
         }
         Debug.Log("Object " + myObjectIndex + " Initialized");
-        spriteRenderer.sprite = taskSprites[0];
+        ObjectImage.sprite = taskSprites[0];
     }
 
     // Indicate somebody has clicked on the 
     private void ClickFunction() {
+        Debug.Log(Net.manager == null);
         if (Net.manager.amExplorer) {
-            // do nothing
+                // do nothing
             return;
         } else {
            // If we are a ghost
@@ -59,16 +68,28 @@ public class ClickableObject : MonoBehaviour
     //TODO: animate rattle movement for this object
     public void OnMoved() {
         // animate
-        Debug.Log("object moved");
+        //Debug.Log("object moved");
+        StartCoroutine(ShakeObject());
     }
 
     public void ChangeSprite(int currTask) {
-        spriteRenderer.sprite = taskSprites[currTask];
+        ObjectImage.sprite = taskSprites[currTask];
     }
+    
+
 
     // Update is called once per frame
     void Update()
     {
-        
+        animator.SetBool("Shake", Shook);
     }
+
+    public IEnumerator ShakeObject()
+
+    {
+        Shook = true;
+        yield return new WaitForSeconds(0.1f);
+        Shook = false;
+    }
+
 }
