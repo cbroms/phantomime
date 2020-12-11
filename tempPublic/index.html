@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>o shit</title>
+		<script src="/socket.io/socket.io.js"></script>
+
+		<style type="text/css">
+			#queue {
+				display: none;
+			}
+
+			#scene {
+				display: none;
+			}
+
+			#scene1, #scene2, #scene3 {
+				display: none;
+			}
+
+			#input {
+				display: none;
+			}
+			#guessed {
+				margin-top: 25px;
+				padding: 10px;
+				border: 1px solid black;
+			}
+
+			#complete {
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="queue">
+			<h1 id="queueTitle">Welcome, join the queue</h1>
+			<button id="queueButton" onclick="joinQueue()">Join Queue</button>
+		</div>
+
+		<div id="scene">
+			<h1 id="role"></h1>
+			<div id="scene1">
+			<p onclick="shakeObject(1)" class="c1">Mountain scene</p>
+			<p onclick="shakeObject(2)" class="c2">Hilly scene</p>
+			<p onclick="shakeObject(3)" class="c3">Forest scene</p>
+			<p onclick="shakeObject(4)" class="c4">Cows grazing</p>
+			<p onclick="shakeObject(5)" class="c5">Fancy gold clock</p>
+			<p onclick="shakeObject(6)" class="c6">Person on a horse</p>
+			<p onclick="shakeObject(7)" class="c7">Big mansion with trees</p>
+			<p onclick="shakeObject(8)" class="c8">Generic portrait of same guy</p>
+			<p onclick="shakeObject(9)" class="c9">Same man with puppy</p>
+			<p onclick="shakeObject(10)" class="c10">
+				My man lookin fly in a sick suit
+			</p>
+		</div>
+
+		<div id="scene2">
+			<p onclick="shakeObject(1)" class="c1">The Hound of the Baskervilles </p>
+			<p onclick="shakeObject(2)" class="c2">Official Textbook on Human Anatomy 3rd Edition</p>
+			<p onclick="shakeObject(3)" class="c3">Diagram of the Animal Kingdom</p>
+			<p onclick="shakeObject(4)" class="c4">Surgeons Handbook to Amputation</p>
+			<p onclick="shakeObject(5)" class="c5">Murder of the Hound in the day time</p>
+			<p onclick="shakeObject(6)" class="c6">Insect, bisect, dissect: biology for the utmost enjoyability</p>
+			<p onclick="shakeObject(7)" class="c7">A study of brains of differing Size and variation</p>
+			<p onclick="shakeObject(8)" class="c8">Why are you in my house?: The book</p>
+			<p onclick="shakeObject(9)" class="c9">Who Killed whom?</p>
+			<p onclick="shakeObject(10)" class="c10">
+				A Treatise on Human Nature
+			</p>
+		</div>
+
+		<div id="scene3">
+			<p onclick="shakeObject(1)" class="c1">Animal teeth</p>
+			<p onclick="shakeObject(2)" class="c2">Silver Skull </p>
+			<p onclick="shakeObject(3)" class="c3">Eyeballs in jar</p>
+			<p onclick="shakeObject(4)" class="c4">Scalpel/sharp tool</p>
+			<p onclick="shakeObject(5)" class="c5">Animal liver in jar</p>
+			<p onclick="shakeObject(6)" class="c6">Heart floating in liquid</p>
+			<p onclick="shakeObject(7)" class="c7">Shiny bottle containing feathers </p>
+			<p onclick="shakeObject(8)" class="c8">Candle (not lit)</p>
+			<p onclick="shakeObject(9)" class="c9">Rat floating in liquid</p>
+			<p onclick="shakeObject(10)" class="c10">
+				Claws in jar
+			</p>
+		</div>
+
+			<div id="guessed">Last guess: <span id="lastGuess"></span><div>
+		
+
+			<div id="input">
+					<input type="text" id="guess" />
+					<button onclick="submitGuess()">make guess</input>
+			</div>
+
+			
+		</div>
+
+		<div id="complete">
+					<h1>YOU DID IT YOU WON!</h1>
+			</div>
+
+		<script type="text/javascript">
+			let iAmGhost = false;
+			let index = 0;
+			let task = 0;
+			let state = {}
+
+			const socket = io();
+			socket.on("connect", () => {
+				document.getElementById("queue").style.display = "block";
+			});
+
+			socket.on("enteredGame", (data) => {
+				console.log(data);
+				document.getElementById("queue").style.display = "none";
+				document.getElementById("scene").style.display = "block";
+				document.getElementById("scene1").style.display = "block";
+
+				if (data.role === 0) {
+					state = data;
+					iAmGhost = true;
+					document.getElementById("role").innerHTML =
+						"You are the ghost. The word is: " + data.taskWords[task][index];
+				} else {
+					document.getElementById("input").style.display = "block";
+					document.getElementById("role").innerHTML =
+						"You are the explorer. Guess the word.";
+				}
+
+
+			});
+
+			socket.on("nextWord", () => {
+				index++;
+				if (iAmGhost) {
+					document.getElementById("role").innerHTML =
+										"You are the ghost. The word is: " + state.taskWords[task][index];
+									}
+
+			})
+
+			socket.on("nextTask", () => {
+
+				document.getElementById("scene1").style.display = "none";
+				document.getElementById("scene2").style.display = "none";
+				document.getElementById("scene3").style.display = "none";
+
+				index = 0
+				task++;
+
+				if (task === 1) {
+					document.getElementById("scene2").style.display = "block";
+				}
+				else if (task === 2) {
+					document.getElementById("scene3").style.display = "block";
+				}
+
+
+				if (iAmGhost) {
+					document.getElementById("role").innerHTML =
+										"You are the ghost. The word is: " + state.taskWords[task][index];
+									}
+
+			})
+
+			socket.on("tasksComplete", () => {
+				document.getElementById("scene").style.display = "none"
+				document.getElementById("complete").style.display = "block"
+			})
+
+			socket.on("explorerGuessedWord", (result) => {
+				document.getElementById("lastGuess").innerHTML = `${result.guess} (${result.correct ? "correct": "incorrect"})`
+			})
+
+			socket.on("ghostMovedObject", (num) => {
+				document.querySelectorAll(`.c${num.toString()}`).forEach((elt) => {
+   					elt.style.fontWeight = 600;
+				});
+
+				
+
+				window.setTimeout(() => {
+					document.querySelectorAll(`.c${num.toString()}`).forEach((elt) => {
+   					elt.style.fontWeight = 400;
+				});
+				}, 2000);
+			});
+
+			function shakeObject(num) {
+				if (iAmGhost) socket.emit("moveObject", num);
+			}
+
+			function submitGuess() {
+				const guess= document.getElementById("guess").value
+				socket.emit("guess", guess)
+			}
+
+			function joinQueue() {
+				document.getElementById("queueButton").style.display = "none";
+				document.getElementById("queueTitle").innerHTML =
+					"Waiting for player to join...";
+				socket.emit("addToQueue");
+			}
+		</script>
+	</body>
+</html>
