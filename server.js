@@ -128,7 +128,7 @@ setInterval(() => {
 }, 5000);
 
 //when a client connects serve the static files in the public directory ie public/index.html
-app.use(express.static("public"));
+app.use(express.static("tempPublic"));
 
 io.on("connection", (socket) => {
   console.log(`player ${socket.id} connected`);
