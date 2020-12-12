@@ -1,11 +1,7 @@
 const express = require("express");
 const app = express();
 const http = require("http").createServer(app);
-const io = require('socket.io')(http, {
-  cors: {
-    origin: '*',
-  }
-});
+const io = require("socket.io")(http);
 const { v4: uuidv4 } = require("uuid");
 
 /* EVENT API DOCUMENTATION
@@ -67,6 +63,13 @@ const defaultGameState = {
     ["animal", "wealthy", "landscape"],
     ["dissection", "biology", "mystery"],
     ["sharp", "moist", "shiny"],
+  ],
+  hints: [
+    [
+      ["a _ _ _ _ _", "a _ i _ _ _", "a _ i _ _ l"],
+      ["w _ _ _ _ _ _", "w _ _ l _ _ _", "w _ _ l _ _ y"],
+      ["l _ _ _ _ _ _ _ _", "l _ _ d _ _ _ _ _", "l _ _ d _ _ _ p _"],
+    ],
   ],
   role: null, // am I the ghost (0) or explorer (1)?
 };
@@ -132,7 +135,7 @@ setInterval(() => {
 }, 5000);
 
 //when a client connects serve the static files in the public directory ie public/index.html
-app.use(express.static("tempPublic"));
+app.use(express.static("public"));
 
 io.on("connection", (socket) => {
   console.log(`player ${socket.id} connected`);
