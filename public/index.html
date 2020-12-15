@@ -5,6 +5,10 @@
 		<script src="/socket.io/socket.io.js"></script>
 
 		<style type="text/css">
+			#inner {
+  			position: absolute;
+			} 
+			
 			#queue {
 				display: none;
 			}
@@ -40,9 +44,14 @@
 		</div>
 
 		<div id="scene">
+		<img class="inner" 
+		src="Assets/Resources/Scene_1_Wall.png"
+     	alt="BG"></img width=100% height=100%></img>
 			<h1 id="role"></h1>
 			<div id="scene1">
-				<p onclick="shakeObject(1)" class="c1">Mountain scene</p>
+				<img onclick="shakeObject(1)" class="Mountain scene" 
+				src="Assets/Resources/Scene1Painting1.png"
+     			alt="Mountain scene"></img>
 				<p onclick="shakeObject(2)" class="c2">Hilly scene</p>
 				<p onclick="shakeObject(3)" class="c3">Forest scene</p>
 				<p onclick="shakeObject(4)" class="c4">Cows grazing</p>
@@ -59,7 +68,7 @@
 					My man lookin fly in a sick suit
 				</p>
 			</div>
-
+			
 			<div id="scene2">
 				<p onclick="shakeObject(1)" class="c1">
 					The Hound of the Baskervilles

@@ -6,6 +6,8 @@ let state = {};
 
 const socket = io();
 
+let SceneBG;
+
 socket.on("connect", () => {
 	show("queue");
 });
@@ -94,6 +96,14 @@ socket.on("ghostMovedObject", (num) => {
 		});
 	}, 2000);
 });
+
+function preload() {
+	SceneBG = loadImage('Assets/Resources/Scene_1_Wall.png');
+  }
+
+
+  
+
 
 function shakeObject(num) {
 	if (iAmGhost) socket.emit("moveObject", num);
