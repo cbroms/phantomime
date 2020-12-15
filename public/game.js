@@ -4,6 +4,7 @@ let task = 0;
 let guessesThisWord = 0;
 let state = {};
 let currIntroScene = 0;
+let intensity = 1;
 
 const socket = io();
 
@@ -31,6 +32,7 @@ socket.on("showGameUI", () => {
 	show("scene1");
 
 	if (iAmGhost) {
+		show("intensityButtons");
 		setText(
 			"role",
 			"You are the ghost. The word is: " + state.taskWords[task][index]
@@ -92,18 +94,23 @@ socket.on("explorerGuessedWord", (result) => {
 	);
 });
 
-socket.on("ghostMovedObject", (num) => {
+socket.on("ghostMovedObject", (obj) => {	
+	var num = obj.num;
+	intensity = obj.intense;
+
+	//TODO: USE intensity VARIABLE TO MAKE ANIMATIONS DIFFERENT
+
 	// set the text bold
 	document.querySelectorAll(`.c${num.toString()}`).forEach((elt) => {
 		elt.style.fontWeight = 600;
 	});
 
-	// reset the text after two seconds
+	// reset the text after intensity seconds
 	window.setTimeout(() => {
 		document.querySelectorAll(`.c${num.toString()}`).forEach((elt) => {
 			elt.style.fontWeight = 400;
 		});
-	}, 2000);
+	}, 1000 * intensity);
 });
 
 
@@ -154,11 +161,17 @@ function preload() {
   }
 
 
+function setIntensity(myIntense) {
+	intensity = myIntense;
+	setText("currIntensity", "Current Intensity: " + intensity);
+}
+
+
   
 
 
 function shakeObject(num) {
-	if (iAmGhost) socket.emit("moveObject", num);
+	if (iAmGhost) socket.emit("moveObject", {num: num, intense: intensity});
 }
 
 function submitGuess() {

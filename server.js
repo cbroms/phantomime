@@ -241,10 +241,10 @@ io.on("connection", (socket) => {
   // when I receive a movement, send it to both the players
   // here I'm assuming the ghost client is sending a number that will be used by
   // the explorer client to reference the same object that was clicked
-  socket.on("moveObject", (objNumber) => {
-    console.log(`player ${socket.id} moved object ${objNumber}`);
+  socket.on("moveObject", (obj) => {
+    console.log(`player ${socket.id} moved object ${obj.num}`);
     // send the movement to the players
-    io.sockets.to(playerToGame[socket.id]).emit("ghostMovedObject", objNumber);
+    io.sockets.to(playerToGame[socket.id]).emit("ghostMovedObject", obj);
   });
 });
 

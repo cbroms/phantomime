@@ -25,6 +25,10 @@
 				display: none;
 			}
 
+			#intensityButtons {
+				display: none;
+			}
+
 			#scene1,
 			#scene2,
 			#scene3 {
@@ -65,6 +69,15 @@
 		<div id="scene">
 		
 			<h1 id="role"></h1>
+
+			<div id ="intensityButtons">
+				<h4 id="currIntensity">Current Intensity: 1</h6>
+				<button id="intensity1" onclick="setIntensity(1)">Set Intensity 1</button>
+				<button id="intensity2" onclick="setIntensity(2)">Set Intensity 2</button>
+				<button id="intensity3" onclick="setIntensity(3)">Set Intensity 3</button>
+			</div>
+
+
 			<div id="scene1">
 				<img onclick="shakeObject(1)" class="Mountain scene" 
 				src="Assets/Resources/Scene1Painting1.png"
