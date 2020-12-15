@@ -13,7 +13,9 @@ socket.on("connect", () => {
 });
 
 socket.on("enteredGame", (data) => {
-	hide("queue");
+	clearInterval();
+	// hide("queue");
+	hide("waitingScene");
 	show("scene");
 	show("scene1");
 
@@ -133,9 +135,19 @@ function submitGuess() {
 }
 
 function joinQueue() {
-	hide("queueButton");
-	setText("queueTitle", "Waiting for player to join...");
+	hide("queue");
+	show("waitingScene")
+	setText("waitTitle", "Waiting for player to join...");
+
 	socket.emit("addToQueue");
+	var myTimer = 0;
+	var counter = 0;
+//window.getComputedStyle(document.getElementById("waitingScene")).display !== 'none'
+	window.setInterval(() => {
+			setImgSrc("queueImage", "Assets/Resources/Queue/Sprite_" + counter + ".png");
+			counter++;
+			counter %= 10;
+	}, 500);
 }
 
 // Get the input field

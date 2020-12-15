@@ -13,6 +13,10 @@
 				display: none;
 			}
 
+			#waitingScene {
+				display: none;
+			}
+
 			#scene {
 				display: none;
 			}
@@ -41,6 +45,11 @@
 		<div id="queue">
 			<h1 id="queueTitle">Welcome, join the queue</h1>
 			<button id="queueButton" onclick="joinQueue()">Join Queue</button>
+		</div>
+
+		<div id="waitingScene">
+			<h1 id="waitTitle">Waiting for player to join...</h1>
+			<img id="queueImage" src="Assets/Resources/Queue/Sprite_1.png"></img>
 		</div>
 
 		<div id="scene">

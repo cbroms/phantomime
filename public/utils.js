@@ -9,3 +9,7 @@ const hide = (id) => {
 const setText = (id, text) => {
 	document.getElementById(id).innerHTML = text;
 };
+
+const setImgSrc = (id, src) => {
+	document.getElementById(id).src = src;
+}
