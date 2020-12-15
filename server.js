@@ -79,6 +79,7 @@ let queue = [];
 const gameState = {};
 const inGame = {};
 const playerToGame = {};
+const readingInstructions = {};
 
 // QUEUE MANAGEMENT
 // every five seconds, check the queue and make new pairings
@@ -111,6 +112,8 @@ setInterval(() => {
         // record the pair as being in game
         inGame[pair[0].id] = pair[1].id;
         inGame[pair[1].id] = pair[0].id;
+        readingInstructions[pair[0].id] = true;
+        readingInstructions[pair[1].id] = true;
 
         // initialize the game state
         gameState[gameId] = { ...defaultGameState };
@@ -145,6 +148,15 @@ io.on("connection", (socket) => {
     console.log(`adding player ${socket.id} to queue`);
     // add the player to the queue and wait for a partner
     queue.push({ id: socket.id, socket: socket });
+  });
+
+  socket.on("doneReading", () => {
+    readingInstructions[socket.id] = false;
+    if (readingInstructions[inGame[socket.id]] === false) {
+      io.sockets
+            .to(playerToGame[socket.id])
+            .emit("showGameUI");
+    }
   });
 
   // handle cleanup when the player leaves
