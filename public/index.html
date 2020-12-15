@@ -5,8 +5,21 @@
 		<script src="/socket.io/socket.io.js"></script>
 
 		<style type="text/css">
+			.Outer {
+				position: absolute;
+				z-index: 2;
+				
+			}
+
+			.Header {
+				
+				z-index: 3;
+				position: top;
+			}
+
 			.inner {
-  			position: absolute;
+				position: absolute;
+				z-index: 1;
 			} 
 			
 			#queue {
@@ -69,7 +82,7 @@
 
 		<div id="scene">
 		
-			<h1 id="role"></h1>
+			<h1 class="Header"  id="role"></h1>
 
 			<div id ="intensityButtons">
 				<h4 id="currIntensity">Current Intensity: 1</h6>
@@ -80,24 +93,40 @@
 
 
 			<div id="scene1">
-				<img onclick="shakeObject(1)" class="c1" 
+				<img onclick="shakeObject(1)" style="vertical-align:middle;margin:0px 100px" class= "Outer" 
 				src="Assets/Resources/Scene_1/Scene1Painting1.png"
-     			alt="Mountain scene"></img>
-				<p onclick="shakeObject(2)" class="c2">Hilly scene</p>
-				<p onclick="shakeObject(3)" class="c3">Forest scene</p>
-				<p onclick="shakeObject(4)" class="c4">Cows grazing</p>
-				<p onclick="shakeObject(5)" class="c5">Fancy gold clock</p>
-				<p onclick="shakeObject(6)" class="c6">Person on a horse</p>
-				<p onclick="shakeObject(7)" class="c7">
-					Big mansion with trees
-				</p>
-				<p onclick="shakeObject(8)" class="c8">
-					Generic portrait of same guy
-				</p>
-				<p onclick="shakeObject(9)" class="c9">Same man with puppy</p>
-				<p onclick="shakeObject(10)" class="c10">
-					My man lookin fly in a sick suit
-				</p>
+				 alt="Mountain scene"></img>
+				<img onclick="shakeObject(2)" class="Outer" 
+				src="Assets/Resources/Scene_1/Scene1Painting2.png"
+				 alt="hilly scene"></img>
+				<img onclick="shakeObject(3)" class="Outer" 
+				src="Assets/Resources/Scene_1/Scene1Painting3.png"
+     			alt="Forest Scene"></img>
+				<img onclick="shakeObject(4)" class="Outer" 
+				src="Assets/Resources/Scene_1/Scene1Painting4.png"
+				alt="Cows Grazing"></img>
+				<img onclick="shakeObject(5)" class="Outer" 
+				src="Assets/Resources/Scene_1/Scene1Painting5.png"
+     			alt="Fancy clock"></img>
+				<img onclick="shakeObject(6)" class="Outer" 
+				src="Assets/Resources/Scene_1/Scene1Painting6.png"
+			    alt="person on horse"></img>
+				<img onclick="shakeObject(7)" class="Outer" 
+				src="Assets/Resources/Scene_1/Scene1Painting7.png"
+     			alt="big mansion"></img>
+				<img onclick="shakeObject(8)" class="Outer" 
+				src="Assets/Resources/Scene_1/Scene1Painting8.png"
+			    alt="Genric portrait"></img>
+				<img onclick="shakeObject(9)" class="Outer" 
+				src="Assets/Resources/Scene_1/Scene1Painting2.png"
+     			alt="same man with puppy"></img>
+				<img onclick="shakeObject(10)" class="Outer" 
+				src="Assets/Resources/Scene_1/Scene1Painting10.png"
+			    alt="Sick suit"></img>
+				<img class="inner" 
+				src="Assets/Resources/Scene_1/Scene_1_Wall.png"
+				alt="BG"></img width=100% height=100%></img>
+				
 			</div>
 			
 			<div id="scene2">
@@ -170,9 +199,7 @@
 				<h1>YOU DID IT YOU WON!</h1>
 			</div>
 
-			<img class="inner" 
-			src="Assets/Resources/Scene_1_Wall.png"
-			alt="BG"></img width=100% height=100%></img>
+			
 		</div>
 
 		<script src="utils.js"></script>
