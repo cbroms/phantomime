@@ -5,7 +5,7 @@
 		<script src="/socket.io/socket.io.js"></script>
 
 		<style type="text/css">
-			#inner {
+			.inner {
   			position: absolute;
 			} 
 			
@@ -44,9 +44,7 @@
 		</div>
 
 		<div id="scene">
-		<img class="inner" 
-		src="Assets/Resources/Scene_1_Wall.png"
-     	alt="BG"></img width=100% height=100%></img>
+		
 			<h1 id="role"></h1>
 			<div id="scene1">
 				<img onclick="shakeObject(1)" class="Mountain scene" 
@@ -126,6 +124,9 @@
 				<input type="text" id="guess" />
 				<button onclick="submitGuess()">make guess</button>
 			</div>
+		<img class="inner" 
+		src="Assets/Resources/Scene_1_Wall.png"
+     	alt="BG"></img width=100% height=100%></img>
 		</div>
 
 		<div id="complete">
