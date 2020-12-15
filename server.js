@@ -212,7 +212,7 @@ io.on("connection", (socket) => {
             .to(playerToGame[socket.id])
             .emit("nextWord", game.currentWord);
         };
-      } else if (game.currentTask < 2) {
+      } else if (game.currentTask < 3) {
         // move on to the next task in the game
         game.currentTask += 1;
         game.currentWord = 0;
@@ -221,7 +221,7 @@ io.on("connection", (socket) => {
             .to(playerToGame[socket.id])
             .emit("nextTask", game.currentTask);
         };
-      } else {
+      } else { //should never get called
         // the game is complete!
         nextEmit = () => {
           io.sockets.to(playerToGame[socket.id]).emit("tasksComplete");
@@ -246,6 +246,20 @@ io.on("connection", (socket) => {
     // send the movement to the players
     io.sockets.to(playerToGame[socket.id]).emit("ghostMovedObject", obj);
   });
+
+  socket.on("candleLit", (obj) => {
+    console.log(`player ${socket.id} lit candle ${obj}`);
+    // send the movement to the players
+    io.sockets.to(playerToGame[socket.id]).emit("ghostLitCandle", obj);
+  });
+
+  // Taken from "guess"
+  socket.on("litAllCandles", () => {
+    // the game is complete!
+    console.log("player completed all tasks");
+    io.sockets.to(playerToGame[socket.id]).emit("tasksComplete");
+  });
+
 });
 
 //listen to the port 3000

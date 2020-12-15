@@ -5,6 +5,8 @@ let guessesThisWord = 0;
 let state = {};
 let currIntroScene = 0;
 let intensity = 1;
+let candleText = ["", "Bloody wall with message", "Bloody animal footprints on ground","Desk spattered in blood", "Dead body’s leg"];
+let litCandles = [false, false, false, false];
 
 const socket = io();
 
@@ -44,6 +46,10 @@ socket.on("showGameUI", () => {
 });
 
 socket.on("nextWord", () => {
+	//TODO: stop rattling animation here
+	document.querySelectorAll('p[class^="c"]').forEach((elt) => {
+		elt.style.fontWeight = 400;
+	});
 	setText("hint", "");
 
 	guessesThisWord = 0;
@@ -57,9 +63,17 @@ socket.on("nextWord", () => {
 });
 
 socket.on("nextTask", () => {
+	//TODO: stop rattling animation here
+	document.querySelectorAll('p[class^="c"]').forEach((elt) => {
+		elt.style.fontWeight = 400;
+	});
+	setText("hint", "");
+	setText("lastGuess", "");
+	
 	hide("scene1");
 	hide("scene2");
 	hide("scene3");
+	hide("finalscene");
 	setText("hint", "");
 
 	guessesThisWord = 0;
@@ -70,6 +84,15 @@ socket.on("nextTask", () => {
 		show("scene2");
 	} else if (task === 2) {
 		show("scene3");
+	} else if (task === 3) {
+		//TODO: final image?? put it in the html
+		show("finalscene");
+		hide("guessed");
+		hide("input");
+		hide("intensityButtons");
+		setText("role", iAmGhost ? "Click each candle to light it" : "Wait for the ghost to light the candles");
+
+		return;
 	}
 
 	if (iAmGhost) {
@@ -81,7 +104,8 @@ socket.on("nextTask", () => {
 });
 
 socket.on("tasksComplete", () => {
-	hide("scene");
+	//TODO: do we want the final image to be shown at completion??
+	// hide("scene");
 	show("complete");
 });
 
@@ -113,8 +137,31 @@ socket.on("ghostMovedObject", (obj) => {
 	}, 1000 * intensity);
 });
 
+socket.on("ghostLitCandle", (num) => {	
+	//TODO: actually light candle image here
+	litCandles[num-1] = true;
 
-//TODO: make this fade??
+	// set the text bold and to what the candle lit up
+	document.querySelectorAll(`.c${num.toString()}`).forEach((elt) => {
+		elt.style.fontWeight = 600;
+		elt.innerHTML = candleText[num];
+	});
+
+	// Only ghost sends the completion event??
+	if (iAmGhost === true) {
+		var numLit = 0;
+		var i = 0;
+		for (i = 0; i < litCandles.length; i++) {
+			if (litCandles[i] === true) numLit++;
+		}
+	
+		if (numLit === litCandles.length) {
+			socket.emit("litAllCandles");
+		}
+	}
+});
+
+
 function introScene() {
 	var toShow = iAmGhost ? "ghost" : "explorer";
 	setText("introText", "You are the " + toShow);
@@ -164,6 +211,15 @@ function preload() {
 function setIntensity(myIntense) {
 	intensity = myIntense;
 	setText("currIntensity", "Current Intensity: " + intensity);
+}
+
+function lightCandle(num) {
+	if (iAmGhost) {
+		// If already lit, leave it alone
+		if (litCandles[num-1] === true) return;
+
+		socket.emit("candleLit", num);
+	}
 }
 
 

@@ -29,6 +29,7 @@
 				display: none;
 			}
 
+			#finalscene,
 			#scene1,
 			#scene2,
 			#scene3 {
@@ -79,7 +80,7 @@
 
 
 			<div id="scene1">
-				<img onclick="shakeObject(1)" class="Mountain scene" 
+				<img onclick="shakeObject(1)" class="c1" 
 				src="Assets/Resources/Scene1Painting1.png"
      			alt="Mountain scene"></img>
 				<p onclick="shakeObject(2)" class="c2">Hilly scene</p>
@@ -149,6 +150,14 @@
 				<p onclick="shakeObject(10)" class="c10">Claws in jar</p>
 			</div>
 
+
+			<div id="finalscene">
+				<p onclick="lightCandle(1)" class="c1">Candle 1</p>
+				<p onclick="lightCandle(2)" class="c2">Candle 2</p>
+				<p onclick="lightCandle(3)" class="c3">Candle 3</p>
+				<p onclick="lightCandle(4)" class="c4">Candle 4</p>
+			</div>
+
 			<h3 id="hint"></h3>
 			<h3 id="guessed">Last guess: <span id="lastGuess"></span></h3>
 
@@ -156,13 +165,14 @@
 				<input type="text" id="guess" />
 				<button onclick="submitGuess()">make guess</button>
 			</div>
-		<img class="inner" 
-		src="Assets/Resources/Scene_1_Wall.png"
-     	alt="BG"></img width=100% height=100%></img>
-		</div>
 
-		<div id="complete">
-			<h1>YOU DID IT YOU WON!</h1>
+			<div id="complete">
+				<h1>YOU DID IT YOU WON!</h1>
+			</div>
+
+			<img class="inner" 
+			src="Assets/Resources/Scene_1_Wall.png"
+			alt="BG"></img width=100% height=100%></img>
 		</div>
 
 		<script src="utils.js"></script>
