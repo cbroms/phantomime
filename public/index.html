@@ -126,70 +126,70 @@
 			.Scene3-1Candle {
 				position: absolute;
 				z-index: 2;
-				top: 100px;
+				top: 120px;
 				left: 400px; 
 			}
 
 			.Scene3-2Claws {
 				position: absolute;
 				z-index: 2;
-				top: 300px;
+				top: 350px;
 				left: 800px;
 			}
 
 			.Scene3-3Eyeballs {
 				position: absolute;
 				z-index: 2;
-				top: 300px;
-				left: 800px;
+				top: 600px;
+				left: 860px;
 			}
 
 			.Scene3-4Feathers {
 				position: absolute;
 				z-index: 2;
-				top: 100px;
+				top: 120px;
 				left: 900px; 
 			}
 
 			.Scene3-5Heart {
 				position: absolute;
 				z-index: 2;
-				top: 300px;
+				top: 350px;
 				left: 300px;
 			}
 
 			.Scene3-6Liver {
 				position: absolute;
 				z-index: 2;
-				top: 300px;
+				top: 350px;
 				left: 100px;
 			}
 
 			.Scene3-7Rat {
 				position: absolute;
 				z-index: 2;
-				top: 530%;
-				left: 1000%;
+				top: 350px;
+				left: 600px;
 			}
 
 			.Scene3-8Scapel {
 				position: absolute;
 				z-index: 2;
-				top: 850%;
-				left: 1000%;
+				top: 640px;
+				left: 700px;
 			}
 
 			.Scene3-9Skull {
 				position: absolute;
 				z-index: 2;
-				top: 800%;
-				left: 400%;
+				top: 600px;
+				left: 200px;
 			}
 
 			.Scene3-10Tooth {
 				position: absolute;
 				z-index: 2;
-				top: 100px;
+				top: 120px;
 				left: 200px;
 			}
 
@@ -716,13 +716,13 @@
 				display: none;
 			}
 
-			#scene3,
+			/*#scene3,
 			#scene,
 			#intensityButtons,
 			#role {
 				display: block;
 				z-index: 1000;
-			}
+			}*/
 
 			#role {
 				text-transform: uppercase;
@@ -774,8 +774,8 @@
 				background-size: cover;
 				background-position: center;
 
-				height: 1080px;
-				width: 1920px;
+				height: 900px;
+				width: 1440px;
 
 				position: absolute;
 				top: 0;
@@ -956,7 +956,7 @@
 			<h1 class="Header" id="role">You are the ghost</h1>
 
 			<div id="scene1">
-				<div class="scene-content">
+				<div class="scene-content" style="transform: scale(0.65);">
 					<img
 						onclick="shakeObject(1)"
 						class="Scene1-1Forest item"
@@ -1025,7 +1025,7 @@
 			</div>
 
 			<div id="scene2">
-				<div class="scene-content">
+				<div class="scene-content" style="transform: scale(0.6);">
 					<img
 						onclick="shakeObject(1)"
 						class="Scene2-1 item"
@@ -1089,8 +1089,8 @@
 				</div>
 			</div>
 
-			<div id="scene3">
-			<div class="scene-content">
+			<div id="scene3" >
+			<div class="scene-content" style="transform: scale(0.9);">
 				<img
 					onclick="shakeObject(1)"
 					class="Scene3-1Candle"
