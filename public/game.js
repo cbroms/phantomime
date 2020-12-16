@@ -6,13 +6,13 @@ let state = {};
 let currIntroScene = 0;
 let intensity = 1;
 let currScene = 1;
-let candleText = [
-	"",
-	"Bloody wall with message",
-	"Bloody animal footprints on ground",
-	"Desk spattered in blood",
-	"Dead body’s leg",
-];
+// let candleText = [
+// 	"",
+// 	"Bloody wall with message",
+// 	"Bloody animal footprints on ground",
+// 	"Desk spattered in blood",
+// 	"Dead body’s leg",
+// ];
 let litCandles = [false, false, false, false, false, false];
 
 const socket = io();
@@ -188,7 +188,8 @@ socket.on("ghostLitCandle", (num) => {
 	for (i = 0; i < litCandles.length; i++) {
 		if (litCandles[i] === true) numLit++;
 	}
-	var percent = ceil((numLit / (1.0 * litCandles.length)) * 100);
+	var percent = Math.ceil((numLit / litCandles.length) * 100);
+	console.log(percent);
 	playMusic("rattling_sound");
 
 	// set yellow filter on candle
@@ -201,8 +202,8 @@ socket.on("ghostLitCandle", (num) => {
 		});
 
 	// increase image contrast
-	document.querySelectorAll(`inner`).forEach((elt) => {
-		elt.style.filter = "contrast(" + percent + "%)";
+	document.querySelectorAll('.finalscene-bg').forEach((elt) => {
+		elt.style.filter = "brightness(" + percent + "%)";
 	});
 
 	// Only ghost sends the completion event??

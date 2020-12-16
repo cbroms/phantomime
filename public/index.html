@@ -158,12 +158,34 @@
 				left: 500px;
 			}
 
-			img[class^="Scene4-"]
-			/*.Scene4-all*/ {
-				position: absolute;
-				z-index: 2;
-				top: 80px;
-				left: 0px;
+			.Scene4-1 {
+				top: 800px;
+				left: 35vw;
+			}
+
+			.Scene4-2 {
+				top: 800px;
+				left: 50vw;
+			}
+
+			.Scene4-3 {
+				top: 800px;
+				left: 63vw;
+			}
+
+			.Scene4-4 {
+				top: 800px;
+				left: 77vw;
+			}
+
+			.Scene4-5 {
+				top: 800px;
+				left: 90vw;
+			}
+
+			.Scene4-6 {
+				top: 800px;
+				left: 10vw;
 			}
 
 			.Header {
@@ -176,11 +198,11 @@
 				z-index: 1;
 			}
 
-			.Scene4-inner {
+			/* .Scene4-inner {
 				position: absolute;
 				z-index: 1;
 				filter: contrast(0%);
-			}
+			} */
 
 			.yellow {
 				-webkit-filter: grayscale(100%) brightness(120%) sepia(90%)
@@ -464,6 +486,31 @@
 				position: absolute;
 				top: 0;
 				left: 0;
+			}
+
+			#finalscene {
+				background-image: url("Assets/Resources/Scene_4/SceneNoObject.png");
+				background-size: cover;
+				background-position: center;
+
+				height: 100%;
+				width: 100%;
+
+				position: absolute;
+				top: 0;
+				left: 0;
+			}
+
+			.finalscene-bg {
+				height: 100%;
+				width: 100%;
+
+				z-index: 1;
+				position: absolute;
+				top: 0;
+				left: 0;
+				position: absolute;
+				filter: brightness(0%);
 			}
 
 			.scene-content {
@@ -815,39 +862,43 @@
 		<div id="finalscene">
 			<img
 				onclick="lightCandle(1)"
-				class="Scene4-1"
+				class="Scene4-1 item"
 				src="Assets/Resources/Scene_4/BotMidRight.png"
 				alt="BotMidRight"
 			/>
 			<img
 				onclick="lightCandle(2)"
-				class="Scene4-2"
+				class="Scene4-2 item"
 				src="Assets/Resources/Scene_4/BottomMidLeft.png"
 				alt="BotMidLeft"
 			/>
 			<img
 				onclick="lightCandle(3)"
-				class="Scene4-3"
+				class="Scene4-3 item"
 				src="Assets/Resources/Scene_4/Left.png"
 				alt="Left"
 			/>
 			<img
 				onclick="lightCandle(4)"
-				class="Scene4-4"
+				class="Scene4-4 item"
 				src="Assets/Resources/Scene_4/Right.png"
 				alt="Right"
 			/>
 			<img
 				onclick="lightCandle(5)"
-				class="Scene4-5"
+				class="Scene4-5 item"
 				src="Assets/Resources/Scene_4/TopMidLeft.png"
 				alt="TopMidLeft"
 			/>
 			<img
 				onclick="lightCandle(6)"
-				class="Scene4-6"
+				class="Scene4-6 item"
 				src="Assets/Resources/Scene_4/TopMidRight.png"
 				alt="TopMidRight"
+			/>
+			<img
+				class="finalscene-bg"
+				src="Assets/Resources/Scene_4/SceneNoObject.png"
 			/>
 		</div>
 
