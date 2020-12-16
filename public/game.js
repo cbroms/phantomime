@@ -5,8 +5,9 @@ let guessesThisWord = 0;
 let state = {};
 let currIntroScene = 0;
 let intensity = 1;
+let currScene = 1;
 let candleText = ["", "Bloody wall with message", "Bloody animal footprints on ground","Desk spattered in blood", "Dead body’s leg"];
-let litCandles = [false, false, false, false];
+let litCandles = [false, false, false, false, false, false];
 
 const socket = io();
 
@@ -47,8 +48,8 @@ socket.on("showGameUI", () => {
 
 socket.on("nextWord", () => {
 	//TODO: stop rattling animation here
-	document.querySelectorAll('p[class^="c"]').forEach((elt) => {
-		elt.style.fontWeight = 400;
+	document.querySelectorAll('img[class^="Scene"]').forEach((elt) => {
+		elt.classList.remove("shake" + intensity);
 	});
 	setText("hint", "");
 
@@ -64,8 +65,8 @@ socket.on("nextWord", () => {
 
 socket.on("nextTask", () => {
 	//TODO: stop rattling animation here
-	document.querySelectorAll('p[class^="c"]').forEach((elt) => {
-		elt.style.fontWeight = 400;
+	document.querySelectorAll('img[class^="Scene"]').forEach((elt) => {
+		elt.classList.remove("shake" + intensity);
 	});
 	setText("hint", "");
 	setText("lastGuess", "");
@@ -81,11 +82,13 @@ socket.on("nextTask", () => {
 	task++;
 
 	if (task === 1) {
+		currScene = 2;
 		show("scene2");
 	} else if (task === 2) {
+		currScene = 3;
 		show("scene3");
 	} else if (task === 3) {
-		//TODO: final image?? put it in the html
+		currScene = 4;
 		show("finalscene");
 		hide("guessed");
 		hide("input");
@@ -122,7 +125,9 @@ socket.on("ghostMovedObject", (obj) => {
 	var num = obj.num;
 	intensity = obj.intense;
 
-	//TODO: USE intensity VARIABLE TO MAKE ANIMATIONS DIFFERENT
+	document.querySelectorAll('img[class^="Scene' + currScene + "-" + num.toString() + '"]').forEach((elt) => {
+		elt.classList.add("shake" + intensity);
+	});
 
 	// set the text bold
 	//document.querySelectorAll(`.c${num.toString()}`).forEach((elt) => {
@@ -131,30 +136,33 @@ socket.on("ghostMovedObject", (obj) => {
 
 	// reset the text after intensity seconds
 	window.setTimeout(() => {
-		document.querySelectorAll(`.c${num.toString()}`).forEach((elt) => {
-			elt.style.fontWeight = 400;
+		document.querySelectorAll('img[class^="Scene' + currScene + "-" + num.toString() + '"]').forEach((elt) => {
+			elt.classList.remove("shake" + intensity);
 		});
-	}, 1000 * intensity);
+	}, 2000);
 });
 
 socket.on("ghostLitCandle", (num) => {	
-	//TODO: actually light candle image here
 	litCandles[num-1] = true;
+	var numLit = 0;
+	var i = 0;
+	for (i = 0; i < litCandles.length; i++) {
+		if (litCandles[i] === true) numLit++;
+	}
+	var percent = ceil(numLit / (1.0 * litCandles.length) * 100);
 
-	// set the text bold and to what the candle lit up
-	document.querySelectorAll(`.c${num.toString()}`).forEach((elt) => {
-		elt.style.fontWeight = 600;
-		elt.innerHTML = candleText[num];
+	// set yellow filter on candle
+	document.querySelectorAll('img[class^="Scene' + currScene + "-" + num.toString() + '"]').forEach((elt) => {
+		elt.classList.add("yellow");
+	});
+
+	// increase image contrast
+	document.querySelectorAll(`inner`).forEach((elt) => {
+		elt.style.filter="contrast(" + percent + "%)";
 	});
 
 	// Only ghost sends the completion event??
 	if (iAmGhost === true) {
-		var numLit = 0;
-		var i = 0;
-		for (i = 0; i < litCandles.length; i++) {
-			if (litCandles[i] === true) numLit++;
-		}
-	
 		if (numLit === litCandles.length) {
 			socket.emit("litAllCandles");
 		}
@@ -228,8 +236,8 @@ function lightCandle(num) {
 
 function shakeObject(num) {
 	if (iAmGhost) socket.emit("moveObject", {num: num, intense: intensity});
-	element.classList.add("shake");
-	element.classList.remove("shake");
+	// element.classList.add("shake" + intensity);
+	// element.classList.remove("shake" + intensity);
 }
 
 function submitGuess() {
