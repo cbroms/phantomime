@@ -256,8 +256,39 @@
 				margin-top: 85vh;
 				height: 40px;
 				width: 250px;
-				font-size: 25px;
+				background-image: url("Assets/Resources/Button_Asset_Large.png");
+				border-radius: 7px;
+				font-size: 35px;
 			}
+
+			#introButton {
+				height: 40px;
+				width: 100px;
+				background-image: linear-gradient(rgba(0, 0, 0, 0.5),
+                       rgba(0, 0, 0, 0.5)), url("Assets/Resources/Button_Asset_Small.png");
+				border-radius: 7px;
+				font-size: 35px;
+
+			}
+
+			#outroButton {
+				height: 40px;
+				width: 250px;
+				background-image: linear-gradient(rgba(0, 0, 0, 0.5),
+                       rgba(0, 0, 0, 0.5)), url("Assets/Resources/Button_Asset_Large.png");
+				border-radius: 7px;
+				font-size: 35px;
+			}
+
+			#guessButton {
+				height: 40px;
+				width: 250px;
+				background-image: linear-gradient(rgba(0, 0, 0, 0.5),
+                       rgba(0, 0, 0, 0.5)), url("Assets/Resources/Button_Asset_Large.png");
+				border-radius: 7px;
+				font-size: 35px;
+			}
+
 
 			#queueCredits {
 				font-size: 18px;
@@ -268,6 +299,20 @@
 			}
 
 			#waitingScene {
+				display: none;
+				background-image: url("Assets/Resources/Scene_1/Scene_1_Wall.png");
+				background-size: cover;
+				background-position: center;
+				display: none;
+				height: 100%;
+				width: 100%;
+
+				position: absolute;
+				top: 0;
+				left: 0;
+			}
+
+			#partnerLeft {
 				display: none;
 				background-image: url("Assets/Resources/Scene_1/Scene_1_Wall.png");
 				background-size: cover;
@@ -522,7 +567,12 @@
 			#intensity2,
 			#intensity3 {
 				text-transform: lowercase;
-				font-size: 20px;
+				height: 40px;
+				width: 200px;
+				background-image: linear-gradient(rgba(0, 0, 0, 0.5),
+                       rgba(0, 0, 0, 0.5)), url("Assets/Resources/Button_Asset_Large.png");
+				border-radius: 7px;
+				font-size: 30px;
 			}
 
 			#complete {
@@ -572,8 +622,8 @@
 				outline: none;
 				font-size: 40px;
 				font-family: ghosty;
-				background-color: rgba(0, 0, 0, 0.2);
 				color: white;
+				background-color: rgba(0, 0, 0, 0.2);
 			}
 
 			input:focus {
@@ -598,6 +648,17 @@
 						id="queueImage"
 						src="Assets/Resources/Queue/Sprite_1.png"
 					/>
+				</div>
+			</div>
+		</div>
+
+		<div id="partnerLeft">
+			<div class="center">
+				<div class="center-content">
+					<h1>Your partner left</h1>
+					<button id="outroButton" onclick="window.location.reload()">
+						Leave game
+					</button>
 				</div>
 			</div>
 		</div>
@@ -871,7 +932,7 @@
 
 		<div id="input">
 			<input type="text" id="guess" />
-			<button onclick="submitGuess()">make guess</button>
+			<button id="guessButton" onclick="submitGuess()">make guess</button>
 		</div>
 
 		<h3 id="hint"></h3>
