@@ -53,7 +53,7 @@ socket.on("showGameUI", () => {
 	setMusic("rattling_sound", "Assets/Resources/Music/Scene_1/rattle.mp3");
 	hide("introScene");
 	show("scene");
-	show("scene2");
+	show("scene1");
 	show("guessed");
 
 	if (iAmGhost) {
@@ -170,7 +170,7 @@ socket.on("ghostMovedObject", (obj) => {
 			'img[class^="Scene' + currScene + "-" + num.toString() + '"]'
 		)
 		.forEach((elt) => {
-			if (num.toString() === '1' && elt.className.includes("10")) continue;
+			if (num.toString() === '1' && elt.className.includes("10")) return;
 			else elt.classList.add("shake" + intensity);
 		});
 
@@ -190,7 +190,7 @@ socket.on("ghostMovedObject", (obj) => {
 				'img[class^="Scene' + currScene + "-" + num.toString() + '"]'
 			)
 			.forEach((elt) => {
-				if (num.toString() === '1' && elt.className.includes("10")) continue;
+				if (num.toString() === '1' && elt.className.includes("10")) return;
 				else elt.classList.remove("shake" + intensity);
 			});
 	}, 2000);
