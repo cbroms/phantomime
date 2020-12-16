@@ -37,7 +37,7 @@ socket.on("enteredGame", (data) => {
 socket.on("showGameUI", () => {
 	hide("introScene");
 	show("scene");
-	show("scene1");
+	show("scene2");
 	show("guessed");
 
 	if (iAmGhost) {
