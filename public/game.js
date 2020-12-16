@@ -53,7 +53,7 @@ socket.on("showGameUI", () => {
 	setMusic("rattling_sound", "Assets/Resources/Music/Scene_1/rattle.mp3");
 	hide("introScene");
 	show("scene");
-	show("scene1");
+	show("scene2");
 	show("guessed");
 
 	if (iAmGhost) {
