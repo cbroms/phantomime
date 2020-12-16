@@ -46,38 +46,21 @@ socket.on("showGameUI", () => {
 		playMusic("ambient_scene");
 	}, 5000);
 
-	show("finalscene");
-	show("finalghost");
-	show("finalhand");
-	show("finalghosthand");
-	//TODO: do we want the final image to be shown at completion??
-	// hide("scene");
-	document.querySelectorAll('.finalghost').forEach((elt) => {
-		elt.classList.add("final-ghostanimation");
-	});
-	document.querySelectorAll('.finalhand').forEach((elt) => {
-		elt.classList.add("final-handanimation");
-	});
-	document.querySelectorAll('.finalghosthand').forEach((elt) => {
-		elt.classList.add("final-ghosthandanimation");
-	});
+	playMusic("ambient_bg");
+	pauseMusic("title_music");
+	setMusic("rattling_sound", "Assets/Resources/Music/Scene_1/rattle.mp3");
+	hide("introScene");
+	show("scene");
+	show("scene1");
+	show("guessed");
 
-
-	// playMusic("ambient_bg");
-	// pauseMusic("title_music");
-	// setMusic("rattling_sound", "Assets/Resources/Music/Scene_1/rattle.mp3");
-	// hide("introScene");
-	// show("scene");
-	// show("scene1");
-	// show("guessed");
-
-	// if (iAmGhost) {
-	// 	show("intensityButtons");
-	// 	setText("role", "The word is: " + state.taskWords[task][index]);
-	// } else {
-	// 	show("input");
-	// 	setText("role", "Guess the word.");
-	// }
+	if (iAmGhost) {
+		show("intensityButtons");
+		setText("role", "The word is: " + state.taskWords[task][index]);
+	} else {
+		show("input");
+		setText("role", "Guess the word.");
+	}
 });
 
 socket.on("partnerLeft", () => {
@@ -100,7 +83,7 @@ socket.on("nextWord", () => {
 	});
 	pauseMusic("rattling_sound");
 
-	setText("hint", "");
+	document.getElementById("guess").placeholder = "";
 
 	guessesThisWord = 0;
 	index++;
@@ -116,14 +99,17 @@ socket.on("nextTask", () => {
 	});
 	pauseMusic("rattling_sound");
 
-	setText("hint", "");
+	
 	setText("lastGuess", "");
 
 	hide("scene1");
 	hide("scene2");
 	hide("scene3");
 	hide("finalscene");
-	setText("hint", "");
+	
+	// set the hint to nothing 
+	document.getElementById("guess").placeholder = "";
+
 
 	guessesThisWord = 0;
 	index = 0;
@@ -352,7 +338,9 @@ function submitGuess() {
 		// no hint this round
 	}
 
-	setText("hint", hint);
+	//setText("hint", hint);
+	// add the hint as a placeholder
+	document.getElementById("guess").placeholder = hint;
 
 	const guess = document.getElementById("guess").value;
 	socket.emit("guess", guess);
