@@ -230,6 +230,7 @@ socket.on("ghostLitCandle", (num) => {
 		)
 		.forEach((elt) => {
 			elt.classList.add("yellow");
+			elt.src = "Assets/Resources/Scene_4/" + num + ".png";
 		});
 
 	// increase image contrast
