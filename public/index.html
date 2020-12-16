@@ -205,12 +205,12 @@
 
 			.Scene4-3 {
 				top: 65%;
-				left: 35%;
+				left: 33%;
 			}
 
 			.Scene4-4 {
 				top: 65%;
-				left: 52%;
+				left: 58%;
 			}
 
 			.Scene4-5 {
@@ -242,6 +242,15 @@
 			}
 
 			.finalghosthand {
+				opacity: 0;
+				z-index: 10;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+			}
+
+			.endCard {
 				opacity: 0;
 				z-index: 10;
 				position: absolute;
@@ -316,6 +325,15 @@
 			.final-ghosthandanimation {
 				/* Start the shake animation and make the animation last for 2 seconds */
 				animation: finalghosthandanimation 10s;
+
+				/* When the animation is finished, start again */
+				/* animation-iteration-count: 1; */
+			}
+
+			.final-endCard {
+				/* Start the shake animation and make the animation last for 2 seconds */
+				animation: finalendcardanimation 10s;
+				animation-fill-mode: forwards;
 
 				/* When the animation is finished, start again */
 				/* animation-iteration-count: 1; */
@@ -543,6 +561,42 @@
 				}
 				100% {
 					transform: translate(1px, -2px) rotate(-10deg);
+				}
+			}
+
+			@keyframes finalendcardanimation {
+				0% {
+					opacity: 0;
+				}
+				10% {
+					opacity: 0;
+				}
+				20% {
+					opacity: 0;
+				}
+				30% {
+					opacity: 0;
+				}
+				40% {
+					opacity: 0;
+				}
+				50% {
+					opacity: 0;
+				}
+				60% {
+					opacity: 0;
+				}
+				70% {
+					opacity: 0;
+				}
+				80% {
+					opacity: 0;
+				}
+				90% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
 				}
 			}
 
@@ -1156,6 +1210,7 @@
 				id="finalghosthand"
 				src="Assets/Resources/Scene_4/finalghosthand.png"
 			/>
+			<h1 id="endCard" class="endCard">GAME COMPLETE</h1>
 		</div>
 
 		<div id="intensityButtons">

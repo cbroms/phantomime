@@ -133,6 +133,7 @@ socket.on("nextTask", () => {
 		hide("finalghost");
 		hide("finalhand");
 		hide("finalghosthand");
+		hide("endCard");
 		setMusicLoop("rattling_sound", false);
 		setMusic("rattling_sound", "Assets/Resources/Music/Scene_4/rattle.mp3");
 		setText(
@@ -154,6 +155,8 @@ socket.on("tasksComplete", () => {
 	show("finalghost");
 	show("finalhand");
 	show("finalghosthand");
+	show("endCard");
+	hide("role");
 	//TODO: do we want the final image to be shown at completion??
 	// hide("scene");
 	document.querySelectorAll('.finalghost').forEach((elt) => {
@@ -164,6 +167,9 @@ socket.on("tasksComplete", () => {
 	});
 	document.querySelectorAll('.finalghosthand').forEach((elt) => {
 		elt.classList.add("final-ghosthandanimation");
+	});
+	document.querySelectorAll('.endCard').forEach((elt) => {
+		elt.classList.add("final-endCard");
 	});
 	// show("complete");
 });
