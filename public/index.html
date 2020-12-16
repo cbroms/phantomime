@@ -4,83 +4,89 @@
 		<title>Phantomime</title>
 		<script src="/socket.io/socket.io.js"></script>
 		<style type="text/css">
-			.Scene1-1Forest {
+
+			.item {
 				position: absolute;
 				z-index: 2;
+			}
+
+			.Scene1-1Forest {
 				top: 10vh;
 				left: 5vw;
 			}
 
 			.Scene1-2Mansion {
-				position: absolute;
-				z-index: 2;
 				top: 15vh;
 				left: 60vw;
 			}
 
 			.Scene1-3genric {
-				position: absolute;
-				z-index: 2;
 				top: 10vh;
 				left: 120vw;
 			}
 
 			.Scene1-4suit {
-				position: absolute;
-				z-index: 2;
 				top: 25vh;
 				left: 33vw;
 			}
 
 			.Scene1-5Clock {
-				position: absolute;
-				z-index: 2;
 				top: 52vh;
 				left: 55vw;
 			}
 
 			.Scene1-6Cow {
-				position: absolute;
-				z-index: 2;
 				top: 30vh;
 				left: 95vw;
 			}
 
 			.Scene1-7Horse {
-				position: absolute;
-				z-index: 2;
 				top: 65vh;
 				left: 5vw;
 			}
 
 			.Scene1-8Dog {
-				position: absolute;
-				z-index: 2;
 				top: 100vh;
 				left: 40vw;
 			}
 
 			.Scene1-9Hill {
-				position: absolute;
-				z-index: 2;
 				top: 90vh;
 				left: 85vw;
 			}
 
 			.Scene1-10Moutain {
-				position: absolute;
-				z-index: 2;
 				top: 80vh;
 				left: 120vw;
 			}
 
-			img[class^="Scene2-"]
-			/*.Scene2-all*/ {
-				position: absolute;
-				z-index: 2;
-				top: 140px;
-				left: 5px;
+
+			.Scene2-1 {
+				top: 17vh;
+				left: 35vw;
 			}
+
+			.Scene2-2 {
+				top: 19vh;
+				left: 50vw;
+			}
+
+			.Scene2-3 {
+				top: 19vh;
+				left: 63vw;
+			}
+
+			.Scene2-4 {
+				top: 18vh;
+				left: 77vw;
+			}
+
+			.Scene2-5 {
+				top: 18vh;
+				left: 90vw;
+			}
+
+		
 
 			.Scene3-1Candle {
 				position: absolute;
@@ -401,14 +407,14 @@
 				display: none;
 			}
 
-			/*#scene1,
+			/*#scene2,
 			#scene,
 			#intensityButtons,
 			#role {
 				display: block;
 				z-index: 1000;
-			}*/
-
+			}
+*/
 			#role {
 				text-transform: uppercase;
 				left: 100px;
@@ -591,61 +597,61 @@
 				<div class="scene-content">
 					<img
 						onclick="shakeObject(1)"
-						class="Scene1-1Forest"
+						class="Scene1-1Forest item"
 						src="Assets/Resources/Scene_1/Scene1Painting1.png"
 						alt="Forest Scene"
 					/>
 					<img
 						onclick="shakeObject(2)"
-						class="Scene1-2Mansion"
+						class="Scene1-2Mansion item"
 						src="Assets/Resources/Scene_1/Scene1Painting2.png"
 						alt="big mansion"
 					/>
 					<img
 						onclick="shakeObject(3)"
-						class="Scene1-3genric"
+						class="Scene1-3genric item"
 						src="Assets/Resources/Scene_1/Scene1Painting3.png"
 						alt="Genric portrait"
 					/>
 					<img
 						onclick="shakeObject(4)"
-						class="Scene1-4suit"
+						class="Scene1-4suit item"
 						src="Assets/Resources/Scene_1/Scene1Painting4.png"
 						alt="Sick suit"
 					/>
 					<img
 						onclick="shakeObject(5)"
-						class="Scene1-5Clock"
+						class="Scene1-5Clock item"
 						src="Assets/Resources/Scene_1/Scene1Painting5.png"
 						alt="Fancy clock"
 					/>
 					<img
 						onclick="shakeObject(6)"
-						class="Scene1-6Cow"
+						class="Scene1-6Cow item"
 						src="Assets/Resources/Scene_1/Scene1Painting6.png"
 						alt="Cows Grazing"
 					/>
 					<img
 						onclick="shakeObject(7)"
-						class="Scene1-7Horse"
+						class="Scene1-7Horse item"
 						src="Assets/Resources/Scene_1/Scene1Painting7.png"
 						alt="person on horse"
 					/>
 					<img
 						onclick="shakeObject(8)"
-						class="Scene1-8Dog"
+						class="Scene1-8Dog item"
 						src="Assets/Resources/Scene_1/Scene1Painting8.png"
 						alt="same man with puppy"
 					/>
 					<img
 						onclick="shakeObject(9)"
-						class="Scene1-9Hill"
+						class="Scene1-9Hill item"
 						src="Assets/Resources/Scene_1/Scene1Painting9.png"
 						alt="hilly scene"
 					/>
 					<img
 						onclick="shakeObject(10)"
-						class="Scene1-10Moutain"
+						class="Scene1-10Moutain item"
 						src="Assets/Resources/Scene_1/Scene1Painting10.png"
 						alt="Mountain scene"
 					/>
@@ -660,61 +666,61 @@
 				<div class="scene-content">
 					<img
 						onclick="shakeObject(1)"
-						class="Scene2-1"
+						class="Scene2-1 item"
 						src="Assets/Resources/Scene_2/1Book.png"
 						alt="Sherlock"
 					/>
 					<img
 						onclick="shakeObject(2)"
-						class="Scene2-2"
+						class="Scene2-2 item"
 						src="Assets/Resources/Scene_2/2Book.png"
 						alt="HumanAnatmony"
 					/>
 					<img
 						onclick="shakeObject(3)"
-						class="Scene2-3"
+						class="Scene2-3 item"
 						src="Assets/Resources/Scene_2/3Book.png"
 						alt="AnimalKingdom"
 					/>
 					<img
 						onclick="shakeObject(4)"
-						class="Scene2-4"
+						class="Scene2-4 item"
 						src="Assets/Resources/Scene_2/4Book.png"
 						alt="Amputation"
 					/>
 					<img
 						onclick="shakeObject(5)"
-						class="Scene2-5"
+						class="Scene2-5 item"
 						src="Assets/Resources/Scene_2/5Book.png"
 						alt="MurderHound"
 					/>
 					<img
 						onclick="shakeObject(6)"
-						class="Scene2-6"
+						class="Scene2-6 item"
 						src="Assets/Resources/Scene_2/6Book.png"
 						alt="insects"
 					/>
 					<img
 						onclick="shakeObject(7)"
-						class="Scene2-7"
+						class="Scene2-7 item"
 						src="Assets/Resources/Scene_2/7Book.png"
 						alt="brains"
 					/>
 					<img
 						onclick="shakeObject(8)"
-						class="Scene2-8"
+						class="Scene2-8 item"
 						src="Assets/Resources/Scene_2/8Book.png"
 						alt="Who are you"
 					/>
 					<img
 						onclick="shakeObject(9)"
-						class="Scene2-9"
+						class="Scene2-9 item"
 						src="Assets/Resources/Scene_2/9Book.png"
 						alt="who killed"
 					/>
 					<img
 						onclick="shakeObject(10)"
-						class="Scene2-10"
+						class="Scene2-10 item"
 						src="Assets/Resources/Scene_2/10Book.png"
 						alt="human Nature"
 					/>
