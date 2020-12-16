@@ -157,7 +157,8 @@ socket.on("ghostMovedObject", (obj) => {
 			'img[class^="Scene' + currScene + "-" + num.toString() + '"]'
 		)
 		.forEach((elt) => {
-			elt.classList.add("shake" + intensity);
+			if (num.toString() === '1' && elt.className.includes("10")) continue;
+			else elt.classList.add("shake" + intensity);
 		});
 
 	setMusicLoop("rattling_sound", true);
@@ -176,7 +177,8 @@ socket.on("ghostMovedObject", (obj) => {
 				'img[class^="Scene' + currScene + "-" + num.toString() + '"]'
 			)
 			.forEach((elt) => {
-				elt.classList.remove("shake" + intensity);
+				if (num.toString() === '1' && elt.className.includes("10")) continue;
+				else elt.classList.remove("shake" + intensity);
 			});
 	}, 2000);
 });
