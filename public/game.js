@@ -51,7 +51,27 @@ socket.on("showGameUI", () => {
 	setMusic("rattling_sound", "Assets/Resources/Music/Scene_1/rattle.mp3");
 	hide("introScene");
 	show("scene");
-	show("scene1");
+	show("finalscene");
+	show("finalghost");
+	show("finalhand");
+	show("finalghosthand");
+	show("endCard");
+	hide("role");
+	//TODO: do we want the final image to be shown at completion??
+	// hide("scene");
+	document.querySelectorAll('.finalghost').forEach((elt) => {
+		elt.classList.add("final-ghostanimation");
+	});
+	document.querySelectorAll('.finalhand').forEach((elt) => {
+		elt.classList.add("final-handanimation");
+	});
+	document.querySelectorAll('.finalghosthand').forEach((elt) => {
+		elt.classList.add("final-ghosthandanimation");
+	});
+	document.querySelectorAll('.endCard').forEach((elt) => {
+		elt.classList.add("final-endCard");
+	});
+	// show("scene1");
 	show("guessed");
 
 	if (iAmGhost) {
