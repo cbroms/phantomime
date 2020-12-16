@@ -13,3 +13,21 @@ const setText = (id, text) => {
 const setImgSrc = (id, src) => {
 	document.getElementById(id).src = src;
 }
+
+const pauseMusic = (id) => {
+	document.getElementById(id).pause();
+}
+
+const playMusic = (id) => {
+	document.getElementById(id).play();
+}
+
+const setMusic = (id, src) => {
+	document.getElementById(id).src = src;
+	document.getElementById(id).pause();
+}
+
+const setMusicLoop = (id, loopVal) => {
+	document.getElementById(id).loop = loopVal;
+	document.getElementById(id).pause();
+}
