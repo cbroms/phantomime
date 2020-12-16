@@ -85,7 +85,7 @@ socket.on("nextWord", () => {
 	});
 	pauseMusic("rattling_sound");
 
-	setText("hint", "");
+	document.getElementById("guess").placeholder = "";
 
 	guessesThisWord = 0;
 	index++;
@@ -101,14 +101,17 @@ socket.on("nextTask", () => {
 	});
 	pauseMusic("rattling_sound");
 
-	setText("hint", "");
+	
 	setText("lastGuess", "");
 
 	hide("scene1");
 	hide("scene2");
 	hide("scene3");
 	hide("finalscene");
-	setText("hint", "");
+	
+	// set the hint to nothing 
+	document.getElementById("guess").placeholder = "";
+
 
 	guessesThisWord = 0;
 	index = 0;
@@ -322,7 +325,9 @@ function submitGuess() {
 		// no hint this round
 	}
 
-	setText("hint", hint);
+	//setText("hint", hint);
+	// add the hint as a placeholder
+	document.getElementById("guess").placeholder = hint;
 
 	const guess = document.getElementById("guess").value;
 	socket.emit("guess", guess);

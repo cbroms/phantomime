@@ -62,13 +62,23 @@ const defaultGameState = {
   taskWords: [
     ["animal", "wealthy", "landscape"],
     ["dissection", "biology", "mystery"],
-    ["sharp", "moist", "shiny"],
+    ["sharp", "preserved", "remains"],
   ],
   hints: [
     [
       ["a _ _ _ _ _", "a _ i _ _ _", "a _ i _ _ l"],
       ["w _ _ _ _ _ _", "w _ _ l _ _ _", "w _ _ l _ _ y"],
       ["l _ _ _ _ _ _ _ _", "l _ _ d _ _ _ _ _", "l _ _ d _ _ _ p _"],
+    ],
+    [
+      ["_ i _ _ _ _ _ _ _ _", "_ i s _ _ _ _ _ _ _", "_ i s _ _ _ _ _ _ n"],
+      ["_ _ _ l _ _ _", "_ _ _ l o _ _", "_ i _ l o _ _"],
+      ["_ _ _ t _ _ _", "_ _ _ t _ r _", "_ _ s t _ r _"],
+    ],
+    [
+      ["_ _ a _ _", "_ h a _ _", "_ h a r _"],
+      ["_ r _ _ _ _ _ _ _", "_ r _ _ _ _ _ e _", "_ r _ s _ _ _ e _"],
+      ["_ _ m _ _ _ _", "_ _ m _ i _ _", "_ _ m _ i _ s"],
     ],
   ],
   role: null, // am I the ghost (0) or explorer (1)?
