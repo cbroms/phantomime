@@ -49,6 +49,19 @@ socket.on("showGameUI", () => {
 	}
 });
 
+socket.on("partnerLeft", () => {
+	hide("scene1");
+	hide("scene2");
+	hide("scene3");
+	hide("hint")
+	hide("lastGuess")
+	hide("guessed")
+	hide("role")
+	hide("input")
+	hide("finalscene");
+	show("partnerLeft")
+})
+
 socket.on("nextWord", () => {
 	//TODO: stop rattling animation here
 	document.querySelectorAll('img[class^="Scene"]').forEach((elt) => {
