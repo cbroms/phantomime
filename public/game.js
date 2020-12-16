@@ -53,7 +53,7 @@ socket.on("showGameUI", () => {
 	setMusic("rattling_sound", "Assets/Resources/Music/Scene_1/rattle.mp3");
 	hide("introScene");
 	show("scene");
-	show("scene1");
+	show("scene2");
 	show("guessed");
 
 	if (iAmGhost) {
@@ -64,6 +64,19 @@ socket.on("showGameUI", () => {
 		setText("role", "Guess the word.");
 	}
 });
+
+socket.on("partnerLeft", () => {
+	hide("scene1");
+	hide("scene2");
+	hide("scene3");
+	hide("hint")
+	hide("lastGuess")
+	hide("guessed")
+	hide("role")
+	hide("input")
+	hide("finalscene");
+	show("partnerLeft")
+})
 
 socket.on("nextWord", () => {
 	//TODO: stop rattling animation here

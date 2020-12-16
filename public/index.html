@@ -86,76 +86,100 @@
 				left: 90vw;
 			}
 
+			.Scene2-6 {
+				top: 18vh;
+				left: 90vw;
+			}
+
+			.Scene2-7 {
+				top: 18vh;
+				left: 90vw;
+			}
+
+			.Scene2-8 {
+				top: 18vh;
+				left: 90vw;
+			}
+
+			.Scene2-9 {
+				top: 18vh;
+				left: 90vw;
+			}
+
+			.Scene2-10 {
+				top: 18vh;
+				left: 90vw;
+			}
 		
 
 			.Scene3-1Candle {
 				position: absolute;
 				z-index: 2;
-				top: 280px;
-				left: 700px;
+				top: 280vh;
+				left: 700vw;
 			}
 
 			.Scene3-2Claws {
 				position: absolute;
 				z-index: 2;
-				top: 530px;
-				left: 1300px;
+				top: 530vh;
+				left: 1300vw;
 			}
 
 			.Scene3-3Eyeballs {
 				position: absolute;
 				z-index: 2;
-				top: 800px;
-				left: 1400px;
+				top: 800vh;
+				left: 1400vw;
 			}
 
 			.Scene3-4Feathers {
 				position: absolute;
 				z-index: 2;
-				top: 280px;
-				left: 1200px;
+				top: 280vh;
+				left: 1200vw;
 			}
 
 			.Scene3-5Heart {
 				position: absolute;
 				z-index: 2;
-				top: 530px;
-				left: 800px;
+				top: 530vh;
+				left: 800vw;
 			}
 
 			.Scene3-6Liver {
 				position: absolute;
 				z-index: 2;
-				top: 530px;
-				left: 500px;
+				top: 530vh;
+				left: 500vw;
 			}
 
 			.Scene3-7Rat {
 				position: absolute;
 				z-index: 2;
-				top: 530px;
-				left: 1000px;
+				top: 530vh;
+				left: 1000vw;
 			}
 
 			.Scene3-8Scapel {
 				position: absolute;
 				z-index: 2;
-				top: 850px;
-				left: 1000px;
+				top: 850vh;
+				left: 1000vw;
 			}
 
 			.Scene3-9Skull {
 				position: absolute;
 				z-index: 2;
-				top: 800px;
-				left: 400px;
+				top: 800vh;
+				left: 400vw;
 			}
 
 			.Scene3-10Tooth {
 				position: absolute;
 				z-index: 2;
-				top: 280px;
-				left: 500px;
+				top: 280vh;
+				left: 500vw;
 			}
 
 			.Scene4-1 {
@@ -254,8 +278,39 @@
 				margin-top: 85vh;
 				height: 40px;
 				width: 250px;
-				font-size: 25px;
+				background-image: url("Assets/Resources/Button_Asset_Large.png");
+				border-radius: 7px;
+				font-size: 35px;
 			}
+
+			#introButton {
+				height: 40px;
+				width: 100px;
+				background-image: linear-gradient(rgba(0, 0, 0, 0.5),
+                       rgba(0, 0, 0, 0.5)), url("Assets/Resources/Button_Asset_Small.png");
+				border-radius: 7px;
+				font-size: 35px;
+
+			}
+
+			#outroButton {
+				height: 40px;
+				width: 250px;
+				background-image: linear-gradient(rgba(0, 0, 0, 0.5),
+                       rgba(0, 0, 0, 0.5)), url("Assets/Resources/Button_Asset_Large.png");
+				border-radius: 7px;
+				font-size: 35px;
+			}
+
+			#guessButton {
+				height: 40px;
+				width: 250px;
+				background-image: linear-gradient(rgba(0, 0, 0, 0.5),
+                       rgba(0, 0, 0, 0.5)), url("Assets/Resources/Button_Asset_Large.png");
+				border-radius: 7px;
+				font-size: 35px;
+			}
+
 
 			#queueCredits {
 				font-size: 18px;
@@ -266,6 +321,20 @@
 			}
 
 			#waitingScene {
+				display: none;
+				background-image: url("Assets/Resources/Scene_1/Scene_1_Wall.png");
+				background-size: cover;
+				background-position: center;
+				display: none;
+				height: 100%;
+				width: 100%;
+
+				position: absolute;
+				top: 0;
+				left: 0;
+			}
+
+			#partnerLeft {
 				display: none;
 				background-image: url("Assets/Resources/Scene_1/Scene_1_Wall.png");
 				background-size: cover;
@@ -545,7 +614,12 @@
 			#intensity2,
 			#intensity3 {
 				text-transform: lowercase;
-				font-size: 20px;
+				height: 40px;
+				width: 200px;
+				background-image: linear-gradient(rgba(0, 0, 0, 0.5),
+                       rgba(0, 0, 0, 0.5)), url("Assets/Resources/Button_Asset_Large.png");
+				border-radius: 7px;
+				font-size: 30px;
 			}
 
 			#complete {
@@ -595,8 +669,8 @@
 				outline: none;
 				font-size: 40px;
 				font-family: ghosty;
-				background-color: rgba(0, 0, 0, 0.2);
 				color: white;
+				background-color: rgba(0, 0, 0, 0.2);
 			}
 
 			input:focus {
@@ -605,25 +679,6 @@
 		</style>
 	</head>
 	<body>
-
-		<audio id="title_music" loop>
-			<source src="Assets/Resources/Music/title_audio.mp3" type="audio/mp3">
-		</audio>
-
-		<audio id="ambient_bg" loop>
-			<source src="Assets/Resources/Music/wind_howl.mp3" type="audio/mp3">
-		</audio>
-
-		<audio id="ambient_scene">
-			<source src="Assets/Resources/Music/wind_howl.mp3" type="audio/mp3">
-		</audio>
-
-		<audio id="rattling_sound">
-			<source src="Assets/Resources/Music/wind_howl.mp3" type="audio/mp3">
-		</audio>
-
-
-
 		<div id="queue">
 			<p id="queueCredits">
 				PHANTOMIME <br />
@@ -640,6 +695,17 @@
 						id="queueImage"
 						src="Assets/Resources/Queue/Sprite_1.png"
 					/>
+				</div>
+			</div>
+		</div>
+
+		<div id="partnerLeft">
+			<div class="center">
+				<div class="center-content">
+					<h1>Your partner left</h1>
+					<button id="outroButton" onclick="window.location.reload()">
+						Leave game
+					</button>
 				</div>
 			</div>
 		</div>
@@ -733,61 +799,61 @@
 					<img
 						onclick="shakeObject(1)"
 						class="Scene2-1 item"
-						src="Assets/Resources/Scene_2/1Book.png"
+						src="Assets/Resources/Scene_2/book1.png"
 						alt="Sherlock"
 					/>
 					<img
 						onclick="shakeObject(2)"
 						class="Scene2-2 item"
-						src="Assets/Resources/Scene_2/2Book.png"
+						src="Assets/Resources/Scene_2/book2.png"
 						alt="HumanAnatmony"
 					/>
 					<img
 						onclick="shakeObject(3)"
 						class="Scene2-3 item"
-						src="Assets/Resources/Scene_2/3Book.png"
+						src="Assets/Resources/Scene_2/book3.png"
 						alt="AnimalKingdom"
 					/>
 					<img
 						onclick="shakeObject(4)"
 						class="Scene2-4 item"
-						src="Assets/Resources/Scene_2/4Book.png"
+						src="Assets/Resources/Scene_2/book4.png"
 						alt="Amputation"
 					/>
 					<img
 						onclick="shakeObject(5)"
 						class="Scene2-5 item"
-						src="Assets/Resources/Scene_2/5Book.png"
+						src="Assets/Resources/Scene_2/book5.png"
 						alt="MurderHound"
 					/>
 					<img
 						onclick="shakeObject(6)"
 						class="Scene2-6 item"
-						src="Assets/Resources/Scene_2/6Book.png"
+						src="Assets/Resources/Scene_2/book6.png"
 						alt="insects"
 					/>
 					<img
 						onclick="shakeObject(7)"
 						class="Scene2-7 item"
-						src="Assets/Resources/Scene_2/7Book.png"
+						src="Assets/Resources/Scene_2/book7.png"
 						alt="brains"
 					/>
 					<img
 						onclick="shakeObject(8)"
 						class="Scene2-8 item"
-						src="Assets/Resources/Scene_2/8Book.png"
+						src="Assets/Resources/Scene_2/book8.png"
 						alt="Who are you"
 					/>
 					<img
 						onclick="shakeObject(9)"
 						class="Scene2-9 item"
-						src="Assets/Resources/Scene_2/9Book.png"
+						src="Assets/Resources/Scene_2/book9.png"
 						alt="who killed"
 					/>
 					<img
 						onclick="shakeObject(10)"
 						class="Scene2-10 item"
-						src="Assets/Resources/Scene_2/10Book.png"
+						src="Assets/Resources/Scene_2/book10.png"
 						alt="human Nature"
 					/>
 				</div>
@@ -917,7 +983,7 @@
 
 		<div id="input">
 			<input type="text" id="guess" />
-			<button onclick="submitGuess()">make guess</button>
+			<button id="guessButton" onclick="submitGuess()">make guess</button>
 		</div>
 
 		<h3 id="hint"></h3>
