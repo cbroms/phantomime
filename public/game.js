@@ -21,12 +21,14 @@ let SceneBG;
 
 socket.on("connect", () => {
 	show("queue");
+	// playMusic("title_music"); doesn't work
 });
 
 socket.on("enteredGame", (data) => {
 	clearInterval();
 	// hide("queue");
 	hide("waitingScene");
+	playMusic("title_music");
 
 	state = data;
 	iAmGhost = data.role === 0 ? true : false;
@@ -35,6 +37,20 @@ socket.on("enteredGame", (data) => {
 });
 
 socket.on("showGameUI", () => {
+	// Play random ambient bg every 5 seconds
+	//TODO: ensure 5 random sounds per scene folder
+	setInterval(() => {
+		pauseMusic("ambient_scene");
+		var randomAudioTrack = "Assets/Resources/Music/Scene_" + currScene + "/BG/" + (Math.floor(Math.random() * 5)) + ".mp3";
+		setMusic("ambient_scene", randomAudioTrack);
+		playMusic("ambient_scene");
+	}, 5000);
+
+
+
+	playMusic("ambient_bg");
+	pauseMusic("title_music");
+	setMusic("rattling_sound", "Assets/Resources/Music/Scene_1/rattle.mp3");
 	hide("introScene");
 	show("scene");
 	show("scene1");
@@ -56,6 +72,8 @@ socket.on("nextWord", () => {
 	document.querySelectorAll('img[class^="Scene"]').forEach((elt) => {
 		elt.classList.remove("shake" + intensity);
 	});
+	pauseMusic("rattling_sound");
+
 	setText("hint", "");
 
 	guessesThisWord = 0;
@@ -73,6 +91,8 @@ socket.on("nextTask", () => {
 	document.querySelectorAll('img[class^="Scene"]').forEach((elt) => {
 		elt.classList.remove("shake" + intensity);
 	});
+	pauseMusic("rattling_sound");
+
 	setText("hint", "");
 	setText("lastGuess", "");
 
@@ -89,15 +109,19 @@ socket.on("nextTask", () => {
 	if (task === 1) {
 		currScene = 2;
 		show("scene2");
+		setMusic("rattling_sound", "Assets/Resources/Music/Scene_2/rattle.mp3");
 	} else if (task === 2) {
 		currScene = 3;
 		show("scene3");
+		setMusic("rattling_sound", "Assets/Resources/Music/Scene_3/rattle.mp3");
 	} else if (task === 3) {
 		currScene = 4;
 		show("finalscene");
 		hide("guessed");
 		hide("input");
 		hide("intensityButtons");
+		setMusicLoop("rattling_sound", false);
+		setMusic("rattling_sound", "Assets/Resources/Music/Scene_4/rattle.mp3");
 		setText(
 			"role",
 			iAmGhost
@@ -143,6 +167,9 @@ socket.on("ghostMovedObject", (obj) => {
 			elt.classList.add("shake" + intensity);
 		});
 
+	setMusicLoop("rattling_sound", true);
+	playMusic("rattling_sound");
+
 	// set the text bold
 	//document.querySelectorAll(`.c${num.toString()}`).forEach((elt) => {
 	//	elt.style.fontWeight = 600;
@@ -150,6 +177,7 @@ socket.on("ghostMovedObject", (obj) => {
 
 	// reset the text after intensity seconds
 	window.setTimeout(() => {
+		pauseMusic("rattling_sound");
 		document
 			.querySelectorAll(
 				'img[class^="Scene' + currScene + "-" + num.toString() + '"]'
@@ -168,6 +196,7 @@ socket.on("ghostLitCandle", (num) => {
 		if (litCandles[i] === true) numLit++;
 	}
 	var percent = ceil((numLit / (1.0 * litCandles.length)) * 100);
+	playMusic("rattling_sound");
 
 	// set yellow filter on candle
 	document
