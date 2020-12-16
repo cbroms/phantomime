@@ -125,9 +125,9 @@ socket.on("ghostMovedObject", (obj) => {
 	//TODO: USE intensity VARIABLE TO MAKE ANIMATIONS DIFFERENT
 
 	// set the text bold
-	document.querySelectorAll(`.c${num.toString()}`).forEach((elt) => {
-		elt.style.fontWeight = 600;
-	});
+	//document.querySelectorAll(`.c${num.toString()}`).forEach((elt) => {
+	//	elt.style.fontWeight = 600;
+	//});
 
 	// reset the text after intensity seconds
 	window.setTimeout(() => {
@@ -228,6 +228,8 @@ function lightCandle(num) {
 
 function shakeObject(num) {
 	if (iAmGhost) socket.emit("moveObject", {num: num, intense: intensity});
+	element.classList.add("shake");
+	element.classList.remove("shake");
 }
 
 function submitGuess() {
