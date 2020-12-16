@@ -3,145 +3,164 @@
 	<head>
 		<title>Phantomime</title>
 		<script src="/socket.io/socket.io.js"></script>
-
 		<style type="text/css">
 			.Scene1-1Forest {
 				position: absolute;
 				z-index: 2;
-				top: 200px; left: 40px;
+				top: 200px;
+				left: 40px;
 			}
 
 			.Scene1-2Mansion {
 				position: absolute;
 				z-index: 2;
-				top: 200px; left: 800px;
+				top: 200px;
+				left: 800px;
 			}
 
 			.Scene1-3genric {
 				position: absolute;
 				z-index: 2;
-				top: 200px; left: 1600px;
+				top: 200px;
+				left: 1600px;
 			}
 
 			.Scene1-4suit {
 				position: absolute;
 				z-index: 2;
-				top: 400px; left: 500px;
+				top: 400px;
+				left: 500px;
 			}
 
 			.Scene1-5Clock {
 				position: absolute;
 				z-index: 2;
-				top: 450px; left: 800px;
+				top: 450px;
+				left: 800px;
 			}
 
 			.Scene1-6Cow {
 				position: absolute;
 				z-index: 2;
-				top: 300px; left: 1300px;
+				top: 300px;
+				left: 1300px;
 			}
 
 			.Scene1-7Horse {
 				position: absolute;
 				z-index: 2;
-				top: 500px; left: 100px;
+				top: 500px;
+				left: 100px;
 			}
 
 			.Scene1-8Dog {
 				position: absolute;
 				z-index: 2;
-				top: 800px; left: 500px;
+				top: 800px;
+				left: 500px;
 			}
 
 			.Scene1-9Hill {
 				position: absolute;
 				z-index: 2;
-				top: 800px; left: 1100px;
+				top: 800px;
+				left: 1100px;
 			}
 
 			.Scene1-10Moutain {
 				position: absolute;
 				z-index: 2;
-				top: 700px; left: 1600px;
+				top: 700px;
+				left: 1600px;
 			}
 
 			img[class^="Scene2-"]
 			/*.Scene2-all*/ {
 				position: absolute;
 				z-index: 2;
-				top: 140px; left: 5px;
+				top: 140px;
+				left: 5px;
 			}
 
 			.Scene3-1Candle {
 				position: absolute;
 				z-index: 2;
-				top: 280px; left: 700px;
+				top: 280px;
+				left: 700px;
 			}
 
 			.Scene3-2Claws {
 				position: absolute;
 				z-index: 2;
-				top: 530px; left: 1300px;
+				top: 530px;
+				left: 1300px;
 			}
 
 			.Scene3-3Eyeballs {
 				position: absolute;
 				z-index: 2;
-				top: 800px; left: 1400px;
+				top: 800px;
+				left: 1400px;
 			}
 
 			.Scene3-4Feathers {
 				position: absolute;
 				z-index: 2;
-				top: 280px; left: 1200px;
+				top: 280px;
+				left: 1200px;
 			}
 
 			.Scene3-5Heart {
 				position: absolute;
 				z-index: 2;
-				top: 530px; left: 800px;
+				top: 530px;
+				left: 800px;
 			}
 
 			.Scene3-6Liver {
 				position: absolute;
 				z-index: 2;
-				top: 530px; left: 500px;
+				top: 530px;
+				left: 500px;
 			}
 
 			.Scene3-7Rat {
 				position: absolute;
 				z-index: 2;
-				top: 530px; left: 1000px;
+				top: 530px;
+				left: 1000px;
 			}
 
 			.Scene3-8Scapel {
 				position: absolute;
 				z-index: 2;
-				top: 850px; left: 1000px;
+				top: 850px;
+				left: 1000px;
 			}
 
 			.Scene3-9Skull {
 				position: absolute;
 				z-index: 2;
-				top: 800px; left: 400px;
+				top: 800px;
+				left: 400px;
 			}
 
 			.Scene3-10Tooth {
 				position: absolute;
 				z-index: 2;
-				top: 280px; left: 500px;
+				top: 280px;
+				left: 500px;
 			}
-	
+
 			img[class^="Scene4-"]
 			/*.Scene4-all*/ {
 				position: absolute;
 				z-index: 2;
-				top: 80px; left: 0px;
+				top: 80px;
+				left: 0px;
 			}
 
-
 			.Header {
-				
 				z-index: 3;
 				position: top;
 			}
@@ -149,18 +168,20 @@
 			.inner {
 				position: absolute;
 				z-index: 1;
-			} 
+			}
 
 			.Scene4-inner {
 				position: absolute;
 				z-index: 1;
 				filter: contrast(0%);
-			} 
+			}
 
 			.yellow {
-				-webkit-filter: grayscale(100%) brightness(120%) sepia(90%) hue-rotate(5deg) saturate(500%) contrast(0.7);
-				filter: grayscale(100%) brightness(120%) sepia(90%) hue-rotate(5deg) saturate(500%) contrast(0.7);
-    		}
+				-webkit-filter: grayscale(100%) brightness(120%) sepia(90%)
+					hue-rotate(5deg) saturate(500%) contrast(0.7);
+				filter: grayscale(100%) brightness(120%) sepia(90%)
+					hue-rotate(5deg) saturate(500%) contrast(0.7);
+			}
 
 			.shake1 {
 				/* Start the shake animation and make the animation last for 2 seconds */
@@ -185,11 +206,11 @@
 				/* When the animation is finished, start again */
 				animation-iteration-count: infinite;
 			}
-			
+
 			#queue {
 				background-image: url("Assets/Resources/phatomime_logo.png");
 				background-size: cover;
-				background-position: center; 
+				background-position: center;
 				display: none;
 				height: 100%;
 				width: 100%;
@@ -209,7 +230,7 @@
 			}
 
 			#queueCredits {
-				font-size:18px;
+				font-size: 18px;
 				position: absolute;
 				left: 10px;
 				bottom: 10px;
@@ -220,7 +241,7 @@
 				display: none;
 				background-image: url("Assets/Resources/Scene_1/Scene_1_Wall.png");
 				background-size: cover;
-				background-position: center; 
+				background-position: center;
 				display: none;
 				height: 100%;
 				width: 100%;
@@ -228,7 +249,6 @@
 				position: absolute;
 				top: 0;
 				left: 0;
-				
 			}
 
 			#queueImage {
@@ -239,11 +259,10 @@
 			#introScene {
 				display: none;
 
-				display: none;
 				background-image: url("Assets/Resources/Scene_1/Scene_1_Wall.png");
 				background-size: cover;
-				background-position: center; 
-				display: none;
+				background-position: center;
+
 				height: 100%;
 				width: 100%;
 
@@ -263,65 +282,117 @@
 			#hint {
 				z-index: 10;
 				position: absolute;
-				top: 50px; left: 40px;
+				top: 50px;
+				left: 40px;
 			}
-
-			#guessed {
-				z-index: 10;
-				position: absolute;
-				top: 75px; left: 40px;
-			}
-
-			#input {
-				z-index: 10;
-				position: absolute;
-				top: 100px; left: 40px;
-			}
-
-			
 
 			@keyframes shake1 {
-				0% { transform: translate(1px, 1px) rotate(0deg); }
-				10% { transform: translate(-1px, -2px) rotate(-1deg); }
-				20% { transform: translate(-3px, 0px) rotate(1deg); }
-				30% { transform: translate(3px, 2px) rotate(0deg); }
-				40% { transform: translate(1px, -1px) rotate(1deg); }
-				50% { transform: translate(-1px, 2px) rotate(-1deg); }
-				60% { transform: translate(-3px, 1px) rotate(0deg); }
-				70% { transform: translate(3px, 1px) rotate(-1deg); }
-				80% { transform: translate(-1px, -1px) rotate(1deg); }
-				90% { transform: translate(1px, 2px) rotate(0deg); }
-				100% { transform: translate(1px, -2px) rotate(-1deg); }
+				0% {
+					transform: translate(1px, 1px) rotate(0deg);
+				}
+				10% {
+					transform: translate(-1px, -2px) rotate(-1deg);
+				}
+				20% {
+					transform: translate(-3px, 0px) rotate(1deg);
+				}
+				30% {
+					transform: translate(3px, 2px) rotate(0deg);
+				}
+				40% {
+					transform: translate(1px, -1px) rotate(1deg);
+				}
+				50% {
+					transform: translate(-1px, 2px) rotate(-1deg);
+				}
+				60% {
+					transform: translate(-3px, 1px) rotate(0deg);
+				}
+				70% {
+					transform: translate(3px, 1px) rotate(-1deg);
+				}
+				80% {
+					transform: translate(-1px, -1px) rotate(1deg);
+				}
+				90% {
+					transform: translate(1px, 2px) rotate(0deg);
+				}
+				100% {
+					transform: translate(1px, -2px) rotate(-1deg);
+				}
 			}
 
 			@keyframes shake2 {
-				0% { transform: translate(1px, 1px) rotate(0deg); }
-				10% { transform: translate(-1px, -2px) rotate(-5deg); }
-				20% { transform: translate(-3px, 0px) rotate(5deg); }
-				30% { transform: translate(3px, 2px) rotate(0deg); }
-				40% { transform: translate(1px, -1px) rotate(5deg); }
-				50% { transform: translate(-1px, 2px) rotate(-5deg); }
-				60% { transform: translate(-3px, 1px) rotate(0deg); }
-				70% { transform: translate(3px, 1px) rotate(-5deg); }
-				80% { transform: translate(-1px, -1px) rotate(5deg); }
-				90% { transform: translate(1px, 2px) rotate(0deg); }
-				100% { transform: translate(1px, -2px) rotate(-5deg); }
+				0% {
+					transform: translate(1px, 1px) rotate(0deg);
+				}
+				10% {
+					transform: translate(-1px, -2px) rotate(-5deg);
+				}
+				20% {
+					transform: translate(-3px, 0px) rotate(5deg);
+				}
+				30% {
+					transform: translate(3px, 2px) rotate(0deg);
+				}
+				40% {
+					transform: translate(1px, -1px) rotate(5deg);
+				}
+				50% {
+					transform: translate(-1px, 2px) rotate(-5deg);
+				}
+				60% {
+					transform: translate(-3px, 1px) rotate(0deg);
+				}
+				70% {
+					transform: translate(3px, 1px) rotate(-5deg);
+				}
+				80% {
+					transform: translate(-1px, -1px) rotate(5deg);
+				}
+				90% {
+					transform: translate(1px, 2px) rotate(0deg);
+				}
+				100% {
+					transform: translate(1px, -2px) rotate(-5deg);
+				}
 			}
 
 			@keyframes shake3 {
-				0% { transform: translate(1px, 1px) rotate(0deg); }
-				10% { transform: translate(-1px, -2px) rotate(-10deg); }
-				20% { transform: translate(-3px, 0px) rotate(10deg); }
-				30% { transform: translate(3px, 2px) rotate(0deg); }
-				40% { transform: translate(1px, -1px) rotate(10deg); }
-				50% { transform: translate(-1px, 2px) rotate(-10deg); }
-				60% { transform: translate(-3px, 1px) rotate(0deg); }
-				70% { transform: translate(3px, 1px) rotate(-10deg); }
-				80% { transform: translate(-1px, -1px) rotate(10deg); }
-				90% { transform: translate(1px, 2px) rotate(0deg); }
-				100% { transform: translate(1px, -2px) rotate(-10deg); }
+				0% {
+					transform: translate(1px, 1px) rotate(0deg);
+				}
+				10% {
+					transform: translate(-1px, -2px) rotate(-10deg);
+				}
+				20% {
+					transform: translate(-3px, 0px) rotate(10deg);
+				}
+				30% {
+					transform: translate(3px, 2px) rotate(0deg);
+				}
+				40% {
+					transform: translate(1px, -1px) rotate(10deg);
+				}
+				50% {
+					transform: translate(-1px, 2px) rotate(-10deg);
+				}
+				60% {
+					transform: translate(-3px, 1px) rotate(0deg);
+				}
+				70% {
+					transform: translate(3px, 1px) rotate(-10deg);
+				}
+				80% {
+					transform: translate(-1px, -1px) rotate(10deg);
+				}
+				90% {
+					transform: translate(1px, 2px) rotate(0deg);
+				}
+				100% {
+					transform: translate(1px, -2px) rotate(-10deg);
+				}
 			}
-
 
 			#finalscene,
 			#scene1,
@@ -330,14 +401,98 @@
 				display: none;
 			}
 
+			/*#scene3,
+			#scene,
+			#intensityButtons,
+			#role {
+				display: block;
+				z-index: 1000;
+			}*/
+
+			#role {
+				text-transform: uppercase;
+				left: 100px;
+				position: absolute;
+			}
+
+			#intensityButtons {
+				position: absolute;
+				bottom: 10px;
+				left: 100px;
+			}
+
+			#scene1 {
+				background-image: url("Assets/Resources/Scene_1/Scene_1_Wall.png");
+				background-size: cover;
+				background-position: center;
+
+				height: 100%;
+				width: 100%;
+
+				position: absolute;
+				top: 0;
+				left: 0;
+			}
+
+			#scene2 {
+				background-image: url("Assets/Resources/Scene_2/Scene2ShelfOnly.png");
+				background-size: cover;
+				background-position: center;
+
+				height: 100%;
+				width: 100%;
+
+				position: absolute;
+				top: 0;
+				left: 0;
+			}
+
+			#scene3 {
+				background-image: url("Assets/Resources/Scene_3/Scene 3, Cabinet.png");
+				background-size: cover;
+				background-position: center;
+
+				height: 100%;
+				width: 100%;
+
+				position: absolute;
+				top: 0;
+				left: 0;
+			}
+
+			.scene-content {
+				position: absolute;
+				left: 100px;
+				top: 0;
+				transform: scale(0.6);
+			}
+
 			#input {
 				display: none;
+
+				position: absolute;
+				bottom: 20px;
+				left: 100px;
+				height: 50px;
 			}
 			#guessed {
-				margin-top: 25px;
+				position: absolute;
 				padding: 10px;
-				border: 1px solid black;
 				display: none;
+
+				left: 100px;
+				bottom: 60px;
+			}
+
+			#currIntensity {
+				display: inline-block;
+			}
+
+			#intensity1,
+			#intensity2,
+			#intensity3 {
+				text-transform: lowercase;
+				font-size: 20px;
 			}
 
 			#complete {
@@ -345,9 +500,9 @@
 			}
 
 			@font-face {
-  font-family: ghosty;
-  src: url("Assets/Resources/iknowaghost.ttf");
-}
+				font-family: ghosty;
+				src: url("Assets/Resources/iknowaghost.ttf");
+			}
 
 			body {
 				margin: 0;
@@ -373,206 +528,327 @@
 				height: 100%;
 				width: 100%;
 				display: flex;
-    			justify-content: center;
-    			align-items: center;
+				justify-content: center;
+				align-items: center;
 			}
 
 			.center-content {
 				width: 870px;
 			}
+
+			input {
+				padding: 0;
+				border: none;
+				outline: none;
+				font-size: 40px;
+				font-family: ghosty;
+				background-color: rgba(0, 0, 0, 0.2);
+				color: white;
+			}
+
+			input:focus {
+				outline: none;
 			}
 		</style>
 	</head>
 	<body>
 		<div id="queue">
-			
-			<p id="queueCredits">PHANTOMIME <br> Created By Christian, Kalpa, Vivian, Monica, and Michael.</p>
+			<p id="queueCredits">
+				PHANTOMIME <br />
+				Created By Christian, Kalpa, Vivian, Monica, and Michael.
+			</p>
 			<button id="queueButton" onclick="joinQueue()">JOIN QUEUE</button>
-			
 		</div>
 
 		<div id="waitingScene">
 			<div class="center">
 				<div class="center-content">
-			<h1 id="waitTitle">Waiting for player to join...</h1>
-			<img id="queueImage" src="Assets/Resources/Queue/Sprite_1.png"/>
-		</div>
-		</div>
-
+					<h1 id="waitTitle">Waiting for player to join...</h1>
+					<img
+						id="queueImage"
+						src="Assets/Resources/Queue/Sprite_1.png"
+					/>
+				</div>
+			</div>
 		</div>
 
 		<div id="introScene">
 			<div class="center">
 				<div class="center-content">
-			<h1 id="introText">You are the ?</h1>
-			<h3 id="introDesc">Description</h3>
-			<button id="introButton" onclick="introScene()">Next</button>
+					<h1 id="introText">You are the ?</h1>
+					<h3 id="introDesc">Description</h3>
+					<button id="introButton" onclick="introScene()">
+						Next
+					</button>
+				</div>
 			</div>
-		</div>
-			
 		</div>
 
 		<div id="scene">
-		
-			<h1 class="Header"  id="role"></h1>
-
-			<div id ="intensityButtons">
-				<h4 id="currIntensity">Current Intensity: 1</h6>
-				<button id="intensity1" onclick="setIntensity(1)">Set Intensity 1</button>
-				<button id="intensity2" onclick="setIntensity(2)">Set Intensity 2</button>
-				<button id="intensity3" onclick="setIntensity(3)">Set Intensity 3</button>
-			</div>
-
+			<h1 class="Header" id="role">You are the ghost</h1>
 
 			<div id="scene1">
-				<img onclick="shakeObject(1)"  class= "Scene1-1Forest" 
-				src="Assets/Resources/Scene_1/Scene1Painting1.png"
-				 alt="Forest Scene" />
-				<img onclick="shakeObject(2)" class="Scene1-2Mansion" 
-				src="Assets/Resources/Scene_1/Scene1Painting2.png"
-				 alt="big mansion"/>
-				<img onclick="shakeObject(3)" class="Scene1-3genric" 
-				src="Assets/Resources/Scene_1/Scene1Painting3.png"
-     			alt="Genric portrait"/>
-				<img onclick="shakeObject(4)" class="Scene1-4suit" 
-				src="Assets/Resources/Scene_1/Scene1Painting4.png"
-				alt="Sick suit"/>
-				<img onclick="shakeObject(5)" class="Scene1-5Clock" 
-				src="Assets/Resources/Scene_1/Scene1Painting5.png"
-     			alt="Fancy clock"/>
-				<img onclick="shakeObject(6)" class="Scene1-6Cow" 
-				src="Assets/Resources/Scene_1/Scene1Painting6.png"
-			    alt="Cows Grazing"/>
-				<img onclick="shakeObject(7)" class="Scene1-7Horse" 
-				src="Assets/Resources/Scene_1/Scene1Painting7.png"
-     			alt="person on horse"/>
-				<img onclick="shakeObject(8)" class="Scene1-8Dog" 
-				src="Assets/Resources/Scene_1/Scene1Painting8.png"
-			    alt="same man with puppy"/>
-				<img onclick="shakeObject(9)" class="Scene1-9Hill" 
-				src="Assets/Resources/Scene_1/Scene1Painting9.png"
-     			alt="hilly scene"/>
-				<img onclick="shakeObject(10)" class="Scene1-10Moutain" 
-				src="Assets/Resources/Scene_1/Scene1Painting10.png"
-			    alt="Mountain scene"/>
+				<div class="scene-content">
+					<img
+						onclick="shakeObject(1)"
+						class="Scene1-1Forest"
+						src="Assets/Resources/Scene_1/Scene1Painting1.png"
+						alt="Forest Scene"
+					/>
+					<img
+						onclick="shakeObject(2)"
+						class="Scene1-2Mansion"
+						src="Assets/Resources/Scene_1/Scene1Painting2.png"
+						alt="big mansion"
+					/>
+					<img
+						onclick="shakeObject(3)"
+						class="Scene1-3genric"
+						src="Assets/Resources/Scene_1/Scene1Painting3.png"
+						alt="Genric portrait"
+					/>
+					<img
+						onclick="shakeObject(4)"
+						class="Scene1-4suit"
+						src="Assets/Resources/Scene_1/Scene1Painting4.png"
+						alt="Sick suit"
+					/>
+					<img
+						onclick="shakeObject(5)"
+						class="Scene1-5Clock"
+						src="Assets/Resources/Scene_1/Scene1Painting5.png"
+						alt="Fancy clock"
+					/>
+					<img
+						onclick="shakeObject(6)"
+						class="Scene1-6Cow"
+						src="Assets/Resources/Scene_1/Scene1Painting6.png"
+						alt="Cows Grazing"
+					/>
+					<img
+						onclick="shakeObject(7)"
+						class="Scene1-7Horse"
+						src="Assets/Resources/Scene_1/Scene1Painting7.png"
+						alt="person on horse"
+					/>
+					<img
+						onclick="shakeObject(8)"
+						class="Scene1-8Dog"
+						src="Assets/Resources/Scene_1/Scene1Painting8.png"
+						alt="same man with puppy"
+					/>
+					<img
+						onclick="shakeObject(9)"
+						class="Scene1-9Hill"
+						src="Assets/Resources/Scene_1/Scene1Painting9.png"
+						alt="hilly scene"
+					/>
+					<img
+						onclick="shakeObject(10)"
+						class="Scene1-10Moutain"
+						src="Assets/Resources/Scene_1/Scene1Painting10.png"
+						alt="Mountain scene"
+					/>
+				</div>
 
-				<img class="inner" 
+				<!-- <img class="inner" 
 				src="Assets/Resources/Scene_1/Scene_1_Wall.png"
-				alt="BG"></img >
-				
+				alt="BG"></img > -->
 			</div>
-			
+
 			<div id="scene2">
-				<img onclick="shakeObject(1)"  class= "Scene2-1" 
-				src="Assets/Resources/Scene_2/1Book.png"
-				 alt="Sherlock" />
-				<img onclick="shakeObject(2)" class="Scene2-2" 
-				src="Assets/Resources/Scene_2/2Book.png"
-				 alt="HumanAnatmony"/>
-				<img onclick="shakeObject(3)" class="Scene2-3" 
-				src="Assets/Resources/Scene_2/3Book.png"
-     			alt="AnimalKingdom"/>
-				<img onclick="shakeObject(4)" class="Scene2-4" 
-				src="Assets/Resources/Scene_2/4Book.png"
-				alt="Amputation"/>
-				<img onclick="shakeObject(5)" class="Scene2-5" 
-				src="Assets/Resources/Scene_2/5Book.png"
-     			alt="MurderHound"/>
-				<img onclick="shakeObject(6)" class="Scene2-6" 
-				src="Assets/Resources/Scene_2/6Book.png"
-			    alt="insects"/>
-				<img onclick="shakeObject(7)" class="Scene2-7" 
-				src="Assets/Resources/Scene_2/7Book.png"
-     			alt="brains"/>
-				<img onclick="shakeObject(8)" class="Scene2-8" 
-				src="Assets/Resources/Scene_2/8Book.png"
-			    alt="Who are you"/>
-				<img onclick="shakeObject(9)" class="Scene2-9" 
-				src="Assets/Resources/Scene_2/9Book.png"
-     			alt="who killed"/>
-				<img onclick="shakeObject(10)" class="Scene2-10" 
-				src="Assets/Resources/Scene_2/10Book.png"
-			    alt="human Nature"/>
-				<img class="inner" 
-				src="Assets/Resources/Scene_2/Scene2ShelfOnly.png"
-				alt="BG"></div>img>
-				
+				<div class="scene-content">
+					<img
+						onclick="shakeObject(1)"
+						class="Scene2-1"
+						src="Assets/Resources/Scene_2/1Book.png"
+						alt="Sherlock"
+					/>
+					<img
+						onclick="shakeObject(2)"
+						class="Scene2-2"
+						src="Assets/Resources/Scene_2/2Book.png"
+						alt="HumanAnatmony"
+					/>
+					<img
+						onclick="shakeObject(3)"
+						class="Scene2-3"
+						src="Assets/Resources/Scene_2/3Book.png"
+						alt="AnimalKingdom"
+					/>
+					<img
+						onclick="shakeObject(4)"
+						class="Scene2-4"
+						src="Assets/Resources/Scene_2/4Book.png"
+						alt="Amputation"
+					/>
+					<img
+						onclick="shakeObject(5)"
+						class="Scene2-5"
+						src="Assets/Resources/Scene_2/5Book.png"
+						alt="MurderHound"
+					/>
+					<img
+						onclick="shakeObject(6)"
+						class="Scene2-6"
+						src="Assets/Resources/Scene_2/6Book.png"
+						alt="insects"
+					/>
+					<img
+						onclick="shakeObject(7)"
+						class="Scene2-7"
+						src="Assets/Resources/Scene_2/7Book.png"
+						alt="brains"
+					/>
+					<img
+						onclick="shakeObject(8)"
+						class="Scene2-8"
+						src="Assets/Resources/Scene_2/8Book.png"
+						alt="Who are you"
+					/>
+					<img
+						onclick="shakeObject(9)"
+						class="Scene2-9"
+						src="Assets/Resources/Scene_2/9Book.png"
+						alt="who killed"
+					/>
+					<img
+						onclick="shakeObject(10)"
+						class="Scene2-10"
+						src="Assets/Resources/Scene_2/10Book.png"
+						alt="human Nature"
+					/>
+				</div>
 			</div>
+		</div>
 
-			<div id="scene3">
-				<img onclick="shakeObject(1)"  class= "Scene3-1Candle" 
-				src="Assets/Resources/Scene_3/Scene 3, Candle.png"
-				 alt="Sherlock" />
-				<img onclick="shakeObject(2)" class="Scene3-2Claws" 
-				src="Assets/Resources/Scene_3/Scene 3, Claws.png"
-				 alt="HumanAnatmony"/>
-				<img onclick="shakeObject(3)" class="Scene3-3Eyeballs" 
-				src="Assets/Resources/Scene_3/Scene 3, Eyeballs.png"
-     			alt="AnimalKingdom"/>
-				<img onclick="shakeObject(4)" class="Scene3-4Feathers" 
-				src="Assets/Resources/Scene_3/Scene 3, Feathers.png"
-				alt="Amputation"/>
-				<img onclick="shakeObject(5)" class="Scene3-5Heart" 
-				src="Assets/Resources/Scene_3/Scene 3, Heart.png"
-     			alt="MurderHound"/>
-				<img onclick="shakeObject(6)" class="Scene3-6Liver" 
-				src="Assets/Resources/Scene_3/Scene 3, Liver.png"
-			    alt="insects"/>
-				<img onclick="shakeObject(7)" class="Scene3-7Rat" 
-				src="Assets/Resources/Scene_3/Scene 3, Rat.png"
-     			alt="brains"/>
-				<img onclick="shakeObject(8)" class="Scene3-8Scapel" 
-				src="Assets/Resources/Scene_3/Scene 3, Scalpel.png"
-			    alt="Who are you"/>
-				<img onclick="shakeObject(9)" class="Scene3-9Skull" 
-				src="Assets/Resources/Scene_3/Scene 3, Skull.png"
-     			alt="who killed"/>
-				<img onclick="shakeObject(10)" class="Scene3-10Tooth" 
-				src="Assets/Resources/Scene_3/Scene 3, Teeth.png"
-			    alt="human Nature"/>
-				<img class="inner" 
-				src="Assets/Resources/Scene_3/Scene 3, Cabinet.png"
-				alt="BG"/>
+		<div id="scene3">
+			<div class="scene-content">
+				<img
+					onclick="shakeObject(1)"
+					class="Scene3-1Candle"
+					src="Assets/Resources/Scene_3/Scene 3, Candle.png"
+					alt="Sherlock"
+				/>
+				<img
+					onclick="shakeObject(2)"
+					class="Scene3-2Claws"
+					src="Assets/Resources/Scene_3/Scene 3, Claws.png"
+					alt="HumanAnatmony"
+				/>
+				<img
+					onclick="shakeObject(3)"
+					class="Scene3-3Eyeballs"
+					src="Assets/Resources/Scene_3/Scene 3, Eyeballs.png"
+					alt="AnimalKingdom"
+				/>
+				<img
+					onclick="shakeObject(4)"
+					class="Scene3-4Feathers"
+					src="Assets/Resources/Scene_3/Scene 3, Feathers.png"
+					alt="Amputation"
+				/>
+				<img
+					onclick="shakeObject(5)"
+					class="Scene3-5Heart"
+					src="Assets/Resources/Scene_3/Scene 3, Heart.png"
+					alt="MurderHound"
+				/>
+				<img
+					onclick="shakeObject(6)"
+					class="Scene3-6Liver"
+					src="Assets/Resources/Scene_3/Scene 3, Liver.png"
+					alt="insects"
+				/>
+				<img
+					onclick="shakeObject(7)"
+					class="Scene3-7Rat"
+					src="Assets/Resources/Scene_3/Scene 3, Rat.png"
+					alt="brains"
+				/>
+				<img
+					onclick="shakeObject(8)"
+					class="Scene3-8Scapel"
+					src="Assets/Resources/Scene_3/Scene 3, Scalpel.png"
+					alt="Who are you"
+				/>
+				<img
+					onclick="shakeObject(9)"
+					class="Scene3-9Skull"
+					src="Assets/Resources/Scene_3/Scene 3, Skull.png"
+					alt="who killed"
+				/>
+				<img
+					onclick="shakeObject(10)"
+					class="Scene3-10Tooth"
+					src="Assets/Resources/Scene_3/Scene 3, Teeth.png"
+					alt="human Nature"
+				/>
 			</div>
+		</div>
 
-
-			<div id="finalscene">
-				<img onclick="lightCandle(1)"  class= "Scene4-1" 
+		<div id="finalscene">
+			<img
+				onclick="lightCandle(1)"
+				class="Scene4-1"
 				src="Assets/Resources/Scene_4/BotMidRight.png"
-				 alt="BotMidRight" />
-				<img onclick="lightCandle(2)" class="Scene4-2" 
+				alt="BotMidRight"
+			/>
+			<img
+				onclick="lightCandle(2)"
+				class="Scene4-2"
 				src="Assets/Resources/Scene_4/BottomMidLeft.png"
-				 alt="BotMidLeft"/>
-				<img onclick="lightCandle(3)" class="Scene4-3" 
+				alt="BotMidLeft"
+			/>
+			<img
+				onclick="lightCandle(3)"
+				class="Scene4-3"
 				src="Assets/Resources/Scene_4/Left.png"
-     			alt="Left"/>
-				<img onclick="lightCandle(4)" class="Scene4-4" 
+				alt="Left"
+			/>
+			<img
+				onclick="lightCandle(4)"
+				class="Scene4-4"
 				src="Assets/Resources/Scene_4/Right.png"
-				alt="Right"/>
-				<img onclick="lightCandle(5)" class="Scene4-5" 
+				alt="Right"
+			/>
+			<img
+				onclick="lightCandle(5)"
+				class="Scene4-5"
 				src="Assets/Resources/Scene_4/TopMidLeft.png"
-     			alt="TopMidLeft"/>
-				<img onclick="lightCandle(6)" class="Scene4-6" 
+				alt="TopMidLeft"
+			/>
+			<img
+				onclick="lightCandle(6)"
+				class="Scene4-6"
 				src="Assets/Resources/Scene_4/TopMidRight.png"
-				alt="TopMidRight"/>
-				<img class="Scene4-inner" 
-				src="Assets/Resources/Scene_4/SceneNoObject.png"
-				alt="BG"></img >
-			</div>
+				alt="TopMidRight"
+			/>
+		</div>
 
-			<h3 id="hint"></h3>
-			<h3 id="guessed">Last guess: <span id="lastGuess"></span></h3>
+		<div id="intensityButtons">
+			<h4 id="currIntensity">Current Intensity: 1</h4>
+			<button id="intensity1" onclick="setIntensity(1)">
+				Intensity 1
+			</button>
+			<button id="intensity2" onclick="setIntensity(2)">
+				Intensity 2
+			</button>
+			<button id="intensity3" onclick="setIntensity(3)">
+				Intensity 3
+			</button>
+		</div>
 
-			<div id="input">
-				<input type="text" id="guess" />
-				<button onclick="submitGuess()">make guess</button>
-			</div>
+		<div id="input">
+			<input type="text" id="guess" />
+			<button onclick="submitGuess()">make guess</button>
+		</div>
 
-			<div id="complete">
-				<h1>YOU DID IT YOU WON!</h1>
-			</div>
+		<h3 id="hint"></h3>
+		<h3 id="guessed"><span id="lastGuess"></span></h3>
 
-			
+		<div id="complete">
+			<h1>YOU DID IT YOU WON!</h1>
 		</div>
 
 		<script src="utils.js"></script>

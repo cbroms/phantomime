@@ -38,16 +38,14 @@ socket.on("showGameUI", () => {
 	hide("introScene");
 	show("scene");
 	show("scene1");
+	show("guessed");
 
 	if (iAmGhost) {
 		show("intensityButtons");
-		setText(
-			"role",
-			"You are the ghost. The word is: " + state.taskWords[task][index]
-		);
+		setText("role", "The word is: " + state.taskWords[task][index]);
 	} else {
 		show("input");
-		setText("role", "You are the explorer. Guess the word.");
+		setText("role", "Guess the word.");
 	}
 });
 
@@ -61,10 +59,7 @@ socket.on("nextWord", () => {
 	guessesThisWord = 0;
 	index++;
 	if (iAmGhost) {
-		setText(
-			"role",
-			"You are the ghost. The word is: " + state.taskWords[task][index]
-		);
+		setText("role", "The word is: " + state.taskWords[task][index]);
 	}
 });
 
@@ -88,6 +83,7 @@ socket.on("nextTask", () => {
 
 	if (task === 1) {
 		currScene = 2;
+
 		show("scene2");
 	} else if (task === 2) {
 		currScene = 3;
@@ -109,10 +105,7 @@ socket.on("nextTask", () => {
 	}
 
 	if (iAmGhost) {
-		setText(
-			"role",
-			"You are the ghost. The word is: " + state.taskWords[task][index]
-		);
+		setText("role", "The word is: " + state.taskWords[task][index]);
 	}
 });
 
@@ -125,7 +118,7 @@ socket.on("tasksComplete", () => {
 socket.on("explorerGuessedWord", (result) => {
 	setText(
 		"lastGuess",
-		`${result.guess} (${
+		`Last guess: ${result.guess} (${
 			result.correct ? "correct! next word..." : "incorrect"
 		})`
 	);
