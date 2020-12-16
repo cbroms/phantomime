@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
-	<head>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Phantomime</title>
-		<script src="/socket.io/socket.io.js"></script>
+		<script src="Phantomime_files/socket.js"></script>
 		<style type="text/css">
 
 			.item {
@@ -73,52 +73,52 @@
 
 
 			.Scene2-1 {
-				top: 185px;
+				top: 265px;
 				left: 600px;
 			}
 
 			.Scene2-2 {
-				top: 185px;
+				top: 265px;
 				left: 775px;
 			}
 
 			.Scene2-3 {
-				top: 185px;
+				top: 265px;
 				left: 950px;
 			}
 
 			.Scene2-4 {
-				top: 185px;
+				top: 265px;
 				left: 1125px;
 			}
 
 			.Scene2-5 {
-				top: 185px;
+				top: 265px;
 				left: 1300px;
 			}
 
 			.Scene2-6 {
-				top: 820px;
+				top: 950px;
 				left: 600px;
 			}
 
 			.Scene2-7 {
-				top: 820px;
+				top: 950px;
 				left: 775px;
 			}
 
 			.Scene2-8 {
-				top: 820px;
+				top: 950px;
 				left: 950px;
 			}
 
 			.Scene2-9 {
-				top: 820px;
+				top: 950px;
 				left: 1125px;
 			}
 
 			.Scene2-10 {
-				top: 820px;
+				top: 950px;
 				left: 1300px;
 			}
 		
@@ -126,70 +126,70 @@
 			.Scene3-1Candle {
 				position: absolute;
 				z-index: 2;
-				top: 120px;
+				top: 100px;
 				left: 400px; 
 			}
 
 			.Scene3-2Claws {
 				position: absolute;
 				z-index: 2;
-				top: 350px;
-				left: 1000px;
+				top: 300px;
+				left: 800px;
 			}
 
 			.Scene3-3Eyeballs {
 				position: absolute;
 				z-index: 2;
-				top: 600px;
-				left: 960px;
+				top: 800%;
+				left: 1400%;
 			}
 
 			.Scene3-4Feathers {
 				position: absolute;
 				z-index: 2;
-				top: 120px;
-				left: 800px; 
+				top: 100px;
+				left: 900px; 
 			}
 
 			.Scene3-5Heart {
 				position: absolute;
 				z-index: 2;
-				top: 350px;
-				left: 500px;
+				top: 530%;
+				left: 800%;
 			}
 
 			.Scene3-6Liver {
 				position: absolute;
 				z-index: 2;
-				top: 350px;
-				left: 300px;
+				top: 530%;
+				left: 500%;
 			}
 
 			.Scene3-7Rat {
 				position: absolute;
 				z-index: 2;
-				top: 350px;
-				left: 800px;
+				top: 530%;
+				left: 1000%;
 			}
 
 			.Scene3-8Scapel {
 				position: absolute;
 				z-index: 2;
-				top: 640px;
-				left: 700px;
+				top: 850%;
+				left: 1000%;
 			}
 
 			.Scene3-9Skull {
 				position: absolute;
 				z-index: 2;
-				top: 600px;
-				left: 200px;
+				top: 800%;
+				left: 400%;
 			}
 
 			.Scene3-10Tooth {
 				position: absolute;
 				z-index: 2;
-				top: 120px;
+				top: 100px;
 				left: 200px;
 			}
 
@@ -205,12 +205,12 @@
 
 			.Scene4-3 {
 				top: 65%;
-				left: 33%;
+				left: 35%;
 			}
 
 			.Scene4-4 {
 				top: 65%;
-				left: 58%;
+				left: 52%;
 			}
 
 			.Scene4-5 {
@@ -242,15 +242,6 @@
 			}
 
 			.finalghosthand {
-				opacity: 0;
-				z-index: 10;
-				position: absolute;
-				top: 50%;
-				left: 50%;
-				transform: translate(-50%, -50%);
-			}
-
-			.endCard {
 				opacity: 0;
 				z-index: 10;
 				position: absolute;
@@ -330,21 +321,12 @@
 				/* animation-iteration-count: 1; */
 			}
 
-			.final-endCard {
-				/* Start the shake animation and make the animation last for 2 seconds */
-				animation: finalendcardanimation 10s;
-				animation-fill-mode: forwards;
-
-				/* When the animation is finished, start again */
-				/* animation-iteration-count: 1; */
-			}
-
 			#queue {
 				background-image: url("Assets/Resources/phatomime_logo.png");
 				background-size: cover;
 				background-position: center;
 				display: none;
-				height: 800px;
+				height: 900px;
 				width: 1440px;
 				position: relative;
 			}
@@ -405,7 +387,7 @@
 				background-size: cover;
 				background-position: center;
 				display: none;
-				height: 800px;
+				height: 900px;
 				width: 1440px;
 				position: relative;
 
@@ -417,7 +399,7 @@
 				background-size: cover;
 				background-position: center;
 				display: none;
-				height: 800px;
+				height: 900px;
 				width: 1440px;
 				position: relative;
 			}
@@ -434,7 +416,7 @@
 				background-size: cover;
 				background-position: center;
 
-				height: 800px;
+				height: 900px;
 				width: 1440px;
 				position: relative;
 
@@ -564,42 +546,6 @@
 				}
 			}
 
-			@keyframes finalendcardanimation {
-				0% {
-					opacity: 0;
-				}
-				10% {
-					opacity: 0;
-				}
-				20% {
-					opacity: 0;
-				}
-				30% {
-					opacity: 0;
-				}
-				40% {
-					opacity: 0;
-				}
-				50% {
-					opacity: 0;
-				}
-				60% {
-					opacity: 0;
-				}
-				70% {
-					opacity: 0;
-				}
-				80% {
-					opacity: 0;
-				}
-				90% {
-					opacity: 0;
-				}
-				100% {
-					opacity: 1;
-				}
-			}
-
 			@keyframes finalghostanimation {
 				0% {
 					opacity: 0;
@@ -647,15 +593,13 @@
 					opacity: 1;
 				}
 				30% {
-					top: 80%; /*translate(0px, -100%);*/
+					transform: translate(0px, -100%);
 				}
 				40% {
-					top: 60%;
-					/* transform: translate(0px, -150%); */
+					transform: translate(0px, -150%);
 				}
 				50% {
-					top: 50%;
-					/* transform: translate(0px, -200%); */
+					transform: translate(0px, -200%);
 				}
 				60% {
 					opacity: 0;
@@ -697,17 +641,16 @@
 					opacity: 1;
 				}
 				70% {
-					top: 50%;
-					/* transform: translate(0px, -100%); */
+					transform: translate(0px, -100%);
 				}
 				80% {
-					top: 70%;
+					transform: translate(0px, -50%);
 				}
 				90% {
-					top: 90%;
+					transform: translate(0px, 50%);
 				}
 				100% {
-					top: 99%;
+					transform: translate(0px, 90%);
 					opacity: 0;
 				}
 			}
@@ -719,13 +662,13 @@
 				display: none;
 			}
 
-			/*#finalscene,
+			#scene3,
 			#scene,
 			#intensityButtons,
 			#role {
 				display: block;
 				z-index: 1000;
-			}*/
+			}
 
 			#role {
 				text-transform: uppercase;
@@ -744,7 +687,7 @@
 				background-size: cover;
 				background-position: center;
 
-				height: 800px;
+				height: 900px;
 				width: 1440px;
 
 				position: relative;
@@ -755,7 +698,7 @@
 				background-size: cover;
 				background-position: center;
 
-				height: 800px;
+				height: 900px;
 				width: 1440px;
 
 				position: relative;
@@ -766,7 +709,7 @@
 				background-size: cover;
 				background-position: center;
 
-				height: 800px;
+				height: 900px;
 				width: 1440px;
 
 				position: relative;
@@ -777,8 +720,8 @@
 				background-size: cover;
 				background-position: center;
 
-				height: 800px;
-				width: 1440px;
+				height: 1080px;
+				width: 1920px;
 
 				position: absolute;
 				top: 0;
@@ -848,7 +791,7 @@
 
 			body {
 				margin: 0;
-				height: 800px;
+				height: 900px;
 				width: 1440px;
 				font-family: ghosty;
 				font-size: 30px;
@@ -885,7 +828,7 @@
 				font-size: 40px;
 				font-family: ghosty;
 				color: white;
-				background-color: rgba(0, 0, 0, 0.3);
+				background-color: rgba(0, 0, 0, 0.2);
 			}
 
 			input:focus {
@@ -895,39 +838,36 @@
 	</head>
 	<body>
 		
-		<audio id="title_music" loop>
-			<source src="Assets/Resources/Music/title_audio.mp3" type="audio/mp3">
+		<audio id="title_music" loop="">
+			<source src="Phantomime_files/title_audio.mp3" type="audio/mp3">
 		</audio>
 
-		<audio id="ambient_bg" loop>
-			<source src="Assets/Resources/Music/wind_howl.mp3" type="audio/mp3">
+		<audio id="ambient_bg" loop="">
+			<source src="Phantomime_files/wind_howl.mp3" type="audio/mp3">
 		</audio>
 
 		<audio id="ambient_scene">
-			<source src="Assets/Resources/Music/wind_howl.mp3" type="audio/mp3">
+			<source src="Phantomime_files/wind_howl.mp3" type="audio/mp3">
 		</audio>
 
 		<audio id="rattling_sound">
-			<source src="Assets/Resources/Music/wind_howl.mp3" type="audio/mp3">
+			<source src="Phantomime_files/wind_howl.mp3" type="audio/mp3">
 		</audio>
 
 
-		<div id="queue">
+		<div id="queue" style="display: block;">
 			<p id="queueCredits">
-				PHANTOMIME <br />
+				PHANTOMIME <br>
 				Created By Christian, Kalpa, Vivian, Monica, and Michael.
 			</p>
-			<button id="queueButton" onclick="joinQueue()">ENTER</button>
+			<button id="queueButton" onclick="joinQueue()">JOIN QUEUE</button>
 		</div>
 
 		<div id="waitingScene">
 			<div class="center">
 				<div class="center-content">
 					<h1 id="waitTitle">Waiting for player to join...</h1>
-					<img
-						id="queueImage"
-						src="Assets/Resources/Queue/Sprite_1.png"
-					/>
+					<img id="queueImage" src="Phantomime_files/Sprite_1.png">
 				</div>
 			</div>
 		</div>
@@ -959,67 +899,17 @@
 			<h1 class="Header" id="role">You are the ghost</h1>
 
 			<div id="scene1">
-				<div class="scene-content" style="transform: scale(0.65);">
-					<img
-						onclick="shakeObject(1)"
-						class="Scene1-1Forest item"
-						src="Assets/Resources/Scene_1/Scene1Painting1.png"
-						alt="Forest Scene"
-					/>
-					<img
-						onclick="shakeObject(2)"
-						class="Scene1-2Mansion item"
-						src="Assets/Resources/Scene_1/Scene1Painting2.png"
-						alt="big mansion"
-					/>
-					<img
-						onclick="shakeObject(3)"
-						class="Scene1-3genric item"
-						src="Assets/Resources/Scene_1/Scene1Painting3.png"
-						alt="Genric portrait"
-					/>
-					<img
-						onclick="shakeObject(4)"
-						class="Scene1-4suit item"
-						src="Assets/Resources/Scene_1/Scene1Painting4.png"
-						alt="Sick suit"
-					/>
-					<img
-						onclick="shakeObject(5)"
-						class="Scene1-5Clock item"
-						src="Assets/Resources/Scene_1/Scene1Painting5.png"
-						alt="Fancy clock"
-					/>
-					<img
-						onclick="shakeObject(6)"
-						class="Scene1-6Cow item"
-						src="Assets/Resources/Scene_1/Scene1Painting6.png"
-						alt="Cows Grazing"
-					/>
-					<img
-						onclick="shakeObject(7)"
-						class="Scene1-7Horse item"
-						src="Assets/Resources/Scene_1/Scene1Painting7.png"
-						alt="person on horse"
-					/>
-					<img
-						onclick="shakeObject(8)"
-						class="Scene1-8Dog item"
-						src="Assets/Resources/Scene_1/Scene1Painting8.png"
-						alt="same man with puppy"
-					/>
-					<img
-						onclick="shakeObject(9)"
-						class="Scene1-9Hill item"
-						src="Assets/Resources/Scene_1/Scene1Painting9.png"
-						alt="hilly scene"
-					/>
-					<img
-						onclick="shakeObject(10)"
-						class="Scene1-10Moutain item"
-						src="Assets/Resources/Scene_1/Scene1Painting10.png"
-						alt="Mountain scene"
-					/>
+				<div class="scene-content">
+					<img onclick="shakeObject(1)" class="Scene1-1Forest item" src="Phantomime_files/Scene1Painting1.png" alt="Forest Scene">
+					<img onclick="shakeObject(2)" class="Scene1-2Mansion item" src="Phantomime_files/Scene1Painting2.png" alt="big mansion">
+					<img onclick="shakeObject(3)" class="Scene1-3genric item" src="Phantomime_files/Scene1Painting3.png" alt="Genric portrait">
+					<img onclick="shakeObject(4)" class="Scene1-4suit item" src="Phantomime_files/Scene1Painting4.png" alt="Sick suit">
+					<img onclick="shakeObject(5)" class="Scene1-5Clock item" src="Phantomime_files/Scene1Painting5.png" alt="Fancy clock">
+					<img onclick="shakeObject(6)" class="Scene1-6Cow item" src="Phantomime_files/Scene1Painting6.png" alt="Cows Grazing">
+					<img onclick="shakeObject(7)" class="Scene1-7Horse item" src="Phantomime_files/Scene1Painting7.png" alt="person on horse">
+					<img onclick="shakeObject(8)" class="Scene1-8Dog item" src="Phantomime_files/Scene1Painting8.png" alt="same man with puppy">
+					<img onclick="shakeObject(9)" class="Scene1-9Hill item" src="Phantomime_files/Scene1Painting9.png" alt="hilly scene">
+					<img onclick="shakeObject(10)" class="Scene1-10Moutain item" src="Phantomime_files/Scene1Painting10.png" alt="Mountain scene">
 				</div>
 
 				<!-- <img class="inner" 
@@ -1028,192 +918,46 @@
 			</div>
 
 			<div id="scene2">
-				<div class="scene-content" style="transform: scale(0.6);">
-					<img
-						onclick="shakeObject(1)"
-						class="Scene2-1 item"
-						src="Assets/Resources/Scene_2/book1.png"
-						alt="Sherlock"
-					/>
-					<img
-						onclick="shakeObject(2)"
-						class="Scene2-2 item"
-						src="Assets/Resources/Scene_2/book2.png"
-						alt="HumanAnatmony"
-					/>
-					<img
-						onclick="shakeObject(3)"
-						class="Scene2-3 item"
-						src="Assets/Resources/Scene_2/book3.png"
-						alt="AnimalKingdom"
-					/>
-					<img
-						onclick="shakeObject(4)"
-						class="Scene2-4 item"
-						src="Assets/Resources/Scene_2/book4.png"
-						alt="Amputation"
-					/>
-					<img
-						onclick="shakeObject(5)"
-						class="Scene2-5 item"
-						src="Assets/Resources/Scene_2/book5.png"
-						alt="MurderHound"
-					/>
-					<img
-						onclick="shakeObject(6)"
-						class="Scene2-6 item"
-						src="Assets/Resources/Scene_2/book6.png"
-						alt="insects"
-					/>
-					<img
-						onclick="shakeObject(7)"
-						class="Scene2-7 item"
-						src="Assets/Resources/Scene_2/book7.png"
-						alt="brains"
-					/>
-					<img
-						onclick="shakeObject(8)"
-						class="Scene2-8 item"
-						src="Assets/Resources/Scene_2/book8.png"
-						alt="Who are you"
-					/>
-					<img
-						onclick="shakeObject(9)"
-						class="Scene2-9 item"
-						src="Assets/Resources/Scene_2/book9.png"
-						alt="who killed"
-					/>
-					<img
-						onclick="shakeObject(10)"
-						class="Scene2-10 item"
-						src="Assets/Resources/Scene_2/book10.png"
-						alt="human Nature"
-					/>
+				<div class="scene-content">
+					<img onclick="shakeObject(1)" class="Scene2-1 item" src="Phantomime_files/book1.png" alt="Sherlock">
+					<img onclick="shakeObject(2)" class="Scene2-2 item" src="Phantomime_files/book2.png" alt="HumanAnatmony">
+					<img onclick="shakeObject(3)" class="Scene2-3 item" src="Phantomime_files/book3.png" alt="AnimalKingdom">
+					<img onclick="shakeObject(4)" class="Scene2-4 item" src="Phantomime_files/book4.png" alt="Amputation">
+					<img onclick="shakeObject(5)" class="Scene2-5 item" src="Phantomime_files/book5.png" alt="MurderHound">
+					<img onclick="shakeObject(6)" class="Scene2-6 item" src="Phantomime_files/book6.png" alt="insects">
+					<img onclick="shakeObject(7)" class="Scene2-7 item" src="Phantomime_files/book7.png" alt="brains">
+					<img onclick="shakeObject(8)" class="Scene2-8 item" src="Phantomime_files/book8.png" alt="Who are you">
+					<img onclick="shakeObject(9)" class="Scene2-9 item" src="Phantomime_files/book9.png" alt="who killed">
+					<img onclick="shakeObject(10)" class="Scene2-10 item" src="Phantomime_files/book10.png" alt="human Nature">
 				</div>
 			</div>
 
-			<div id="scene3" >
-			<div class="scene-content" style="transform: scale(0.8);">
-				<img
-					onclick="shakeObject(1)"
-					class="Scene3-1Candle"
-					src="Assets/Resources/Scene_3/Scene 3, Candle.png"
-					alt="Sherlock"
-				/>
-				<img
-					onclick="shakeObject(2)"
-					class="Scene3-2Claws"
-					src="Assets/Resources/Scene_3/Scene 3, Claws.png"
-					alt="HumanAnatmony"
-				/>
-				<img
-					onclick="shakeObject(3)"
-					class="Scene3-3Eyeballs"
-					src="Assets/Resources/Scene_3/Scene 3, Eyeballs.png"
-					alt="AnimalKingdom"
-				/>
-				<img
-					onclick="shakeObject(4)"
-					class="Scene3-4Feathers"
-					src="Assets/Resources/Scene_3/Scene 3, Feathers.png"
-					alt="Amputation"
-				/>
-				<img
-					onclick="shakeObject(5)"
-					class="Scene3-5Heart"
-					src="Assets/Resources/Scene_3/Scene 3, Heart.png"
-					alt="MurderHound"
-				/>
-				<img
-					onclick="shakeObject(6)"
-					class="Scene3-6Liver"
-					src="Assets/Resources/Scene_3/Scene 3, Liver.png"
-					alt="insects"
-				/>
-				<img
-					onclick="shakeObject(7)"
-					class="Scene3-7Rat"
-					src="Assets/Resources/Scene_3/Scene 3, Rat.png"
-					alt="brains"
-				/>
-				<img
-					onclick="shakeObject(8)"
-					class="Scene3-8Scapel"
-					src="Assets/Resources/Scene_3/Scene 3, Scalpel.png"
-					alt="Who are you"
-				/>
-				<img
-					onclick="shakeObject(9)"
-					class="Scene3-9Skull"
-					src="Assets/Resources/Scene_3/Scene 3, Skull.png"
-					alt="who killed"
-				/>
-				<img
-					onclick="shakeObject(10)"
-					class="Scene3-10Tooth"
-					src="Assets/Resources/Scene_3/Scene 3, Teeth.png"
-					alt="human Nature"
-				/>
+			<div id="scene3">
+			<div class="scene-content">
+				<img onclick="shakeObject(1)" class="Scene3-1Candle" src="Phantomime_files/Scene%25203%2520Candle.png" alt="Sherlock">
+				<img onclick="shakeObject(2)" class="Scene3-2Claws" src="Phantomime_files/Scene%25203%2520Claws.png" alt="HumanAnatmony">
+				<img onclick="shakeObject(3)" class="Scene3-3Eyeballs" src="Phantomime_files/Scene%25203%2520Eyeballs.png" alt="AnimalKingdom">
+				<img onclick="shakeObject(4)" class="Scene3-4Feathers" src="Phantomime_files/Scene%25203%2520Feathers.png" alt="Amputation">
+				<img onclick="shakeObject(5)" class="Scene3-5Heart" src="Phantomime_files/Scene%25203%2520Heart.png" alt="MurderHound">
+				<img onclick="shakeObject(6)" class="Scene3-6Liver" src="Phantomime_files/Scene%25203%2520Liver.png" alt="insects">
+				<img onclick="shakeObject(7)" class="Scene3-7Rat" src="Phantomime_files/Scene%25203%2520Rat.png" alt="brains">
+				<img onclick="shakeObject(8)" class="Scene3-8Scapel" src="Phantomime_files/Scene%25203%2520Scalpel.png" alt="Who are you">
+				<img onclick="shakeObject(9)" class="Scene3-9Skull" src="Phantomime_files/Scene%25203%2520Skull.png" alt="who killed">
+				<img onclick="shakeObject(10)" class="Scene3-10Tooth" src="Phantomime_files/Scene%25203%2520Teeth.png" alt="human Nature">
 			</div>
 		</div>
 
 		<div id="finalscene">
-			<img
-				onclick="lightCandle(1)"
-				class="Scene4-1 item"
-				src="Assets/Resources/Scene_4/BotMidRightUnlit.png"
-				alt="BotMidRight"
-			/>
-			<img
-				onclick="lightCandle(2)"
-				class="Scene4-2 item"
-				src="Assets/Resources/Scene_4/BottomMidLeftUnlit.png"
-				alt="BotMidLeft"
-			/>
-			<img
-				onclick="lightCandle(3)"
-				class="Scene4-3 item"
-				src="Assets/Resources/Scene_4/LeftUnlit.png"
-				alt="Left"
-			/>
-			<img
-				onclick="lightCandle(4)"
-				class="Scene4-4 item"
-				src="Assets/Resources/Scene_4/RightUnlit.png"
-				alt="Right"
-			/>
-			<img
-				onclick="lightCandle(5)"
-				class="Scene4-5 item"
-				src="Assets/Resources/Scene_4/TopMidLeftUnlit.png"
-				alt="TopMidLeft"
-			/>
-			<img
-				onclick="lightCandle(6)"
-				class="Scene4-6 item"
-				src="Assets/Resources/Scene_4/TopMidRightUnlit.png"
-				alt="TopMidRight"
-			/>
-			<img
-				class="finalscene-bg"
-				src="Assets/Resources/Scene_4/SceneNoObject.png"
-			/>
-			<img
-				class="finalghost"
-				id ="finalghost"
-				src="Assets/Resources/Scene_4/finalghost.png"
-			/>
-			<img
-				class="finalhand"
-				id="finalhand"
-				src="Assets/Resources/Scene_4/finalhand.png"
-			/>
-			<img
-				class="finalghosthand"
-				id="finalghosthand"
-				src="Assets/Resources/Scene_4/finalghosthand.png"
-			/>
-			<h1 id="endCard" class="endCard">GAME COMPLETE</h1>
+			<img onclick="lightCandle(1)" class="Scene4-1 item" src="Phantomime_files/BotMidRightUnlit.png" alt="BotMidRight">
+			<img onclick="lightCandle(2)" class="Scene4-2 item" src="Phantomime_files/BottomMidLeftUnlit.png" alt="BotMidLeft">
+			<img onclick="lightCandle(3)" class="Scene4-3 item" src="Phantomime_files/LeftUnlit.png" alt="Left">
+			<img onclick="lightCandle(4)" class="Scene4-4 item" src="Phantomime_files/RightUnlit.png" alt="Right">
+			<img onclick="lightCandle(5)" class="Scene4-5 item" src="Phantomime_files/TopMidLeftUnlit.png" alt="TopMidLeft">
+			<img onclick="lightCandle(6)" class="Scene4-6 item" src="Phantomime_files/TopMidRightUnlit.png" alt="TopMidRight">
+			<img class="finalscene-bg" src="Phantomime_files/SceneNoObject.png">
+			<img class="finalghost" id="finalghost" src="Phantomime_files/finalghost.png">
+			<img class="finalhand" id="finalhand" src="Phantomime_files/finalhand.png">
+			<img class="finalghosthand" id="finalghosthand" src="Phantomime_files/finalghosthand.png">
 		</div>
 
 		<div id="intensityButtons">
@@ -1230,7 +974,7 @@
 		</div>
 
 		<div id="input">
-			<input type="text" id="guess" />
+			<input type="text" id="guess">
 			<button id="guessButton" onclick="submitGuess()">make guess</button>
 		</div>
 
@@ -1246,7 +990,8 @@
 		
 
 
-		<script src="utils.js"></script>
-		<script src="game.js"></script>
-	</body>
-</html>
+		<script src="Phantomime_files/utils.js"></script>
+		<script src="Phantomime_files/game.js"></script>
+	
+
+</body></html>
