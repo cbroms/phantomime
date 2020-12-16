@@ -46,23 +46,38 @@ socket.on("showGameUI", () => {
 		playMusic("ambient_scene");
 	}, 5000);
 
+	show("finalscene");
+	show("finalghost");
+	show("finalhand");
+	show("finalghosthand");
+	//TODO: do we want the final image to be shown at completion??
+	// hide("scene");
+	document.querySelectorAll('.finalghost').forEach((elt) => {
+		elt.classList.add("final-ghostanimation");
+	});
+	document.querySelectorAll('.finalhand').forEach((elt) => {
+		elt.classList.add("final-handanimation");
+	});
+	document.querySelectorAll('.finalghosthand').forEach((elt) => {
+		elt.classList.add("final-ghosthandanimation");
+	});
 
 
-	playMusic("ambient_bg");
-	pauseMusic("title_music");
-	setMusic("rattling_sound", "Assets/Resources/Music/Scene_1/rattle.mp3");
-	hide("introScene");
-	show("scene");
-	show("scene1");
-	show("guessed");
+	// playMusic("ambient_bg");
+	// pauseMusic("title_music");
+	// setMusic("rattling_sound", "Assets/Resources/Music/Scene_1/rattle.mp3");
+	// hide("introScene");
+	// show("scene");
+	// show("scene1");
+	// show("guessed");
 
-	if (iAmGhost) {
-		show("intensityButtons");
-		setText("role", "The word is: " + state.taskWords[task][index]);
-	} else {
-		show("input");
-		setText("role", "Guess the word.");
-	}
+	// if (iAmGhost) {
+	// 	show("intensityButtons");
+	// 	setText("role", "The word is: " + state.taskWords[task][index]);
+	// } else {
+	// 	show("input");
+	// 	setText("role", "Guess the word.");
+	// }
 });
 
 socket.on("partnerLeft", () => {
@@ -129,6 +144,9 @@ socket.on("nextTask", () => {
 		hide("guessed");
 		hide("input");
 		hide("intensityButtons");
+		hide("finalghost");
+		hide("finalhand");
+		hide("finalghosthand");
 		setMusicLoop("rattling_sound", false);
 		setMusic("rattling_sound", "Assets/Resources/Music/Scene_4/rattle.mp3");
 		setText(
@@ -147,9 +165,21 @@ socket.on("nextTask", () => {
 });
 
 socket.on("tasksComplete", () => {
+	show("finalghost");
+	show("finalhand");
+	show("finalghosthand");
 	//TODO: do we want the final image to be shown at completion??
 	// hide("scene");
-	show("complete");
+	document.querySelectorAll('.finalghost').forEach((elt) => {
+		elt.classList.add("final-ghostanimation");
+	});
+	document.querySelectorAll('.finalhand').forEach((elt) => {
+		elt.classList.add("final-handanimation");
+	});
+	document.querySelectorAll('.finalghosthand').forEach((elt) => {
+		elt.classList.add("final-ghosthandanimation");
+	});
+	// show("complete");
 });
 
 socket.on("explorerGuessedWord", (result) => {

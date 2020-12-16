@@ -212,6 +212,33 @@
 				left: 10vw;
 			}
 
+			.finalghost {
+				opacity: 0;
+				z-index: 10;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+			}
+
+			.finalhand {
+				opacity: 0;
+				z-index: 10;
+				position: absolute;
+				top: 80%;
+				left: 50%;
+				transform: translate(-50%, 80%);
+			}
+
+			.finalghosthand {
+				opacity: 0;
+				z-index: 10;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+			}
+
 			.Header {
 				z-index: 3;
 				position: top;
@@ -257,6 +284,30 @@
 
 				/* When the animation is finished, start again */
 				animation-iteration-count: infinite;
+			}
+
+			.final-ghostanimation {
+				/* Start the shake animation and make the animation last for 2 seconds */
+				animation: finalghostanimation 10s;
+
+				/* When the animation is finished, start again */
+				/* animation-iteration-count: 1; */
+			}
+
+			.final-handanimation {
+				/* Start the shake animation and make the animation last for 2 seconds */
+				animation: finalhandanimation 10s;
+
+				/* When the animation is finished, start again */
+				/* animation-iteration-count: 1; */
+			}
+
+			.final-ghosthandanimation {
+				/* Start the shake animation and make the animation last for 2 seconds */
+				animation: finalghosthandanimation 10s;
+
+				/* When the animation is finished, start again */
+				/* animation-iteration-count: 1; */
 			}
 
 			#queue {
@@ -488,6 +539,115 @@
 				}
 				100% {
 					transform: translate(1px, -2px) rotate(-10deg);
+				}
+			}
+
+			@keyframes finalghostanimation {
+				0% {
+					opacity: 0;
+				}
+				10% {
+					opacity: 0.5;
+				}
+				20% {
+					opacity: 1;
+				}
+				30% {
+					opacity: 1;
+				}
+				40% {
+					opacity: 1;
+				}
+				50% {
+					opacity: 1;
+				}
+				60% {
+					opacity: 0;
+				}
+				70% {
+					opacity: 0;
+				}
+				80% {
+					opacity: 0;
+				}
+				90% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+
+			@keyframes finalhandanimation {
+				0% {
+					opacity: 0;
+				}
+				10% {
+					opacity: 0;
+				}
+				20% {
+					opacity: 1;
+				}
+				30% {
+					transform: translate(0px, -100%);
+				}
+				40% {
+					transform: translate(0px, -150%);
+				}
+				50% {
+					transform: translate(0px, -200%);
+				}
+				60% {
+					opacity: 0;
+				}
+				70% {
+					opacity: 0;
+				}
+				80% {
+					opacity: 0;
+				}
+				90% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+
+			@keyframes finalghosthandanimation {
+				0% {
+					opacity: 0;
+				}
+				10% {
+					opacity: 0;
+				}
+				20% {
+					opacity: 0;
+				}
+				30% {
+					opacity: 0;
+				}
+				40% {
+					opacity: 0;
+				}
+				50% {
+					opacity: 0;
+				}
+				60% {
+					opacity: 1;
+				}
+				70% {
+					transform: translate(0px, -100%);
+				}
+				80% {
+					transform: translate(0px, -50%);
+				}
+				90% {
+					transform: translate(0px, 50%);
+				}
+				100% {
+					transform: translate(0px, 90%);
+					opacity: 0;
 				}
 			}
 
@@ -983,6 +1143,21 @@
 			<img
 				class="finalscene-bg"
 				src="Assets/Resources/Scene_4/SceneNoObject.png"
+			/>
+			<img
+				class="finalghost"
+				id ="finalghost"
+				src="Assets/Resources/Scene_4/finalghost.png"
+			/>
+			<img
+				class="finalhand"
+				id="finalhand"
+				src="Assets/Resources/Scene_4/finalhand.png"
+			/>
+			<img
+				class="finalghosthand"
+				id="finalghosthand"
+				src="Assets/Resources/Scene_4/finalghosthand.png"
 			/>
 		</div>
 
