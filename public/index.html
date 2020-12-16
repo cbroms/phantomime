@@ -187,15 +187,61 @@
 			}
 			
 			#queue {
+				background-image: url("Assets/Resources/phatomime_logo.png");
+				background-size: cover;
+				background-position: center; 
 				display: none;
+				height: 100%;
+				width: 100%;
+
+				position: absolute;
+				top: 0;
+				left: 0;
+			}
+
+			#queueButton {
+				margin: 0 auto;
+				display: block;
+				margin-top: 85vh;
+				height: 40px;
+				width: 250px;
+				font-size: 25px;
 			}
 
 			#waitingScene {
 				display: none;
+				background-image: url("Assets/Resources/Scene_1/Scene_1_Wall.png");
+				background-size: cover;
+				background-position: center; 
+				display: none;
+				height: 100%;
+				width: 100%;
+
+				position: absolute;
+				top: 0;
+				left: 0;
+				
+			}
+
+			#queueImage {
+				margin: 0 auto;
+				display: block;
 			}
 
 			#introScene {
 				display: none;
+
+				display: none;
+				background-image: url("Assets/Resources/Scene_1/Scene_1_Wall.png");
+				background-size: cover;
+				background-position: center; 
+				display: none;
+				height: 100%;
+				width: 100%;
+
+				position: absolute;
+				top: 0;
+				left: 0;
 			}
 
 			#scene {
@@ -283,38 +329,77 @@
 				margin-top: 25px;
 				padding: 10px;
 				border: 1px solid black;
+				display: none;
 			}
 
 			#complete {
 				display: none;
 			}
+
+			@font-face {
+  font-family: ghosty;
+  src: url("Assets/Resources/iknowaghost.ttf");
+}
+
+			body {
+				margin: 0;
+				height: 100vh;
+				width: 100vw;
+				font-family: ghosty;
+				font-size: 30px;
+				color: white;
+			}
+
+			button {
+				font-family: ghosty;
+				font-size: 40px;
+				background-color: black;
+				color: white;
+				text-transform: uppercase;
+				outline: none;
+				border: none;
+				cursor: pointer;
+			}
+
+			.center {
+				height: 100%;
+				width: 100%;
+				display: flex;
+    			justify-content: center;
+    			align-items: center;
+			}
+
+			.center-content {
+				width: 870px;
+			}
+			}
 		</style>
 	</head>
 	<body>
 		<div id="queue">
-			<h1 id="queueTitle">PHANTOMINE</h1>
-			<h1 id="queueTitle">Welcome, join the queue</h1>
-			<button id="queueButton" onclick="joinQueue()">Join Queue</button>
-			<img class="inner" 
-				src="Assets/Resources/phatomime_logo.png"
-				alt="BG"></img width=100% height=100%></img>
+			<button id="queueButton" onclick="joinQueue()">JOIN QUEUE</button>
+			
 		</div>
 
 		<div id="waitingScene">
+			<div class="center">
+				<div class="center-content">
 			<h1 id="waitTitle">Waiting for player to join...</h1>
-			<img id="queueImage" src="Assets/Resources/Queue/Sprite_1.png"></img>
-			<img class="inner" 
-				src="Assets/Resources/phatomime_logo.png"
-				alt="BG"></img width=100% height=100%></img>
+			<img id="queueImage" src="Assets/Resources/Queue/Sprite_1.png"/>
+		</div>
+		</div>
+
 		</div>
 
 		<div id="introScene">
+			<div class="center">
+				<div class="center-content">
 			<h1 id="introText">You are the ?</h1>
 			<h3 id="introDesc">Description</h3>
 			<button id="introButton" onclick="introScene()">Next</button>
-			<img class="inner" 
-				src="Assets/Resources/Scene_1/Scene_1_Wall.png"
-				alt="BG"></img width=100% height=100%></img>
+			</div>
+		</div>
+			
 		</div>
 
 		<div id="scene">
@@ -332,136 +417,137 @@
 			<div id="scene1">
 				<img onclick="shakeObject(1)"  class= "Scene1-1Forest" 
 				src="Assets/Resources/Scene_1/Scene1Painting1.png"
-				 alt="Forest Scene" ></img>
+				 alt="Forest Scene" />
 				<img onclick="shakeObject(2)" class="Scene1-2Mansion" 
 				src="Assets/Resources/Scene_1/Scene1Painting2.png"
-				 alt="big mansion"></img>
+				 alt="big mansion"/>
 				<img onclick="shakeObject(3)" class="Scene1-3genric" 
 				src="Assets/Resources/Scene_1/Scene1Painting3.png"
-     			alt="Genric portrait"></img>
+     			alt="Genric portrait"/>
 				<img onclick="shakeObject(4)" class="Scene1-4suit" 
 				src="Assets/Resources/Scene_1/Scene1Painting4.png"
-				alt="Sick suit"></img>
+				alt="Sick suit"/>
 				<img onclick="shakeObject(5)" class="Scene1-5Clock" 
 				src="Assets/Resources/Scene_1/Scene1Painting5.png"
-     			alt="Fancy clock"></img>
+     			alt="Fancy clock"/>
 				<img onclick="shakeObject(6)" class="Scene1-6Cow" 
 				src="Assets/Resources/Scene_1/Scene1Painting6.png"
-			    alt="Cows Grazing"></img>
+			    alt="Cows Grazing"/>
 				<img onclick="shakeObject(7)" class="Scene1-7Horse" 
 				src="Assets/Resources/Scene_1/Scene1Painting7.png"
-     			alt="person on horse"></img>
+     			alt="person on horse"/>
 				<img onclick="shakeObject(8)" class="Scene1-8Dog" 
 				src="Assets/Resources/Scene_1/Scene1Painting8.png"
-			    alt="same man with puppy"></img>
+			    alt="same man with puppy"/>
 				<img onclick="shakeObject(9)" class="Scene1-9Hill" 
 				src="Assets/Resources/Scene_1/Scene1Painting9.png"
-     			alt="hilly scene"></img>
+     			alt="hilly scene"/>
 				<img onclick="shakeObject(10)" class="Scene1-10Moutain" 
 				src="Assets/Resources/Scene_1/Scene1Painting10.png"
-			    alt="Mountain scene"></img>
+			    alt="Mountain scene"/>
+
 				<img class="inner" 
 				src="Assets/Resources/Scene_1/Scene_1_Wall.png"
-				alt="BG"></img width=100% height=100%></img>
+				alt="BG"></img >
 				
 			</div>
 			
 			<div id="scene2">
 				<img onclick="shakeObject(1)"  class= "Scene2-1" 
 				src="Assets/Resources/Scene_2/1Book.png"
-				 alt="Sherlock" ></img>
+				 alt="Sherlock" />
 				<img onclick="shakeObject(2)" class="Scene2-2" 
 				src="Assets/Resources/Scene_2/2Book.png"
-				 alt="HumanAnatmony"></img>
+				 alt="HumanAnatmony"/>
 				<img onclick="shakeObject(3)" class="Scene2-3" 
 				src="Assets/Resources/Scene_2/3Book.png"
-     			alt="AnimalKingdom"></img>
+     			alt="AnimalKingdom"/>
 				<img onclick="shakeObject(4)" class="Scene2-4" 
 				src="Assets/Resources/Scene_2/4Book.png"
-				alt="Amputation"></img>
+				alt="Amputation"/>
 				<img onclick="shakeObject(5)" class="Scene2-5" 
 				src="Assets/Resources/Scene_2/5Book.png"
-     			alt="MurderHound"></img>
+     			alt="MurderHound"/>
 				<img onclick="shakeObject(6)" class="Scene2-6" 
 				src="Assets/Resources/Scene_2/6Book.png"
-			    alt="insects"></img>
+			    alt="insects"/>
 				<img onclick="shakeObject(7)" class="Scene2-7" 
 				src="Assets/Resources/Scene_2/7Book.png"
-     			alt="brains"></img>
+     			alt="brains"/>
 				<img onclick="shakeObject(8)" class="Scene2-8" 
 				src="Assets/Resources/Scene_2/8Book.png"
-			    alt="Who are you"></img>
+			    alt="Who are you"/>
 				<img onclick="shakeObject(9)" class="Scene2-9" 
 				src="Assets/Resources/Scene_2/9Book.png"
-     			alt="who killed"></img>
+     			alt="who killed"/>
 				<img onclick="shakeObject(10)" class="Scene2-10" 
 				src="Assets/Resources/Scene_2/10Book.png"
-			    alt="human Nature"></img>
+			    alt="human Nature"/>
 				<img class="inner" 
 				src="Assets/Resources/Scene_2/Scene2ShelfOnly.png"
-				alt="BG"></img width=100% height=100%></img>
+				alt="BG"></div>img>
 				
 			</div>
 
 			<div id="scene3">
 				<img onclick="shakeObject(1)"  class= "Scene3-1Candle" 
 				src="Assets/Resources/Scene_3/Scene 3, Candle.png"
-				 alt="Sherlock" ></img>
+				 alt="Sherlock" />
 				<img onclick="shakeObject(2)" class="Scene3-2Claws" 
 				src="Assets/Resources/Scene_3/Scene 3, Claws.png"
-				 alt="HumanAnatmony"></img>
+				 alt="HumanAnatmony"/>
 				<img onclick="shakeObject(3)" class="Scene3-3Eyeballs" 
 				src="Assets/Resources/Scene_3/Scene 3, Eyeballs.png"
-     			alt="AnimalKingdom"></img>
+     			alt="AnimalKingdom"/>
 				<img onclick="shakeObject(4)" class="Scene3-4Feathers" 
 				src="Assets/Resources/Scene_3/Scene 3, Feathers.png"
-				alt="Amputation"></img>
+				alt="Amputation"/>
 				<img onclick="shakeObject(5)" class="Scene3-5Heart" 
 				src="Assets/Resources/Scene_3/Scene 3, Heart.png"
-     			alt="MurderHound"></img>
+     			alt="MurderHound"/>
 				<img onclick="shakeObject(6)" class="Scene3-6Liver" 
 				src="Assets/Resources/Scene_3/Scene 3, Liver.png"
-			    alt="insects"></img>
+			    alt="insects"/>
 				<img onclick="shakeObject(7)" class="Scene3-7Rat" 
 				src="Assets/Resources/Scene_3/Scene 3, Rat.png"
-     			alt="brains"></img>
+     			alt="brains"/>
 				<img onclick="shakeObject(8)" class="Scene3-8Scapel" 
 				src="Assets/Resources/Scene_3/Scene 3, Scalpel.png"
-			    alt="Who are you"></img>
+			    alt="Who are you"/>
 				<img onclick="shakeObject(9)" class="Scene3-9Skull" 
 				src="Assets/Resources/Scene_3/Scene 3, Skull.png"
-     			alt="who killed"></img>
+     			alt="who killed"/>
 				<img onclick="shakeObject(10)" class="Scene3-10Tooth" 
 				src="Assets/Resources/Scene_3/Scene 3, Teeth.png"
-			    alt="human Nature"></img>
+			    alt="human Nature"/>
 				<img class="inner" 
 				src="Assets/Resources/Scene_3/Scene 3, Cabinet.png"
-				alt="BG"></img width=100% height=100%></img>
+				alt="BG"/>
 			</div>
 
 
 			<div id="finalscene">
 				<img onclick="lightCandle(1)"  class= "Scene4-1" 
 				src="Assets/Resources/Scene_4/BotMidRight.png"
-				 alt="BotMidRight" ></img>
+				 alt="BotMidRight" />
 				<img onclick="lightCandle(2)" class="Scene4-2" 
 				src="Assets/Resources/Scene_4/BottomMidLeft.png"
-				 alt="BotMidLeft"></img>
+				 alt="BotMidLeft"/>
 				<img onclick="lightCandle(3)" class="Scene4-3" 
 				src="Assets/Resources/Scene_4/Left.png"
-     			alt="Left"></img>
+     			alt="Left"/>
 				<img onclick="lightCandle(4)" class="Scene4-4" 
 				src="Assets/Resources/Scene_4/Right.png"
-				alt="Right"></img>
+				alt="Right"/>
 				<img onclick="lightCandle(5)" class="Scene4-5" 
 				src="Assets/Resources/Scene_4/TopMidLeft.png"
-     			alt="TopMidLeft"></img>
+     			alt="TopMidLeft"/>
 				<img onclick="lightCandle(6)" class="Scene4-6" 
 				src="Assets/Resources/Scene_4/TopMidRight.png"
-				alt="TopMidRight"></img>
+				alt="TopMidRight"/>
 				<img class="Scene4-inner" 
 				src="Assets/Resources/Scene_4/SceneNoObject.png"
-				alt="BG"></img width=100% height=100%></img>
+				alt="BG"></img >
 			</div>
 
 			<h3 id="hint"></h3>

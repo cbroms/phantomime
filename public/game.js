@@ -6,7 +6,13 @@ let state = {};
 let currIntroScene = 0;
 let intensity = 1;
 let currScene = 1;
-let candleText = ["", "Bloody wall with message", "Bloody animal footprints on ground","Desk spattered in blood", "Dead body’s leg"];
+let candleText = [
+	"",
+	"Bloody wall with message",
+	"Bloody animal footprints on ground",
+	"Desk spattered in blood",
+	"Dead body’s leg",
+];
 let litCandles = [false, false, false, false, false, false];
 
 const socket = io();
@@ -26,7 +32,6 @@ socket.on("enteredGame", (data) => {
 	iAmGhost = data.role === 0 ? true : false;
 	show("introScene");
 	introScene();
-
 });
 
 socket.on("showGameUI", () => {
@@ -70,7 +75,7 @@ socket.on("nextTask", () => {
 	});
 	setText("hint", "");
 	setText("lastGuess", "");
-	
+
 	hide("scene1");
 	hide("scene2");
 	hide("scene3");
@@ -93,7 +98,12 @@ socket.on("nextTask", () => {
 		hide("guessed");
 		hide("input");
 		hide("intensityButtons");
-		setText("role", iAmGhost ? "Click each candle to light it" : "Wait for the ghost to light the candles");
+		setText(
+			"role",
+			iAmGhost
+				? "Click each candle to light it"
+				: "Wait for the ghost to light the candles"
+		);
 
 		return;
 	}
@@ -121,13 +131,17 @@ socket.on("explorerGuessedWord", (result) => {
 	);
 });
 
-socket.on("ghostMovedObject", (obj) => {	
+socket.on("ghostMovedObject", (obj) => {
 	var num = obj.num;
 	intensity = obj.intense;
 
-	document.querySelectorAll('img[class^="Scene' + currScene + "-" + num.toString() + '"]').forEach((elt) => {
-		elt.classList.add("shake" + intensity);
-	});
+	document
+		.querySelectorAll(
+			'img[class^="Scene' + currScene + "-" + num.toString() + '"]'
+		)
+		.forEach((elt) => {
+			elt.classList.add("shake" + intensity);
+		});
 
 	// set the text bold
 	//document.querySelectorAll(`.c${num.toString()}`).forEach((elt) => {
@@ -136,29 +150,37 @@ socket.on("ghostMovedObject", (obj) => {
 
 	// reset the text after intensity seconds
 	window.setTimeout(() => {
-		document.querySelectorAll('img[class^="Scene' + currScene + "-" + num.toString() + '"]').forEach((elt) => {
-			elt.classList.remove("shake" + intensity);
-		});
+		document
+			.querySelectorAll(
+				'img[class^="Scene' + currScene + "-" + num.toString() + '"]'
+			)
+			.forEach((elt) => {
+				elt.classList.remove("shake" + intensity);
+			});
 	}, 2000);
 });
 
-socket.on("ghostLitCandle", (num) => {	
-	litCandles[num-1] = true;
+socket.on("ghostLitCandle", (num) => {
+	litCandles[num - 1] = true;
 	var numLit = 0;
 	var i = 0;
 	for (i = 0; i < litCandles.length; i++) {
 		if (litCandles[i] === true) numLit++;
 	}
-	var percent = ceil(numLit / (1.0 * litCandles.length) * 100);
+	var percent = ceil((numLit / (1.0 * litCandles.length)) * 100);
 
 	// set yellow filter on candle
-	document.querySelectorAll('img[class^="Scene' + currScene + "-" + num.toString() + '"]').forEach((elt) => {
-		elt.classList.add("yellow");
-	});
+	document
+		.querySelectorAll(
+			'img[class^="Scene' + currScene + "-" + num.toString() + '"]'
+		)
+		.forEach((elt) => {
+			elt.classList.add("yellow");
+		});
 
 	// increase image contrast
 	document.querySelectorAll(`inner`).forEach((elt) => {
-		elt.style.filter="contrast(" + percent + "%)";
+		elt.style.filter = "contrast(" + percent + "%)";
 	});
 
 	// Only ghost sends the completion event??
@@ -169,31 +191,38 @@ socket.on("ghostLitCandle", (num) => {
 	}
 });
 
-
 function introScene() {
-	var toShow = iAmGhost ? "ghost" : "explorer";
-	setText("introText", "You are the " + toShow);
-	switch(currIntroScene) {
+	var toShow = iAmGhost ? "GHOST" : "EXPLORER";
+	setText("introText", "YOU ARE THE " + toShow);
+	switch (currIntroScene) {
 		case 0:
-			toShow = iAmGhost ? "You are trapped in the house." : "You have arrived at a house, interested in rumors about a ghost.";
+			toShow = iAmGhost
+				? "You are trapped in the house."
+				: "You have arrived at a house, interested in rumors about a ghost.";
 			setText("introDesc", toShow);
 			currIntroScene += 1;
 			// setTimeout((() => introScene(currText+1)), 5000);
 			return;
 		case 1:
-			toShow = iAmGhost ? "You want to convey certain words to the explorer so they can uncover the mystery of your death." : "You want to figure out what words the ghost is conveying to you.";
+			toShow = iAmGhost
+				? "You want to convey certain words to the explorer so they can uncover the mystery of your death."
+				: "You want to figure out what words the ghost is conveying to you.";
 			setText("introDesc", toShow);
 			currIntroScene += 1;
 			// setTimeout((() => introScene(currText+1)), 5000);
 			return;
 		case 2:
-			toShow = iAmGhost ? "You will do so by clicking on items related to the word on the screen to \"rattle\" them and alert the explorer." : "You must find the relation between the objects that the ghost rattles on the screen.";
+			toShow = iAmGhost
+				? 'You will do so by clicking on items related to the word on the screen to "rattle" them and alert the explorer.'
+				: "You must find the relation between the objects that the ghost rattles on the screen.";
 			setText("introDesc", toShow);
 			currIntroScene += 1;
 			// setTimeout((() => introScene(currText+1)), 5000);
 			return;
 		case 3:
-			toShow = iAmGhost ? "You can rattle with different intensity by setting your intensity at the top of the screen." : "Objects can rattle with different intensity based on how much the ghost wants to emphasize them.";
+			toShow = iAmGhost
+				? "You can rattle with different intensity by setting your intensity at the top of the screen."
+				: "Objects can rattle with different intensity based on how much the ghost wants to emphasize them.";
 			setText("introDesc", toShow);
 			currIntroScene += 1;
 			// setTimeout((() => introScene(currText+1)), 5000);
@@ -204,7 +233,10 @@ function introScene() {
 			// setTimeout((() => introScene(currText+1)), 3000);
 			return;
 		default:
-			setText("introDesc", "Waiting for other player to read the instructions...");
+			setText(
+				"introDesc",
+				"Waiting for other player to read the instructions..."
+			);
 			hide("introButton");
 			socket.emit("doneReading");
 			break;
@@ -212,9 +244,8 @@ function introScene() {
 }
 
 function preload() {
-	SceneBG = loadImage('Assets/Resources/Scene_1_Wall.png');
-  }
-
+	SceneBG = loadImage("Assets/Resources/Scene_1_Wall.png");
+}
 
 function setIntensity(myIntense) {
 	intensity = myIntense;
@@ -224,18 +255,14 @@ function setIntensity(myIntense) {
 function lightCandle(num) {
 	if (iAmGhost) {
 		// If already lit, leave it alone
-		if (litCandles[num-1] === true) return;
+		if (litCandles[num - 1] === true) return;
 
 		socket.emit("candleLit", num);
 	}
 }
 
-
-  
-
-
 function shakeObject(num) {
-	if (iAmGhost) socket.emit("moveObject", {num: num, intense: intensity});
+	if (iAmGhost) socket.emit("moveObject", { num: num, intense: intensity });
 	// element.classList.add("shake" + intensity);
 	// element.classList.remove("shake" + intensity);
 }
@@ -265,16 +292,19 @@ function submitGuess() {
 
 function joinQueue() {
 	hide("queue");
-	show("waitingScene")
+	show("waitingScene");
 	setText("waitTitle", "Waiting for player to join...");
 
 	socket.emit("addToQueue");
 	var counter = 0;
 
 	window.setInterval(() => {
-			setImgSrc("queueImage", "Assets/Resources/Queue/Sprite_" + counter + ".png");
-			counter++;
-			counter %= 10;
+		setImgSrc(
+			"queueImage",
+			"Assets/Resources/Queue/Sprite_" + counter + ".png"
+		);
+		counter++;
+		counter %= 10;
 	}, 500);
 }
 
