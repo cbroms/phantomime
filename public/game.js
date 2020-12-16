@@ -226,11 +226,11 @@ socket.on("ghostLitCandle", (num) => {
 	// set yellow filter on candle
 	document
 		.querySelectorAll(
-			'img[class^="Scene' + currScene + "-" + num.toString() + '"]'
+			'img[class^="Scene4-' + num.toString() + '"]'
 		)
 		.forEach((elt) => {
-			elt.classList.add("yellow");
 			elt.src = "Assets/Resources/Scene_4/" + num + ".png";
+			elt.classList.add("yellow");
 		});
 
 	// increase image contrast
